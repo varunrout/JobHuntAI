@@ -1,0 +1,8 @@
+Plan ID,Job ID,Application ID,Plan Type,Step No.,Action,Owner,Due Date,Dependency,Status,Completion Evidence,Notes
+PLAN-ENGIE-001,JOB-0001,APP-0001,Networking,1,Send recruiter connection request,Varun,24/07/2026,Application submitted,Complete,LinkedIn request sent,Ilina Petrovska
+PLAN-ENGIE-001,JOB-0001,APP-0001,Networking,2,Send same-role employee connection request,Varun,24/07/2026,Application submitted,Complete,LinkedIn request sent,Philippe Dewart
+PLAN-ENGIE-001,JOB-0001,APP-0001,Networking,3,Send recruiter post-accept message,Varun,25/07/2026,Ilina accepts,Blocked,,Ask work-authorisation question
+PLAN-ENGIE-001,JOB-0001,APP-0001,Networking,4,Send peer post-accept message,Varun,25/07/2026,Philippe accepts,Blocked,,Ask about team priorities
+PLAN-ENGIE-001,JOB-0001,APP-0001,Networking,5,Check Gmail and LinkedIn responses,ChatGPT + Varun,26/07/2026,48 hours elapsed,Planned,,Update Contacts and Touchpoints
+PLAN-ENGIE-001,JOB-0001,APP-0001,Networking,6,Day-7 recruiter follow-up,Varun,31/07/2026,No substantive response,Planned,,Send one concise follow-up
+PLAN-ENGIE-001,JOB-0001,APP-0001,Networking,7,Close or re-plan networking stage,ChatGPT,07/08/2026,Day-14 status known,Planned,,Do not chase indefinitely
