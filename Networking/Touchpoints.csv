@@ -1,0 +1,3 @@
+Touchpoint ID,Job ID,Application ID,Contact ID,Date / Time,Channel,Action Type,Direction,Message / Summary,Outcome,Evidence Link,Next Action,Next Action Date,Logged By
+TP-0001,JOB-0001,APP-0001,NET-0001,24/07/2026 13:04,LinkedIn,Connection Request,Outbound,Applied for ENGIE Market Risk Analyst role; highlighted E.ON GB power-market background and interest in connecting.,Pending acceptance,,Wait for acceptance,26/07/2026,ChatGPT + Varun
+TP-0002,JOB-0001,APP-0001,NET-0002,24/07/2026 13:07,LinkedIn,Connection Request,Outbound,Applied for the Brussels Market Risk Analyst role; highlighted GB power-market analytics at E.ON and interest in the team.,Pending acceptance,,Wait for acceptance,26/07/2026,ChatGPT + Varun
