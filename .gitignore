@@ -1,0 +1,9 @@
+# Local and generated transient files
+.DS_Store
+Thumbs.db
+*.tmp
+*.log
+~$*
+.env
+.env.*
+__pycache__/
