@@ -4,17 +4,18 @@
 <meta charset="utf-8">
 <style>
 :root {
-  --ink:#111;
+  --ink:#111111;
   --link:#0563c1;
-  --rule:#333;
+  --rule:#333333;
   --font:"Times New Roman","Liberation Serif",serif;
   --body-size:9.25pt;
-  --bullet-text-indent:3.8mm;
-  --bullet-marker-offset:.45mm;
+  --body-line-height:1.17;
+  --bullet-text-indent:1.9mm;
+  --bullet-marker-offset:0.2mm;
 }
-@page { size:A4; margin:12mm 13mm 11mm; }
+@page { size:A4; margin:12mm 13mm 11mm 13mm; }
 * { box-sizing:border-box; margin:0; padding:0; }
-body { font-family:var(--font); font-size:var(--body-size); line-height:1.17; color:var(--ink); }
+body[data-visual-contract="jobhuntai-serif-v1"] { font-family:var(--font); font-size:var(--body-size); line-height:var(--body-line-height); color:var(--ink); }
 a { color:var(--link); text-decoration:underline; }
 header { text-align:center; }
 .name { font-size:17pt; font-weight:700; letter-spacing:.01em; text-transform:uppercase; }
@@ -23,6 +24,7 @@ header { text-align:center; }
 .contact a + span::before,
 .contact span + a::before,
 .contact a + a::before { content:" | "; color:var(--ink); text-decoration:none; }
+.content-column { width:100%; margin:0; padding:0; }
 section { margin-top:2mm; }
 h2 {
   font-size:10.7pt;
@@ -54,15 +56,16 @@ h2 {
   padding:0;
   font-family:var(--font);
   font-size:var(--body-size);
-  line-height:1.17;
+  line-height:var(--body-line-height);
 }
 .evidence-list li {
   position:relative;
   margin:0 0 .15mm 0;
   padding-left:var(--bullet-text-indent);
+  text-indent:0;
   font-family:var(--font);
   font-size:var(--body-size);
-  line-height:1.17;
+  line-height:var(--body-line-height);
   break-inside:avoid;
 }
 .evidence-list li::before {
@@ -72,7 +75,7 @@ h2 {
   top:0;
   font-family:var(--font);
   font-size:var(--body-size);
-  line-height:1.17;
+  line-height:var(--body-line-height);
 }
 .project { margin-bottom:.65mm; break-inside:avoid; }
 .project-head { break-after:avoid; }
@@ -80,22 +83,24 @@ h2 {
 .page-break-before { break-before:page; }
 </style>
 </head>
-<body>
+<body data-visual-contract="jobhuntai-serif-v1">
 <header>
   <div class="name">{{ identity.name }}</div>
   <div class="contact">
     <span>{{ identity.phone }}</span><span><a href="mailto:{{ identity.email }}">{{ identity.email }}</a></span><span><a href="{{ identity.linkedin }}">LinkedIn</a></span><span><a href="{{ identity.portfolio }}">Portfolio</a></span><span><a href="{{ identity.github }}">GitHub</a></span><span>{{ identity.location }}</span>
   </div>
 </header>
-<section><h2>Professional Summary</h2><p class="summary">{{ summary }}</p></section>
-<section class="capabilities"><h2>Skills</h2>{% for s in skills %}<p><span class="cat">{{ s.category }}:</span> {{ s.items }}</p>{% endfor %}</section>
+<main class="content-column">
+<section data-section="summary"><h2>Professional Summary</h2><p class="summary">{{ summary }}</p></section>
+<section class="capabilities" data-section="skills"><h2>Skills</h2>{% for s in skills %}<p><span class="cat">{{ s.category }}:</span> {{ s.items }}</p>{% endfor %}</section>
 {% if projects_lead and projects %}
-<section><h2>Selected Projects</h2>{% for p in projects %}<div class="project"><div class="row project-head"><div><span class="project-title">{{ p.title }}</span>{% if p.tools %} <span class="tools">({{ p.tools }})</span>{% endif %}{% if p.link %} | <a href="{{ p.link }}">{{ p.link_label or 'GitHub' }}</a>{% endif %}</div><div class="block-dates">{{ p.dates }}</div></div><ul class="evidence-list">{% for b in p.bullets %}<li>{{ b }}</li>{% endfor %}</ul></div>{% endfor %}</section>
+<section data-section="projects"><h2>Projects</h2>{% for p in projects %}<div class="project"><div class="row project-head"><div><span class="project-title">{{ p.title }}</span>{% if p.tools %} <span class="tools">({{ p.tools }})</span>{% endif %}{% if p.link %} | <a href="{{ p.link }}">{{ p.link_label or 'GitHub' }}</a>{% endif %}</div><div class="block-dates">{{ p.dates }}</div></div><ul class="evidence-list">{% for b in p.bullets %}<li>{{ b }}</li>{% endfor %}</ul></div>{% endfor %}</section>
 {% endif %}
-<section><h2>Experience</h2>{% for role in experience %}<div class="block{% if role.page_break_before %} page-break-before{% endif %}">{% if role.roles %}{% for sr in role.roles %}<div class="row"><div class="block-title">{{ sr.title }}</div><div class="block-dates">{{ sr.dates }}</div></div>{% if loop.first %}<div class="org">{{ role.org }}{% if role.sub %}, {{ role.sub }}{% endif %}</div>{% endif %}<ul class="evidence-list">{% for b in sr.bullets %}<li>{{ b }}</li>{% endfor %}</ul>{% endfor %}{% else %}<div class="row"><div class="block-title">{{ role.title }}</div><div class="block-dates">{{ role.dates }}</div></div><div class="org">{{ role.org }}{% if role.sub %}, {{ role.sub }}{% endif %}</div><ul class="evidence-list">{% for b in role.bullets %}<li>{{ b }}</li>{% endfor %}</ul>{% endif %}</div>{% endfor %}</section>
+<section data-section="experience"><h2>Experience</h2>{% for role in experience %}<div class="block{% if role.page_break_before %} page-break-before{% endif %}">{% if role.roles %}{% for sr in role.roles %}<div class="row"><div class="block-title">{{ sr.title }}</div><div class="block-dates">{{ sr.dates }}</div></div>{% if loop.first %}<div class="org">{{ role.org }}{% if role.sub %}, {{ role.sub }}{% endif %}</div>{% endif %}<ul class="evidence-list">{% for b in sr.bullets %}<li>{{ b }}</li>{% endfor %}</ul>{% endfor %}{% else %}<div class="row"><div class="block-title">{{ role.title }}</div><div class="block-dates">{{ role.dates }}</div></div><div class="org">{{ role.org }}{% if role.sub %}, {{ role.sub }}{% endif %}</div><ul class="evidence-list">{% for b in role.bullets %}<li>{{ b }}</li>{% endfor %}</ul>{% endif %}</div>{% endfor %}</section>
 {% if not projects_lead and projects %}
-<section><h2>Selected Projects</h2>{% for p in projects %}<div class="project"><div class="row project-head"><div><span class="project-title">{{ p.title }}</span>{% if p.tools %} <span class="tools">({{ p.tools }})</span>{% endif %}{% if p.link %} | <a href="{{ p.link }}">{{ p.link_label or 'GitHub' }}</a>{% endif %}</div><div class="block-dates">{{ p.dates }}</div></div><ul class="evidence-list">{% for b in p.bullets %}<li>{{ b }}</li>{% endfor %}</ul></div>{% endfor %}</section>
+<section data-section="projects"><h2>Projects</h2>{% for p in projects %}<div class="project"><div class="row project-head"><div><span class="project-title">{{ p.title }}</span>{% if p.tools %} <span class="tools">({{ p.tools }})</span>{% endif %}{% if p.link %} | <a href="{{ p.link }}">{{ p.link_label or 'GitHub' }}</a>{% endif %}</div><div class="block-dates">{{ p.dates }}</div></div><ul class="evidence-list">{% for b in p.bullets %}<li>{{ b }}</li>{% endfor %}</ul></div>{% endfor %}</section>
 {% endif %}
-<section class="education"><h2>Education</h2>{% for e in education %}<div class="block row"><div class="education-title">{{ e.degree }}, {{ e.school }}</div><div class="block-dates">{{ e.dates }}</div></div>{% endfor %}</section>
+<section class="education" data-section="education"><h2>Education</h2>{% for e in education %}<div class="block row"><div class="education-title">{{ e.degree }}, {{ e.school }}</div><div class="block-dates">{{ e.dates }}</div></div>{% endfor %}</section>
+</main>
 </body>
 </html>
