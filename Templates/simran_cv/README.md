@@ -1,16 +1,15 @@
-# Simran-style CV template
+# Simran-style CV template workbench
 
-Standalone HTML-to-PDF template workbench based on the recurring visual grammar in the supplied Simran CV references.
-
-This directory is deliberately separate from `cv_pipeline/`. It is a visual-template project first. No application-specific evidence, identity selection or tailoring logic belongs here.
+This directory contains a standalone HTML/CSS CV template derived from the recurring visual grammar across the supplied Simran CV references. It is intentionally separate from candidate evidence, vacancy tailoring and the live `cv_pipeline/` templates.
 
 ## Files
 
-- `simran_cv_template.html`: semantic Jinja2 HTML and locked print CSS.
-- `fixtures/one_page.json`: neutral one-page stress fixture.
-- `fixtures/two_page.json`: neutral two-page stress fixture.
-- `render.py`: renders a fixture to HTML and PDF with WeasyPrint.
-- `VISUAL_SPEC.md`: initial source-derived design specification and open measurement questions.
+- `simran_cv_template.html` - semantic Jinja2 template and print CSS
+- `render.py` - renders one JSON payload to HTML and PDF with WeasyPrint
+- `qa_render.py` - renders both fixtures and checks page count, density, section presence and template leakage
+- `fixtures/one_page.json` - dense one-page neutral fixture
+- `fixtures/two_page.json` - naturally paginating two-page neutral fixture
+- `VISUAL_SPEC.md` - source-derived layout rules, tuned tokens and remaining limitations
 
 ## Render
 
@@ -24,20 +23,35 @@ python Templates/simran_cv/render.py \
   --output-dir build/simran-two-page
 ```
 
-The renderer creates `cv.html` and `cv.pdf`.
+Each command writes `cv.html` and `cv.pdf` into the selected output directory.
 
-## Current design principles
+## QA
 
-- A4, single column and print-first.
-- Dense serif typography with restrained spacing.
-- Centred uppercase name and compact contact line.
-- Section labels use small uppercase text and a thin horizontal rule.
-- Role title and employer remain visually distinct from dates.
-- Experience and project bullets share one geometry.
-- Supporting sections are optional and flow naturally.
-- No manual page break is required by the template.
-- No tables, cards, icons, sidebars or decorative colour blocks.
+```bash
+python Templates/simran_cv/qa_render.py
+```
 
-## Status
+The QA script currently enforces:
 
-This is the first implementation scaffold. Geometry is intentionally expressed through CSS variables so it can be tuned after rendered side-by-side comparison with the references. It is not yet wired into the JobHuntAI application pipeline.
+- one-page fixture remains one page;
+- two-page fixture remains two pages;
+- dense fixture is not obviously sparse;
+- final page of the long fixture carries material content;
+- primary sections render;
+- dictionary-method text cannot leak into the PDF.
+
+## Visual principles
+
+- A4 portrait, one column
+- compact serif typography
+- centred uppercase name and one-line contact details
+- bold title-case section headings without decorative rules
+- labelled skill lines
+- role and date on one row, employer and location immediately below
+- compact bullets with a stable hanging indent
+- natural pagination without manual page breaks
+- no sidebars, cards, icons, profile photos or layout tables
+
+## Boundary
+
+This is a visual-template workbench, not yet the production template. Do not connect it to `cv_pipeline/` until WeasyPrint and Chromium parity has been tested and the visual contract has been versioned around the final geometry.
