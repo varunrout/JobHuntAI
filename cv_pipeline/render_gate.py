@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Artefact-level page and first-page checks for generated CV PDFs."""
+"""Artefact-level page, first-page and locked-template checks for generated CV PDFs."""
 from __future__ import annotations
 
 import argparse
@@ -7,6 +7,8 @@ import json
 import re
 import sys
 from pathlib import Path
+
+from visual_gate import check_contract as check_visual_contract
 
 
 def normalise(text: str) -> str:
@@ -19,6 +21,10 @@ def occurrences(text: str, markers: list[str]) -> int:
 
 
 def check(pdf_path: Path, cv_path: Path, diagnostic_path: Path) -> list[tuple[str, str]]:
+    visual_failures = check_visual_contract()
+    if visual_failures:
+        return visual_failures
+
     try:
         from pypdf import PdfReader
     except ImportError as exc:
