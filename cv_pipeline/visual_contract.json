@@ -2,7 +2,7 @@
   "version": "jobhuntai-serif-v1",
   "shared": {
     "font_family_tokens": ["Times New Roman", "Liberation Serif"],
-    "allowed_pdf_font_fragments": ["TimesNewRoman", "LiberationSerif", "NimbusRoman", "Tinos", "DejaVuSerif", "FreeSerif"],
+    "allowed_pdf_font_fragments": ["TimesNewRoman", "LiberationSerif", "Liberation-Serif", "NimbusRoman", "Tinos", "DejaVuSerif", "FreeSerif"],
     "name_size_pt": 17.0,
     "contact_size_pt": 8.35,
     "ink": "#111111",
