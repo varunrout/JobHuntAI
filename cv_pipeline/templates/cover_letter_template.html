@@ -3,22 +3,46 @@
 <head>
 <meta charset="utf-8">
 <style>
-:root { --ink:#111; --link:#0563c1; --rule:#333; --font:"Times New Roman","Liberation Serif",serif; }
-@page { size:A4; margin:14mm 17mm 14mm; }
-* { box-sizing:border-box; margin:0; padding:0; }
-body { font-family:var(--font); font-size:10.2pt; line-height:1.28; color:var(--ink); }
-a { color:var(--link); text-decoration:underline; }
-header { text-align:center; }
-.name { font-size:17pt; font-weight:700; letter-spacing:.01em; text-transform:uppercase; }
-.contact { font-size:8.35pt; margin-top:1mm; white-space:nowrap; }
-.contact span + span::before,
-.contact a + span::before,
-.contact span + a::before,
-.contact a + a::before { content:" | "; color:var(--ink); text-decoration:none; }
-.role { font-size:11.5pt; font-weight:700; border-bottom:.55pt solid var(--rule); padding-bottom:.5mm; margin:3mm 0 .6mm; }
-.meta { display:grid; grid-template-columns:minmax(0,1fr) auto; column-gap:4mm; align-items:baseline; margin-bottom:3mm; }
-p { margin:0 0 2.2mm 0; text-align:justify; }
-.signoff { margin-top:2.4mm; }
+{% include 'shared_visual.css' %}
+@page { size:A4; margin:14mm 17mm; }
+body {
+  font-size:10.2pt;
+  line-height:1.28;
+}
+.letter-body {
+  width:100%;
+  margin:0;
+  padding:0;
+}
+.role {
+  width:100%;
+  margin:3mm 0 .6mm 0;
+  padding:0 0 .5mm 0;
+  font-size:11.5pt;
+  font-weight:700;
+  border-bottom:.55pt solid var(--rule);
+}
+.meta {
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  column-gap:4mm;
+  align-items:baseline;
+  width:100%;
+  margin:0 0 3mm 0;
+  padding:0;
+}
+.meta .date { text-align:right; white-space:nowrap; }
+.letter-body p {
+  width:100%;
+  margin:0 0 2.2mm 0;
+  padding:0;
+  text-align:left;
+}
+.signoff {
+  width:100%;
+  margin:2.4mm 0 0 0;
+  padding:0;
+}
 .name-signature { font-weight:700; }
 </style>
 </head>
@@ -29,10 +53,12 @@ p { margin:0 0 2.2mm 0; text-align:justify; }
     <span>{{ identity.phone }}</span><span><a href="mailto:{{ identity.email }}">{{ identity.email }}</a></span><span><a href="{{ identity.linkedin }}">LinkedIn</a></span><span><a href="{{ identity.portfolio }}">Portfolio</a></span><span><a href="{{ identity.github }}">GitHub</a></span><span>{{ identity.location }}</span>
   </div>
 </header>
-<div class="role">{{ role_title }}</div>
-<div class="meta"><strong>{{ company }}</strong><span>{{ date }}</span></div>
-<p>{{ greeting }}</p>
-{% for paragraph in paragraphs %}<p>{{ paragraph }}</p>{% endfor %}
-<div class="signoff">{{ sign_off or 'Kind regards,' }}<br><span class="name-signature">{{ identity.name }}</span></div>
+<main class="letter-body">
+  <div class="role">{{ role_title }}</div>
+  <div class="meta"><strong>{{ company }}</strong><span class="date">{{ date }}</span></div>
+  <p>{{ greeting }}</p>
+  {% for paragraph in paragraphs %}<p>{{ paragraph }}</p>{% endfor %}
+  <div class="signoff">{{ sign_off or 'Kind regards,' }}<br><span class="name-signature">{{ identity.name }}</span></div>
+</main>
 </body>
 </html>
