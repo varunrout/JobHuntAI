@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ identity.name }} - CV</title>
+<style>
+:root {
+  --ink: #111111;
+  --muted: #343434;
+  --rule: #1f1f1f;
+  --link: #0645ad;
+  --font-serif: "Times New Roman", "Liberation Serif", Georgia, serif;
+  --page-top: 11.5mm;
+  --page-right: 13mm;
+  --page-bottom: 10.5mm;
+  --page-left: 13mm;
+  --body-size: 9.15pt;
+  --body-leading: 1.14;
+  --name-size: 16.8pt;
+  --contact-size: 8.15pt;
+  --section-size: 9.7pt;
+  --section-gap-top: 1.75mm;
+  --section-gap-bottom: 0.65mm;
+  --block-gap: 1.05mm;
+  --bullet-indent: 3.5mm;
+  --bullet-marker-left: 0.35mm;
+}
+
+@page {
+  size: A4;
+  margin: var(--page-top) var(--page-right) var(--page-bottom) var(--page-left);
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  color: var(--ink);
+  font-family: var(--font-serif);
+  font-size: var(--body-size);
+  line-height: var(--body-leading);
+  text-rendering: geometricPrecision;
+}
+a { color: var(--link); text-decoration: underline; }
+p { margin: 0; }
+header { text-align: center; }
+.name {
+  font-size: var(--name-size);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.015em;
+  text-transform: uppercase;
+}
+.contact {
+  margin-top: 0.85mm;
+  font-size: var(--contact-size);
+  line-height: 1.08;
+  white-space: nowrap;
+}
+.contact > * + *::before {
+  content: " | ";
+  color: var(--ink);
+  text-decoration: none;
+}
+
+main { width: 100%; }
+section {
+  margin-top: var(--section-gap-top);
+}
+.section-heading {
+  display: flex;
+  align-items: baseline;
+  gap: 2.2mm;
+  margin: 0 0 var(--section-gap-bottom) 0;
+  font-size: var(--section-size);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.035em;
+  text-transform: uppercase;
+  break-after: avoid;
+}
+.section-heading::after {
+  content: "";
+  flex: 1;
+  border-top: 0.55pt solid var(--rule);
+  transform: translateY(-0.55mm);
+}
+.summary { text-align: justify; }
+
+.skills-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  row-gap: 0.2mm;
+}
+.skill-line { break-inside: avoid; }
+.skill-label { font-weight: 700; }
+
+.entry,
+.project,
+.education-entry,
+.supporting-entry {
+  margin-bottom: var(--block-gap);
+  break-inside: avoid;
+}
+.entry:last-child,
+.project:last-child,
+.education-entry:last-child,
+.supporting-entry:last-child { margin-bottom: 0; }
+.entry-head,
+.project-head,
+.education-head,
+.supporting-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 4mm;
+  align-items: baseline;
+  break-after: avoid;
+}
+.role,
+.project-title,
+.degree,
+.supporting-title { font-weight: 700; }
+.date { white-space: nowrap; }
+.employer,
+.project-meta,
+.education-meta,
+.supporting-meta {
+  color: var(--muted);
+  font-style: italic;
+  break-after: avoid;
+}
+.project-link { font-style: normal; }
+
+.bullets {
+  list-style: none;
+  margin: 0.25mm 0 0 0;
+  padding: 0;
+}
+.bullets li {
+  position: relative;
+  margin: 0 0 0.12mm 0;
+  padding-left: var(--bullet-indent);
+  break-inside: avoid;
+}
+.bullets li::before {
+  content: "•";
+  position: absolute;
+  left: var(--bullet-marker-left);
+  top: 0;
+}
+
+.inline-list { margin: 0; }
+.inline-list span + span::before { content: "; "; }
+
+.avoid-break { break-inside: avoid; }
+.keep-with-next { break-after: avoid; }
+.page-break-before { break-before: page; }
+
+@media screen {
+  body {
+    max-width: 210mm;
+    margin: 0 auto;
+    padding: var(--page-top) var(--page-right) var(--page-bottom) var(--page-left);
+    background: white;
+    box-shadow: 0 0 12px rgba(0,0,0,.12);
+  }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="name">{{ identity.name }}</div>
+  <div class="contact">
+    {% if identity.phone %}<span>{{ identity.phone }}</span>{% endif %}
+    {% if identity.email %}<a href="mailto:{{ identity.email }}">{{ identity.email }}</a>{% endif %}
+    {% if identity.linkedin %}<a href="{{ identity.linkedin }}">LinkedIn</a>{% endif %}
+    {% if identity.portfolio %}<a href="{{ identity.portfolio }}">Portfolio</a>{% endif %}
+    {% if identity.github %}<a href="{{ identity.github }}">GitHub</a>{% endif %}
+    {% if identity.location %}<span>{{ identity.location }}</span>{% endif %}
+  </div>
+</header>
+
+<main>
+{% if summary %}
+<section data-section="summary">
+  <h2 class="section-heading">Professional Summary</h2>
+  <p class="summary">{{ summary }}</p>
+</section>
+{% endif %}
+
+{% if skills %}
+<section data-section="skills">
+  <h2 class="section-heading">Skills</h2>
+  <div class="skills-grid">
+  {% for skill in skills %}
+    <p class="skill-line"><span class="skill-label">{{ skill.category }}:</span> {{ skill.items }}</p>
+  {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{% if experience %}
+<section data-section="experience">
+  <h2 class="section-heading">Experience</h2>
+  {% for item in experience %}
+  <article class="entry{% if item.page_break_before|default(false) %} page-break-before{% endif %}">
+    <div class="entry-head">
+      <div class="role">{{ item.role }}</div>
+      <div class="date">{{ item.dates }}</div>
+    </div>
+    <div class="employer">{{ item.employer }}{% if item.location %}, {{ item.location }}{% endif %}</div>
+    {% if item.bullets %}
+    <ul class="bullets">
+      {% for bullet in item.bullets %}<li>{{ bullet }}</li>{% endfor %}
+    </ul>
+    {% endif %}
+  </article>
+  {% endfor %}
+</section>
+{% endif %}
+
+{% if education %}
+<section data-section="education">
+  <h2 class="section-heading">Education</h2>
+  {% for item in education %}
+  <article class="education-entry">
+    <div class="education-head">
+      <div class="degree">{{ item.degree }}</div>
+      <div class="date">{{ item.dates }}</div>
+    </div>
+    <div class="education-meta">{{ item.institution }}{% if item.location %}, {{ item.location }}{% endif %}</div>
+    {% if item.details %}<p>{{ item.details }}</p>{% endif %}
+  </article>
+  {% endfor %}
+</section>
+{% endif %}
+
+{% if projects %}
+<section data-section="projects">
+  <h2 class="section-heading">Projects</h2>
+  {% for item in projects %}
+  <article class="project">
+    <div class="project-head">
+      <div>
+        <span class="project-title">{{ item.title }}</span>
+        {% if item.tools %}<span class="project-meta"> ({{ item.tools }})</span>{% endif %}
+        {% if item.link %}<span class="project-link"> | <a href="{{ item.link }}">{{ item.link_label|default('GitHub') }}</a></span>{% endif %}
+      </div>
+      <div class="date">{{ item.dates }}</div>
+    </div>
+    {% if item.bullets %}
+    <ul class="bullets">
+      {% for bullet in item.bullets %}<li>{{ bullet }}</li>{% endfor %}
+    </ul>
+    {% endif %}
+  </article>
+  {% endfor %}
+</section>
+{% endif %}
+
+{% for section in supporting_sections|default([]) %}
+<section data-section="supporting">
+  <h2 class="section-heading">{{ section.heading }}</h2>
+  {% for item in section.items %}
+  <article class="supporting-entry">
+    <div class="supporting-head">
+      <div class="supporting-title">{{ item.title }}</div>
+      <div class="date">{{ item.dates|default('') }}</div>
+    </div>
+    {% if item.meta %}<div class="supporting-meta">{{ item.meta }}</div>{% endif %}
+    {% if item.details %}<p>{{ item.details }}</p>{% endif %}
+  </article>
+  {% endfor %}
+</section>
+{% endfor %}
+</main>
+</body>
+</html>
