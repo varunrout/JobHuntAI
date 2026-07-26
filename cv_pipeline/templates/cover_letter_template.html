@@ -42,7 +42,7 @@ header { text-align:center; }
 <div class="meta"><strong>{{ company }}</strong><span>{{ date }}</span></div>
 <p>{{ greeting }}</p>
 {% for paragraph in paragraphs %}<p>{{ paragraph }}</p>{% endfor %}
-<div class="signoff">{{ sign_off or 'Kind regards,' }}<br><span class="name-signature">{{ identity.name }}</span></div>
+<div class="signoff">{{ sign_off|default('Kind regards,', true) }}<br><span class="name-signature">{{ identity.name }}</span></div>
 </main>
 </body>
 </html>
