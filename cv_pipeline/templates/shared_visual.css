@@ -1,0 +1,31 @@
+:root {
+  --ink:#111;
+  --link:#0563c1;
+  --rule:#333;
+  --font:"Times New Roman","Liberation Serif",serif;
+  --name-size:17pt;
+  --contact-size:8.35pt;
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+body { font-family:var(--font); color:var(--ink); }
+a { color:var(--link); text-decoration:underline; }
+header { text-align:center; }
+.name {
+  font-size:var(--name-size);
+  font-weight:700;
+  letter-spacing:.01em;
+  text-transform:uppercase;
+}
+.contact {
+  font-size:var(--contact-size);
+  margin-top:1mm;
+  white-space:nowrap;
+}
+.contact span + span::before,
+.contact a + span::before,
+.contact span + a::before,
+.contact a + a::before {
+  content:" | ";
+  color:var(--ink);
+  text-decoration:none;
+}
