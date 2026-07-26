@@ -26,12 +26,26 @@ jobs:
       - name: Rendered CV geometry passes
         working-directory: cv_pipeline
         run: python tests/test_visual_contract.py VisualContractTests.test_rendered_cv_passes_visual_geometry -v
+      - name: Upload CV visual diagnostic
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cv-visual-diagnostic
+          path: cv_pipeline/visual-diagnostic.json
+          if-no-files-found: ignore
       - name: Bullet-indent regression is caught
         working-directory: cv_pipeline
         run: python tests/test_visual_contract.py VisualContractTests.test_wrapped_bullet_extra_indent_is_blocked -v
       - name: Rendered cover-letter geometry passes
         working-directory: cv_pipeline
         run: python tests/test_visual_contract.py VisualContractTests.test_rendered_cover_letter_passes_visual_geometry -v
+      - name: Upload cover-letter visual diagnostic
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cover-letter-visual-diagnostic
+          path: cv_pipeline/visual-diagnostic.json
+          if-no-files-found: ignore
       - name: Cover-letter grid regression is caught
         working-directory: cv_pipeline
         run: python tests/test_visual_contract.py VisualContractTests.test_shifted_cover_letter_meta_row_is_blocked -v
