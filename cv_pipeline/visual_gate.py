@@ -1,10 +1,5 @@
 #!/usr/bin/env python3
-"""Hard visual contract gate for JobHuntAI CV and cover-letter artefacts.
-
-The HTML templates are canonical. This gate blocks template drift and checks
-rendered PDF geometry, typography, section labels, links, bullet continuation
-alignment and cover-letter column alignment.
-"""
+"""Hard HTML and rendered-PDF visual contract for JobHuntAI artefacts."""
 from __future__ import annotations
 
 import argparse
@@ -33,46 +28,38 @@ def normalise(text: str) -> str:
     return re.sub(r"\s+", " ", text or "").strip()
 
 
-def fmt_num(value: float) -> str:
-    return f"{value:g}"
-
-
-def compact_css(value: str) -> str:
+def compact(value: str) -> str:
     return re.sub(r"\s+", "", value or "").lower()
 
 
+def fmt(value: float) -> str:
+    return f"{value:g}"
+
+
 def css_rule(html: str, selector: str) -> dict[str, str]:
-    match = re.search(re.escape(selector) + r"\s*\{([^}]*)\}", html, flags=re.S)
+    match = re.search(re.escape(selector) + r"\s*\{([^}]*)\}", html, re.S)
     if not match:
         return {}
-    declarations: dict[str, str] = {}
+    out: dict[str, str] = {}
     for item in match.group(1).split(";"):
-        if ":" not in item:
-            continue
-        key, value = item.split(":", 1)
-        declarations[key.strip().lower()] = value.strip()
-    return declarations
+        if ":" in item:
+            key, value = item.split(":", 1)
+            out[key.strip().lower()] = value.strip()
+    return out
 
 
-def css_root_variables(html: str) -> dict[str, str]:
-    return css_rule(html, ":root")
-
-
-def require_decl(
+def require(
     failures: list[tuple[str, str]],
-    declarations: dict[str, str],
+    rule: dict[str, str],
     selector: str,
     key: str,
     expected: str,
 ) -> None:
-    actual = declarations.get(key)
+    actual = rule.get(key)
     if actual is None:
         failures.append(("VISUAL_CSS_MISSING", f"{selector} is missing {key}"))
-    elif compact_css(actual) != compact_css(expected):
-        failures.append((
-            "VISUAL_CSS_DRIFT",
-            f"{selector} {key} is {actual!r}; locked value is {expected!r}",
-        ))
+    elif compact(actual) != compact(expected):
+        failures.append(("VISUAL_CSS_DRIFT", f"{selector} {key} is {actual!r}; expected {expected!r}"))
 
 
 def check_template_contract(
@@ -80,15 +67,15 @@ def check_template_contract(
     cl_html: str | None = None,
 ) -> list[tuple[str, str]]:
     contract = load_json(CONTRACT_PATH)
-    cv_html = cv_html if cv_html is not None else CV_TEMPLATE_PATH.read_text(encoding="utf-8")
-    cl_html = cl_html if cl_html is not None else CL_TEMPLATE_PATH.read_text(encoding="utf-8")
+    cv_html = CV_TEMPLATE_PATH.read_text(encoding="utf-8") if cv_html is None else cv_html
+    cl_html = CL_TEMPLATE_PATH.read_text(encoding="utf-8") if cl_html is None else cl_html
     failures: list[tuple[str, str]] = []
     version = contract["version"]
 
     for label, html in (("CV", cv_html), ("CL", cl_html)):
         if f'data-visual-contract="{version}"' not in html:
-            failures.append(("VISUAL_VERSION_MISSING", f"{label} template does not declare {version}"))
-        if re.search(r"<table\b", html, flags=re.I):
+            failures.append(("VISUAL_VERSION_MISSING", f"{label} template omits {version}"))
+        if re.search(r"<table\b", html, re.I):
             failures.append(("VISUAL_TABLE_FORBIDDEN", f"{label} template contains a table"))
         for token in ("LinkedIn", "Portfolio", "GitHub"):
             if token not in html:
@@ -96,118 +83,123 @@ def check_template_contract(
         if "{{ identity.portfolio }}" not in html:
             failures.append(("PORTFOLIO_BINDING_MISSING", f"{label} template omits identity.portfolio"))
 
-    cv = contract["cv"]
-    shared = contract["shared"]
+    shared, cv, cl = contract["shared"], contract["cv"], contract["cover_letter"]
     if "Selected Projects" in cv_html:
         failures.append(("PROJECT_HEADING_FORBIDDEN", "CV template contains 'Selected Projects'"))
     if cv_html.count("<h2>Projects</h2>") != 2:
-        failures.append((
-            "PROJECT_HEADING_DRIFT",
-            "CV template must render the exact heading 'Projects' in both project-order branches",
-        ))
+        failures.append(("PROJECT_HEADING_DRIFT", "Both project-order branches must use the exact heading 'Projects'"))
     for section in ("summary", "skills", "experience", "projects", "education"):
         if f'data-section="{section}"' not in cv_html:
             failures.append(("SECTION_HOOK_MISSING", f"CV template omits data-section={section!r}"))
     if re.search(r"<ul(?![^>]*class=\"evidence-list\")", cv_html):
-        failures.append(("UNCONTROLLED_LIST_STYLE", "Every CV bullet list must use evidence-list"))
-    if "<main class=\"content-column\">" not in cv_html:
-        failures.append(("CONTENT_COLUMN_MISSING", "CV template omits the locked content column"))
+        failures.append(("UNCONTROLLED_LIST_STYLE", "Every CV list must use evidence-list"))
+    if '<main class="content-column">' not in cv_html:
+        failures.append(("CONTENT_COLUMN_MISSING", "CV template omits content-column"))
 
-    root = css_root_variables(cv_html)
-    require_decl(failures, root, ":root", "--ink", shared["ink"])
-    require_decl(failures, root, ":root", "--link", shared["link"])
-    require_decl(failures, root, ":root", "--rule", shared["rule"])
-    require_decl(failures, root, ":root", "--body-size", f'{cv["body_size_pt"]}pt')
-    require_decl(failures, root, ":root", "--body-line-height", str(cv["body_line_height"]))
-    require_decl(failures, root, ":root", "--bullet-text-indent", f'{cv["bullet_text_indent_mm"]}mm')
-    require_decl(failures, root, ":root", "--bullet-marker-offset", f'{cv["bullet_marker_offset_mm"]}mm')
+    root = css_rule(cv_html, ":root")
+    for key, value in (
+        ("--ink", shared["ink"]),
+        ("--link", shared["link"]),
+        ("--rule", shared["rule"]),
+        ("--body-size", f'{cv["body_size_pt"]}pt'),
+        ("--body-line-height", str(cv["body_line_height"])),
+        ("--bullet-text-indent", f'{cv["bullet_text_indent_mm"]}mm'),
+        ("--bullet-marker-offset", f'{cv["bullet_marker_offset_mm"]}mm'),
+    ):
+        require(failures, root, ":root", key, value)
 
-    page = css_rule(cv_html, "@page")
-    margins = cv["page_margin_mm"]
-    require_decl(
+    require(
         failures,
-        page,
+        css_rule(cv_html, "@page"),
         "@page",
         "margin",
-        f"{fmt_num(margins[0])}mm {fmt_num(margins[1])}mm {fmt_num(margins[2])}mm {fmt_num(margins[3])}mm",
+        " ".join(f"{fmt(value)}mm" for value in cv["page_margin_mm"]),
     )
     body = css_rule(cv_html, f'body[data-visual-contract="{version}"]')
-    require_decl(failures, body, "CV body", "font-family", "var(--font)")
-    require_decl(failures, body, "CV body", "font-size", "var(--body-size)")
-    require_decl(failures, body, "CV body", "line-height", "var(--body-line-height)")
+    for key, value in (
+        ("font-family", "var(--font)"),
+        ("font-size", "var(--body-size)"),
+        ("line-height", "var(--body-line-height)"),
+    ):
+        require(failures, body, "CV body", key, value)
 
     content_column = css_rule(cv_html, ".content-column")
-    require_decl(failures, content_column, ".content-column", "width", "100%")
-    require_decl(failures, content_column, ".content-column", "margin", "0")
-    require_decl(failures, content_column, ".content-column", "padding", "0")
+    for key, value in (("width", "100%"), ("margin", "0"), ("padding", "0")):
+        require(failures, content_column, ".content-column", key, value)
 
     evidence = css_rule(cv_html, ".evidence-list")
-    require_decl(failures, evidence, ".evidence-list", "list-style", "none")
-    require_decl(failures, evidence, ".evidence-list", "font-size", "var(--body-size)")
-    require_decl(failures, evidence, ".evidence-list", "line-height", "var(--body-line-height)")
+    for key, value in (
+        ("list-style", "none"),
+        ("font-size", "var(--body-size)"),
+        ("line-height", "var(--body-line-height)"),
+    ):
+        require(failures, evidence, ".evidence-list", key, value)
 
-    li = css_rule(cv_html, ".evidence-list li")
-    require_decl(failures, li, ".evidence-list li", "position", "relative")
-    require_decl(failures, li, ".evidence-list li", "padding-left", "var(--bullet-text-indent)")
-    require_decl(failures, li, ".evidence-list li", "text-indent", "0")
-    require_decl(failures, li, ".evidence-list li", "font-size", "var(--body-size)")
-    require_decl(failures, li, ".evidence-list li", "line-height", "var(--body-line-height)")
+    bullet = css_rule(cv_html, ".evidence-list li")
+    for key, value in (
+        ("position", "relative"),
+        ("padding-left", "var(--bullet-text-indent)"),
+        ("text-indent", "0"),
+        ("font-size", "var(--body-size)"),
+        ("line-height", "var(--body-line-height)"),
+    ):
+        require(failures, bullet, ".evidence-list li", key, value)
 
     marker = css_rule(cv_html, ".evidence-list li::before")
-    require_decl(failures, marker, ".evidence-list li::before", "content", '"•"')
-    require_decl(failures, marker, ".evidence-list li::before", "position", "absolute")
-    require_decl(failures, marker, ".evidence-list li::before", "left", "var(--bullet-marker-offset)")
-    require_decl(failures, marker, ".evidence-list li::before", "font-size", "var(--body-size)")
+    for key, value in (
+        ("content", '"•"'),
+        ("position", "absolute"),
+        ("left", "var(--bullet-marker-offset)"),
+        ("font-size", "var(--body-size)"),
+    ):
+        require(failures, marker, ".evidence-list li::before", key, value)
 
-    cl = contract["cover_letter"]
-    if "<main class=\"letter-column\">" not in cl_html:
-        failures.append(("LETTER_COLUMN_MISSING", "Cover-letter template omits the locked letter column"))
-    expected_order = [
+    if '<main class="letter-column">' not in cl_html:
+        failures.append(("LETTER_COLUMN_MISSING", "Cover-letter template omits letter-column"))
+    locked_order = (
         '<div class="role">{{ role_title }}</div>',
         '<div class="meta"><strong>{{ company }}</strong><span>{{ date }}</span></div>',
         '<p>{{ greeting }}</p>',
-    ]
-    positions = [cl_html.find(item) for item in expected_order]
+    )
+    positions = [cl_html.find(item) for item in locked_order]
     if any(position < 0 for position in positions) or positions != sorted(positions):
         failures.append(("LETTER_STRUCTURE_DRIFT", "Role, company/date and greeting are not in locked order"))
 
-    cl_root = css_root_variables(cl_html)
-    require_decl(failures, cl_root, "CL :root", "--body-size", f'{cl["body_size_pt"]}pt')
-    require_decl(failures, cl_root, "CL :root", "--body-line-height", str(cl["body_line_height"]))
-
-    cl_page = css_rule(cl_html, "@page")
-    cl_margins = cl["page_margin_mm"]
-    require_decl(
+    cl_root = css_rule(cl_html, ":root")
+    require(failures, cl_root, "CL :root", "--body-size", f'{cl["body_size_pt"]}pt')
+    require(failures, cl_root, "CL :root", "--body-line-height", str(cl["body_line_height"]))
+    require(
         failures,
-        cl_page,
+        css_rule(cl_html, "@page"),
         "CL @page",
         "margin",
-        f"{fmt_num(cl_margins[0])}mm {fmt_num(cl_margins[1])}mm {fmt_num(cl_margins[2])}mm {fmt_num(cl_margins[3])}mm",
+        " ".join(f"{fmt(value)}mm" for value in cl["page_margin_mm"]),
     )
     letter_column = css_rule(cl_html, ".letter-column")
-    for key, expected in (("width", "100%"), ("margin", "0"), ("padding", "0")):
-        require_decl(failures, letter_column, ".letter-column", key, expected)
+    for key, value in (("width", "100%"), ("margin", "0"), ("padding", "0")):
+        require(failures, letter_column, ".letter-column", key, value)
 
     role = css_rule(cl_html, ".role")
-    require_decl(failures, role, ".role", "width", "100%")
-    require_decl(failures, role, ".role", "margin", "3mm 0 .6mm 0")
-    require_decl(failures, role, ".role", "font-size", f'{cl["role_size_pt"]}pt')
+    for key, value in (
+        ("width", "100%"),
+        ("margin", "3mm 0 .6mm 0"),
+        ("font-size", f'{cl["role_size_pt"]}pt'),
+    ):
+        require(failures, role, ".role", key, value)
 
     meta = css_rule(cl_html, ".meta")
-    for key, expected in (
+    for key, value in (
         ("width", "100%"),
         ("margin", "0 0 3mm 0"),
         ("padding", "0"),
         ("display", "grid"),
         ("grid-template-columns", "minmax(0,1fr) auto"),
     ):
-        require_decl(failures, meta, ".meta", key, expected)
+        require(failures, meta, ".meta", key, value)
 
     paragraphs = css_rule(cl_html, ".letter-column p")
-    require_decl(failures, paragraphs, ".letter-column p", "width", "100%")
-    require_decl(failures, paragraphs, ".letter-column p", "margin", "0 0 2.2mm 0")
-    require_decl(failures, paragraphs, ".letter-column p", "padding", "0")
-
+    for key, value in (("width", "100%"), ("margin", "0 0 2.2mm 0"), ("padding", "0")):
+        require(failures, paragraphs, ".letter-column p", key, value)
     return failures
 
 
@@ -215,8 +207,12 @@ def _open_pdf(path: Path):
     try:
         import fitz
     except ImportError as exc:
-        raise RuntimeError(f"PyMuPDF is required for visual PDF checks: {exc}") from exc
+        raise RuntimeError(f"PyMuPDF is required: {exc}") from exc
     return fitz.open(str(path))
+
+
+def _blocks(page) -> list[dict[str, Any]]:
+    return [block for block in page.get_text("dict").get("blocks", []) if block.get("type") == 0]
 
 
 def _block_text(block: dict[str, Any]) -> str:
@@ -226,54 +222,27 @@ def _block_text(block: dict[str, Any]) -> str:
     ))
 
 
-def _text_blocks(page) -> list[dict[str, Any]]:
-    return [
-        block for block in page.get_text("dict").get("blocks", [])
-        if block.get("type") == 0
-    ]
-
-
-def _find_block_exact(page, needle: str) -> dict[str, Any] | None:
-    target = normalise(needle)
+def _find_block(page, needle: str, exact: bool = False) -> dict[str, Any] | None:
+    target = normalise(needle).casefold()
     if not target:
         return None
-    for block in _text_blocks(page):
-        if _block_text(block) == target:
-            return block
-    return None
-
-
-def _find_block(page, needle: str) -> dict[str, Any] | None:
-    target = normalise(needle)
-    if not target:
-        return None
-    for block in _text_blocks(page):
-        if target in _block_text(block):
+    for block in _blocks(page):
+        value = _block_text(block).casefold()
+        if (value == target) if exact else (target in value):
             return block
     return None
 
 
 def _span_sizes(block: dict[str, Any]) -> list[float]:
-    sizes: list[float] = []
-    for line in block.get("lines", []):
-        for span in line.get("spans", []):
-            text = span.get("text", "")
-            if text.strip():
-                sizes.append(float(span.get("size", 0.0)))
-    return sizes
+    return [
+        float(span.get("size", 0))
+        for line in block.get("lines", [])
+        for span in line.get("spans", [])
+        if span.get("text", "").strip()
+    ]
 
 
-def _pdf_link_uris(document) -> list[str]:
-    uris: list[str] = []
-    for page in document:
-        for link in page.get_links():
-            uri = link.get("uri")
-            if uri:
-                uris.append(uri)
-    return uris
-
-
-def _check_font_size(
+def _check_size(
     failures: list[tuple[str, str]],
     label: str,
     sizes: list[float],
@@ -281,29 +250,47 @@ def _check_font_size(
     tolerance: float,
 ) -> None:
     if not sizes:
-        failures.append(("VISUAL_TEXT_NOT_FOUND", f"No font-size evidence found for {label}"))
+        failures.append(("VISUAL_TEXT_NOT_FOUND", f"No size evidence found for {label}"))
         return
     actual = statistics.median(sizes)
     if abs(actual - expected) > tolerance:
-        failures.append((
-            "VISUAL_FONT_SIZE",
-            f"{label} is {actual:.2f} pt; locked size is {expected:.2f} pt",
-        ))
+        failures.append(("VISUAL_FONT_SIZE", f"{label} is {actual:.2f} pt; expected {expected:.2f} pt"))
 
 
-def _first_nonspace_char_x(line: dict[str, Any], exclude_bullet: bool = False) -> float | None:
-    for span in line.get("spans", []):
-        for char in span.get("chars", []):
-            value = char.get("c", "")
-            if not value.strip():
-                continue
-            if exclude_bullet and value == "•":
-                continue
-            return float(char["bbox"][0])
-    return None
+def _links(document) -> list[str]:
+    return [
+        link["uri"]
+        for page in document
+        for link in page.get_links()
+        if link.get("uri")
+    ]
 
 
-def _line_text_raw(line: dict[str, Any]) -> str:
+def _font_names(document) -> set[str]:
+    return {
+        str(span.get("font", ""))
+        for page in document
+        for block in _blocks(page)
+        for line in block.get("lines", [])
+        for span in line.get("spans", [])
+        if span.get("text", "").strip()
+    }
+
+
+def _check_fonts(
+    failures: list[tuple[str, str]],
+    document,
+    allowed: list[str],
+) -> None:
+    bad = [
+        name for name in _font_names(document)
+        if name and not any(fragment.casefold() in name.casefold() for fragment in allowed)
+    ]
+    if bad:
+        failures.append(("VISUAL_FONT_FAMILY", "Non-contract fonts: " + ", ".join(sorted(bad))))
+
+
+def _raw_line_text(line: dict[str, Any]) -> str:
     return "".join(
         char.get("c", "")
         for span in line.get("spans", [])
@@ -311,258 +298,172 @@ def _line_text_raw(line: dict[str, Any]) -> str:
     )
 
 
-def _check_bullet_geometry(page, body_size: float, contract: dict[str, Any]) -> list[tuple[str, str]]:
-    failures: list[tuple[str, str]] = []
-    raw = page.get_text("rawdict")
-    tolerance = float(contract["cv"]["bullet_alignment_tolerance_pt"])
-    font_tolerance = float(contract["shared"]["font_tolerance_pt"])
-    bullet_blocks = 0
+def _first_char_x(line: dict[str, Any], skip_bullet: bool = False) -> float | None:
+    for span in line.get("spans", []):
+        for char in span.get("chars", []):
+            value = char.get("c", "")
+            if not value.strip() or (skip_bullet and value == "•"):
+                continue
+            return float(char["bbox"][0])
+    return None
 
-    for block in raw.get("blocks", []):
+
+def _check_bullets(page, contract: dict[str, Any]) -> list[tuple[str, str]]:
+    failures: list[tuple[str, str]] = []
+    body_size = float(contract["cv"]["body_size_pt"])
+    align_tolerance = float(contract["cv"]["bullet_alignment_tolerance_pt"])
+    font_tolerance = float(contract["shared"]["font_tolerance_pt"])
+    measured = 0
+
+    for block in page.get_text("rawdict").get("blocks", []):
         if block.get("type") != 0:
             continue
         lines = block.get("lines", [])
-        if not any("•" in _line_text_raw(line) for line in lines):
+        if not any("•" in _raw_line_text(line) for line in lines):
             continue
-        bullet_blocks += 1
-        bullet_xs: list[float] = []
-        text_lines: list[dict[str, Any]] = []
-        text_sizes: list[float] = []
-
+        measured += 1
+        bullet_xs, text_xs, sizes = [], [], []
         for line in lines:
-            text = _line_text_raw(line)
+            text = _raw_line_text(line)
             if "•" in text:
-                bullet_x = _first_nonspace_char_x(line)
-                if bullet_x is not None:
-                    bullet_xs.append(bullet_x)
+                x = _first_char_x(line)
+                if x is not None:
+                    bullet_xs.append(x)
             if text.strip() and text.strip() != "•":
-                text_lines.append(line)
+                x = _first_char_x(line, skip_bullet=True)
+                if x is not None:
+                    text_xs.append(x)
                 for span in line.get("spans", []):
-                    span_text = "".join(char.get("c", "") for char in span.get("chars", []))
-                    if span_text.strip() and span_text.strip() != "•":
-                        text_sizes.append(float(span.get("size", 0.0)))
+                    chars = "".join(char.get("c", "") for char in span.get("chars", []))
+                    if chars.strip() and chars.strip() != "•":
+                        sizes.append(float(span.get("size", 0)))
 
-        if not text_lines:
-            failures.append(("BULLET_TEXT_MISSING", "A bullet marker has no text"))
-            continue
-        text_xs = [_first_nonspace_char_x(line, exclude_bullet=True) for line in text_lines]
-        text_xs = [x for x in text_xs if x is not None]
         if not text_xs:
-            failures.append(("BULLET_TEXT_MISSING", "Unable to locate bullet text start"))
+            failures.append(("BULLET_TEXT_MISSING", "Bullet marker has no measurable text"))
             continue
         first_x = text_xs[0]
         for continuation_x in text_xs[1:]:
-            if abs(continuation_x - first_x) > tolerance:
+            if abs(continuation_x - first_x) > align_tolerance:
                 failures.append((
                     "BULLET_CONTINUATION_INDENT",
-                    f"Wrapped bullet line starts at {continuation_x:.2f} pt, first line at {first_x:.2f} pt",
+                    f"Wrapped line starts at {continuation_x:.2f} pt; first line starts at {first_x:.2f} pt",
                 ))
-        if bullet_xs and not all(bullet_x < first_x for bullet_x in bullet_xs):
+        if bullet_xs and not all(x < first_x for x in bullet_xs):
             failures.append(("BULLET_MARKER_POSITION", "Bullet marker is not left of its text"))
-        if text_sizes:
-            actual_size = statistics.median(text_sizes)
-            if abs(actual_size - body_size) > font_tolerance:
-                failures.append((
-                    "BULLET_FONT_SIZE",
-                    f"Bullet text is {actual_size:.2f} pt; locked body size is {body_size:.2f} pt",
-                ))
+        if sizes and abs(statistics.median(sizes) - body_size) > font_tolerance:
+            failures.append(("BULLET_FONT_SIZE", f"Bullet text is {statistics.median(sizes):.2f} pt; expected {body_size:.2f} pt"))
 
-    if bullet_blocks == 0:
-        failures.append(("BULLET_GEOMETRY_MISSING", "Rendered CV contains no measurable bullet blocks"))
+    if measured == 0:
+        failures.append(("BULLET_GEOMETRY_MISSING", "No measurable bullet blocks found"))
     return failures
 
 
-def _pdf_font_names(document) -> set[str]:
-    names: set[str] = set()
-    for page in document:
-        for block in _text_blocks(page):
-            for line in block.get("lines", []):
-                for span in line.get("spans", []):
-                    if span.get("text", "").strip():
-                        names.add(str(span.get("font", "")))
-    return names
-
-
-def _check_pdf_fonts(
-    failures: list[tuple[str, str]],
-    document,
-    allowed_fragments: list[str],
-) -> None:
-    names = _pdf_font_names(document)
-    disallowed = [
-        name for name in names
-        if name and not any(fragment.lower() in name.lower() for fragment in allowed_fragments)
-    ]
-    if disallowed:
-        failures.append((
-            "VISUAL_FONT_FAMILY",
-            "Rendered PDF contains non-contract fonts: " + ", ".join(sorted(disallowed)),
-        ))
-
-
-def check_cv_pdf(
-    pdf_path: Path,
-    cv: dict[str, Any],
-) -> list[tuple[str, str]]:
+def check_cv_pdf(pdf_path: Path, payload: dict[str, Any]) -> list[tuple[str, str]]:
     contract = load_json(CONTRACT_PATH)
-    shared = contract["shared"]
-    cv_contract = contract["cv"]
+    shared, cv = contract["shared"], contract["cv"]
     failures: list[tuple[str, str]] = []
     document = _open_pdf(pdf_path)
-
-    max_pages = int(cv_contract["default_max_pages"])
-    if cv.get("page_limit_exception"):
-        max_pages = 2
+    max_pages = 2 if payload.get("page_limit_exception") else int(cv["default_max_pages"])
     if len(document) > max_pages:
         failures.append(("VISUAL_PAGE_COUNT", f"CV has {len(document)} pages; maximum is {max_pages}"))
     if not document:
         return [("VISUAL_EMPTY_PDF", "CV PDF has no pages")]
 
-    _check_pdf_fonts(failures, document, shared["allowed_pdf_font_fragments"])
-    first = document[0]
-    text = normalise(first.get_text())
-    for forbidden in cv_contract["forbidden_headings"]:
-        if forbidden in text:
-            failures.append(("PROJECT_HEADING_FORBIDDEN", f"Rendered CV contains {forbidden!r}"))
-    if cv.get("projects") and "Projects" not in text:
-        failures.append(("PROJECT_HEADING_MISSING", "Rendered CV does not contain the exact heading 'Projects'"))
+    _check_fonts(failures, document, shared["allowed_pdf_font_fragments"])
+    page = document[0]
+    text = normalise(page.get_text())
+    for heading in cv["forbidden_headings"]:
+        if heading in text:
+            failures.append(("PROJECT_HEADING_FORBIDDEN", f"Rendered CV contains {heading!r}"))
+    if payload.get("projects") and "Projects" not in text:
+        failures.append(("PROJECT_HEADING_MISSING", "Rendered CV omits the exact heading 'Projects'"))
 
-    expected_left = mm_to_pt(float(cv_contract["page_margin_mm"][1]))
-    geometry_tolerance = float(shared["geometry_tolerance_pt"])
-    required_headings = ["Professional Summary", "Skills", "Experience", "Education"]
-    if cv.get("projects"):
-        required_headings.append("Projects")
-    heading_xs: list[float] = []
-    for heading in required_headings:
-        block = _find_block_exact(first, heading)
+    expected_left = mm_to_pt(float(cv["page_margin_mm"][1]))
+    tolerance = float(shared["geometry_tolerance_pt"])
+    headings = ["Professional Summary", "Skills", "Experience", "Education"]
+    if payload.get("projects"):
+        headings.append("Projects")
+    x_values = []
+    for heading in headings:
+        block = _find_block(page, heading, exact=True)
         if block is None:
             failures.append(("SECTION_HEADING_MISSING", f"Rendered CV omits {heading!r}"))
             continue
         x0 = float(block["bbox"][0])
-        heading_xs.append(x0)
-        if abs(x0 - expected_left) > geometry_tolerance:
-            failures.append((
-                "SECTION_LEFT_EDGE",
-                f"{heading!r} starts at {x0:.2f} pt; locked left edge is {expected_left:.2f} pt",
-            ))
-        _check_font_size(
+        x_values.append(x0)
+        if abs(x0 - expected_left) > tolerance:
+            failures.append(("SECTION_LEFT_EDGE", f"{heading!r} starts at {x0:.2f} pt; expected {expected_left:.2f} pt"))
+        _check_size(
             failures,
             f"heading {heading}",
             _span_sizes(block),
-            float(cv_contract["heading_size_pt"]),
+            float(cv["heading_size_pt"]),
             float(shared["font_tolerance_pt"]),
         )
-    if heading_xs and max(heading_xs) - min(heading_xs) > geometry_tolerance:
-        failures.append(("SECTION_GRID_DRIFT", "CV section headings do not share one left edge"))
+    if x_values and max(x_values) - min(x_values) > tolerance:
+        failures.append(("SECTION_GRID_DRIFT", "CV headings do not share one left edge"))
 
-    name = str(cv.get("identity", {}).get("name", ""))
-    name_block = _find_block(first, name)
+    name = str(payload.get("identity", {}).get("name", ""))
+    name_block = _find_block(page, name)
     if name_block:
-        _check_font_size(
-            failures,
-            "candidate name",
-            _span_sizes(name_block),
-            float(shared["name_size_pt"]),
-            float(shared["font_tolerance_pt"]),
-        )
+        _check_size(failures, "candidate name", _span_sizes(name_block), float(shared["name_size_pt"]), float(shared["font_tolerance_pt"]))
     else:
-        failures.append(("NAME_MISSING", "Candidate name is not visible in the CV PDF"))
+        failures.append(("NAME_MISSING", "Candidate name is not visible"))
 
-    failures.extend(_check_bullet_geometry(first, float(cv_contract["body_size_pt"]), contract))
-
-    uris = _pdf_link_uris(document)
-    if not any(shared["portfolio_uri_contains"] in uri for uri in uris):
+    failures.extend(_check_bullets(page, contract))
+    if not any(shared["portfolio_uri_contains"] in uri for uri in _links(document)):
         failures.append(("PORTFOLIO_LINK_MISSING", "Rendered CV has no clickable portfolio link"))
     return failures
 
 
-def check_cover_letter_pdf(
-    pdf_path: Path,
-    payload: dict[str, Any],
-) -> list[tuple[str, str]]:
+def check_cover_letter_pdf(pdf_path: Path, payload: dict[str, Any]) -> list[tuple[str, str]]:
     contract = load_json(CONTRACT_PATH)
-    shared = contract["shared"]
-    cl_contract = contract["cover_letter"]
+    shared, cl = contract["shared"], contract["cover_letter"]
     failures: list[tuple[str, str]] = []
     document = _open_pdf(pdf_path)
-
-    if len(document) > int(cl_contract["default_max_pages"]):
+    if len(document) > int(cl["default_max_pages"]):
         failures.append(("VISUAL_PAGE_COUNT", f"Cover letter has {len(document)} pages; maximum is 1"))
     if not document:
         return [("VISUAL_EMPTY_PDF", "Cover-letter PDF has no pages")]
 
-    _check_pdf_fonts(failures, document, shared["allowed_pdf_font_fragments"])
-    first = document[0]
-    expected_left = mm_to_pt(float(cl_contract["page_margin_mm"][1]))
-    expected_right = float(first.rect.width) - expected_left
+    _check_fonts(failures, document, shared["allowed_pdf_font_fragments"])
+    page = document[0]
+    left = mm_to_pt(float(cl["page_margin_mm"][1]))
+    right = float(page.rect.width) - left
     tolerance = float(shared["geometry_tolerance_pt"])
-
     targets = [
         ("role title", str(payload.get("role_title", ""))),
         ("company/date row", str(payload.get("company", ""))),
         ("greeting", str(payload.get("greeting", ""))),
     ]
-    paragraphs = payload.get("paragraphs", [])
-    if paragraphs:
-        targets.append(("first body paragraph", str(paragraphs[0])))
+    if payload.get("paragraphs"):
+        targets.append(("first body paragraph", str(payload["paragraphs"][0])))
 
-    blocks: dict[str, dict[str, Any]] = {}
-    for label, text in targets:
-        block = _find_block(first, text)
+    found: dict[str, dict[str, Any]] = {}
+    for label, value in targets:
+        block = _find_block(page, value)
         if block is None:
             failures.append(("LETTER_TEXT_MISSING", f"Unable to locate {label}"))
             continue
-        blocks[label] = block
-        x0 = float(block["bbox"][0])
-        if abs(x0 - expected_left) > tolerance:
-            failures.append((
-                "LETTER_LEFT_EDGE",
-                f"{label} starts at {x0:.2f} pt; locked left edge is {expected_left:.2f} pt",
-            ))
+        found[label] = block
+        if abs(float(block["bbox"][0]) - left) > tolerance:
+            failures.append(("LETTER_LEFT_EDGE", f"{label} starts at {float(block['bbox'][0]):.2f} pt; expected {left:.2f} pt"))
 
-    meta_block = blocks.get("company/date row")
-    if meta_block is not None:
-        x1 = float(meta_block["bbox"][2])
-        if abs(x1 - expected_right) > tolerance:
-            failures.append((
-                "LETTER_RIGHT_EDGE",
-                f"Company/date row ends at {x1:.2f} pt; locked right edge is {expected_right:.2f} pt",
-            ))
-
-    role_block = blocks.get("role title")
-    if role_block is not None:
-        _check_font_size(
-            failures,
-            "cover-letter role title",
-            _span_sizes(role_block),
-            float(cl_contract["role_size_pt"]),
-            float(shared["font_tolerance_pt"]),
-        )
-    paragraph_block = blocks.get("first body paragraph")
-    if paragraph_block is not None:
-        _check_font_size(
-            failures,
-            "cover-letter body",
-            _span_sizes(paragraph_block),
-            float(cl_contract["body_size_pt"]),
-            float(shared["font_tolerance_pt"]),
-        )
+    meta = found.get("company/date row")
+    if meta and abs(float(meta["bbox"][2]) - right) > tolerance:
+        failures.append(("LETTER_RIGHT_EDGE", f"Company/date row ends at {float(meta['bbox'][2]):.2f} pt; expected {right:.2f} pt"))
+    if found.get("role title"):
+        _check_size(failures, "cover-letter role title", _span_sizes(found["role title"]), float(cl["role_size_pt"]), float(shared["font_tolerance_pt"]))
+    if found.get("first body paragraph"):
+        _check_size(failures, "cover-letter body", _span_sizes(found["first body paragraph"]), float(cl["body_size_pt"]), float(shared["font_tolerance_pt"]))
 
     name = str(payload.get("identity", {}).get("name", ""))
-    name_block = _find_block(first, name)
+    name_block = _find_block(page, name)
     if name_block:
-        _check_font_size(
-            failures,
-            "cover-letter candidate name",
-            _span_sizes(name_block),
-            float(shared["name_size_pt"]),
-            float(shared["font_tolerance_pt"]),
-        )
+        _check_size(failures, "cover-letter candidate name", _span_sizes(name_block), float(shared["name_size_pt"]), float(shared["font_tolerance_pt"]))
     else:
-        failures.append(("NAME_MISSING", "Candidate name is not visible in the cover-letter PDF"))
-
-    uris = _pdf_link_uris(document)
-    if not any(shared["portfolio_uri_contains"] in uri for uri in uris):
+        failures.append(("NAME_MISSING", "Candidate name is not visible"))
+    if not any(shared["portfolio_uri_contains"] in uri for uri in _links(document)):
         failures.append(("PORTFOLIO_LINK_MISSING", "Rendered cover letter has no clickable portfolio link"))
     return failures
 
@@ -578,12 +479,12 @@ def main() -> int:
     failures = check_template_contract()
     if args.cv_pdf or args.cv_json:
         if not (args.cv_pdf and args.cv_json):
-            failures.append(("ARGUMENT_ERROR", "--cv-pdf and --cv-json must be provided together"))
+            failures.append(("ARGUMENT_ERROR", "--cv-pdf and --cv-json are required together"))
         else:
             failures.extend(check_cv_pdf(Path(args.cv_pdf), load_json(Path(args.cv_json))))
     if args.cl_pdf or args.cl_json:
         if not (args.cl_pdf and args.cl_json):
-            failures.append(("ARGUMENT_ERROR", "--cl-pdf and --cl-json must be provided together"))
+            failures.append(("ARGUMENT_ERROR", "--cl-pdf and --cl-json are required together"))
         else:
             failures.extend(check_cover_letter_pdf(Path(args.cl_pdf), load_json(Path(args.cl_json))))
 
