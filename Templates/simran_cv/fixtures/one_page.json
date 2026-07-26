@@ -8,56 +8,87 @@
     "github": "https://github.com/example",
     "location": "London, UK"
   },
-  "summary": "Applied data professional with experience building reliable analytical pipelines, evaluated predictive models and clear decision-support tools. Combines structured problem framing, careful validation and concise communication to move work from raw data to practical use without overstating results or hiding limitations.",
+  "summary": "Data professional with 3+ years building production pipelines, validation frameworks and analytical products across enterprise environments. Strong Python, SQL and cloud-data foundation with hands-on experience in orchestration, modelling and dashboard delivery. Bias toward reliable systems, concise documentation and evidence that survives operational use.",
   "skills": [
-    {"category": "Programming", "items": "Python, SQL, pandas, NumPy and Git"},
-    {"category": "Modelling", "items": "forecasting, regression, classification, cross-validation and calibration"},
-    {"category": "Data and delivery", "items": "ETL, data-quality checks, CI/CD, testing, dashboards and documentation"}
+    {"category": "Cloud & Data", "items": "Azure Data Factory, Databricks, Fabric, Snowflake, PostgreSQL and Delta Lake"},
+    {"category": "Programming", "items": "Python, SQL, PySpark, pandas, NumPy, Bash and Git"},
+    {"category": "Pipelines & Quality", "items": "ETL/ELT, batch ingestion, schema validation, reconciliation, anomaly detection and monitoring"},
+    {"category": "Modelling & Analytics", "items": "forecasting, regression, classification, statistical testing and model evaluation"},
+    {"category": "Delivery", "items": "CI/CD, automated testing, Power BI, Streamlit, documentation and stakeholder communication"}
   ],
   "experience": [
     {
-      "role": "Data Analyst",
-      "employer": "Northstar Analytics",
+      "role": "Data Engineer",
+      "employer": "Northstar Retail Co-operative",
       "location": "London, UK",
-      "dates": "2024 - Present",
+      "dates": "March 2025 - Present",
       "bullets": [
-        "Built a repeatable forecasting workflow from operational data, benchmarked candidate methods on held-out periods and documented the assumptions used in monthly planning.",
-        "Automated validation and reporting checks, reducing manual preparation time and giving stakeholders a clearer view of missing, stale and inconsistent inputs.",
-        "Created compact dashboards and written summaries that translated model behaviour into concrete planning decisions for non-technical colleagues."
+        "Own production data pipelines integrating ERP, SFTP, REST API and third-party feeds into governed lakehouse layers.",
+        "Deliver a warehouse migration across more than one hundred tables with reconciliation, parallel-run validation and performance tuning.",
+        "Led root cause investigation on a multi-week silent ingestion failure and redesigned source-count checks to detect schema drift on arrival.",
+        "Partner with finance, BI and engineering teams to translate operational requirements into tested data products.",
+        "Model curated reporting layers for operational and executive users, documenting ownership, refresh expectations and upstream dependencies.",
+        "Maintain incident notes and controlled handovers so recurring jobs can be supported without relying on undocumented personal knowledge.",
+        "Build Power BI reporting layers over curated datasets for operational and executive users, with validation checks aligned to source-system totals.",
+        "Prototype unproven technical approaches in small, reviewable increments before introducing them into recurring production work."
       ]
     },
     {
-      "role": "Junior Data Engineer",
-      "employer": "Cedar Systems",
-      "location": "Manchester, UK",
-      "dates": "2022 - 2024",
+      "role": "Research Assistant",
+      "employer": "Example University",
+      "location": "Glasgow, UK",
+      "dates": "Nov 2024 - Mar 2025",
       "bullets": [
-        "Developed Python and SQL transformations for scheduled data pipelines and added checks for schema drift, duplicate records and failed loads.",
-        "Worked with analysts and software engineers to trace data issues, improve documentation and stabilise recurring production jobs."
+        "Built reproducible statistical validation workflows with calibration checks, truth tables and auditable documentation.",
+        "Applied comparative analytical methods to identify pathways across a public-service dataset and translated the findings into concise evidence for programme leads.",
+        "Maintained reproducible scripts, versioned inputs and review notes so analytical outputs could be audited and rerun by another researcher.",
+        "Prepared structured comparison tables and concise presentation material for an interdisciplinary audience."
+      ]
+    },
+    {
+      "role": "Data Consultant",
+      "employer": "Cedar Software Company",
+      "location": "Delhi, India",
+      "dates": "Mar 2023 - Jul 2023",
+      "bullets": [
+        "Integrated Python and SQL with an enterprise ERP platform, improving data-quality reliability and supporting stakeholder validation through dashboards.",
+        "Built validation dashboards for business review and maintained pull-request checks across a cross-functional delivery team.",
+        "Worked with business users to reconcile source counts and agree acceptance checks before release.",
+        "Documented transformation logic and source-to-target mappings for controlled production handover."
+      ]
+    },
+    {
+      "role": "Python Cloud Developer",
+      "employer": "Blue Ridge Technology",
+      "location": "Delhi, India",
+      "dates": "Jun 2022 - Nov 2022",
+      "bullets": [
+        "Built and evaluated computer-vision inference pipelines in Python, then deployed repeatable services with containers on cloud infrastructure.",
+        "Automated evaluation against stable benchmarks and documented deployment, monitoring and rollback procedures for each release."
+      ]
+    },
+    {
+      "role": "Technical Lead",
+      "employer": "Community Analytics Foundation",
+      "location": "Delhi, India",
+      "dates": "Sep 2019 - Oct 2021",
+      "bullets": [
+        "Delivered standardised reporting across national programmes and reduced recurring turnaround through reusable data models.",
+        "Coordinated reporting requirements with programme owners and trained contributors to use shared definitions and templates consistently."
       ]
     }
   ],
   "education": [
-    {
-      "degree": "MSc Business Analytics",
-      "institution": "Example University",
-      "location": "UK",
-      "dates": "2021 - 2022",
-      "details": "Modules included predictive modelling, data management and decision analytics."
-    }
+    {"degree": "MSc Data Science, 67% (Merit)", "institution": "Example University", "location": "UK", "dates": "Sep 2023 - Sep 2024", "details": "Dissertation: privacy-aware deep learning and evaluation of utility trade-offs. Modules included machine learning, big-data systems, statistics and information visualisation."},
+    {"degree": "BSc Information Technology, 79%", "institution": "Example College", "location": "India", "dates": "Apr 2019 - Mar 2023", "details": ""}
   ],
-  "projects": [
+  "projects": [],
+  "supporting_sections": [
     {
-      "title": "Demand Forecasting Workbench",
-      "tools": "Python, scikit-learn, Streamlit",
-      "link": "https://github.com/example/demand-workbench",
-      "link_label": "GitHub",
-      "dates": "2025",
-      "bullets": [
-        "Built a reproducible forecasting comparison with baseline, tree-based and statistical models across multiple horizons.",
-        "Added a lightweight interface, tests and clear notes on data leakage, evaluation windows and model limitations."
+      "heading": "Achievements, Certifications & Projects",
+      "items": [
+        {"title": "Certifications", "dates": "", "meta": "", "details": "Cloud data engineering, analytics engineering and infrastructure fundamentals. Projects: streaming pipeline with Kafka, Spark and PostgreSQL; privacy-aware activity recognition with explicit baseline comparison; compact NLP assistant with testable intent handling and multiple user interfaces. Additional recognition includes a structured problem-solving programme and community-service awards. The fixture deliberately carries enough content to test a genuinely dense one-page layout rather than a short sample with misleading whitespace."}
       ]
     }
-  ],
-  "supporting_sections": []
+  ]
 }
