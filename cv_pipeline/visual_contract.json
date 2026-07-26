@@ -1,35 +1,73 @@
 {
-  "version": "jobhuntai-serif-v1",
+  "version": "jobhuntai-classic-gold-v2",
   "shared": {
-    "font_family_tokens": ["Times New Roman", "Liberation Serif"],
-    "allowed_pdf_font_fragments": ["TimesNewRoman", "LiberationSerif", "Liberation-Serif", "NimbusRoman", "Tinos", "DejaVuSerif", "FreeSerif"],
-    "name_size_pt": 17.0,
-    "contact_size_pt": 8.35,
-    "ink": "#111111",
-    "link": "#0563c1",
-    "rule": "#333333",
-    "contact_links": ["LinkedIn", "Portfolio", "GitHub"],
+    "font_family_tokens": [
+      "Cormorant Garamond",
+      "Lora",
+      "Georgia",
+      "DejaVu Serif",
+      "Liberation Serif"
+    ],
+    "allowed_pdf_font_fragments": [
+      "Cormorant",
+      "Lora",
+      "Georgia",
+      "DejaVuSerif",
+      "DejaVu-Serif",
+      "LiberationSerif",
+      "Liberation-Serif",
+      "NimbusRoman",
+      "NotoSerif"
+    ],
+    "name_size_pt": 27.0,
+    "contact_size_pt": 7.6,
+    "ink": "#201f1d",
+    "link": "#7d5411",
+    "rule": "#201f1d",
+    "contact_links": [
+      "LinkedIn",
+      "Portfolio",
+      "GitHub"
+    ],
     "portfolio_uri_contains": "varunrout.com",
-    "geometry_tolerance_pt": 1.0,
-    "font_tolerance_pt": 0.3
+    "geometry_tolerance_pt": 1.5,
+    "font_tolerance_pt": 0.55
   },
   "cv": {
-    "page_margin_mm": [12.0, 13.0, 11.0, 13.0],
-    "body_size_pt": 9.25,
-    "body_line_height": 1.17,
-    "heading_size_pt": 10.7,
-    "section_headings": ["Professional Summary", "Skills", "Experience", "Projects", "Education"],
-    "forbidden_headings": ["Selected Projects"],
-    "bullet_text_indent_mm": 1.9,
-    "bullet_marker_offset_mm": 0.2,
-    "bullet_alignment_tolerance_pt": 0.75,
+    "page_margin_mm": [
+      10.2,
+      13.0,
+      9.5,
+      13.0
+    ],
+    "body_size_pt": 8.45,
+    "body_line_height": 1.235,
+    "heading_size_pt": 9.05,
+    "section_headings": [
+      "Professional Summary",
+      "Skills",
+      "Experience",
+      "Projects",
+      "Education"
+    ],
+    "forbidden_headings": [
+      "Selected Projects"
+    ],
+    "bullet_text_indent_mm": 2.4,
+    "bullet_marker_offset_mm": 0.25,
+    "bullet_alignment_tolerance_pt": 0.9,
     "default_max_pages": 1
   },
   "cover_letter": {
-    "page_margin_mm": [14.0, 17.0, 14.0, 17.0],
-    "body_size_pt": 10.2,
-    "body_line_height": 1.28,
-    "role_size_pt": 11.5,
+    "page_margin_mm": [
+      14.0,
+      17.0,
+      13.0,
+      17.0
+    ],
+    "body_size_pt": 9.55,
+    "body_line_height": 1.44,
+    "role_size_pt": 11.7,
     "default_max_pages": 1
   }
 }

@@ -4,45 +4,139 @@
 <meta charset="utf-8">
 <style>
 :root {
-  --ink:#111111;
-  --link:#0563c1;
-  --rule:#333333;
-  --font:"Times New Roman","Liberation Serif",serif;
-  --body-size:10.2pt;
-  --body-line-height:1.28;
+  --ink:#201f1d;
+  --link:#7d5411;
+  --rule:#201f1d;
+  --divider:#d7d3d3;
+  --muted:#605d5d;
+  --accent:#c28d41;
+  --accent-soft:#facb8d;
+  --surface:#fffdf9;
+  --font:"Lora","Georgia","DejaVu Serif","Liberation Serif",serif;
+  --font-heading:"Cormorant Garamond","Georgia","DejaVu Serif","Liberation Serif",serif;
+  --body-size:9.55pt;
+  --body-line-height:1.44;
 }
-@page { size:A4; margin:14mm 17mm 14mm 17mm; }
+@page { size:A4; margin:14mm 17mm 13mm 17mm; }
 * { box-sizing:border-box; margin:0; padding:0; }
-body[data-visual-contract="jobhuntai-serif-v1"] { font-family:var(--font); font-size:var(--body-size); line-height:var(--body-line-height); color:var(--ink); }
-a { color:var(--link); text-decoration:underline; }
-header { text-align:center; }
-.name { font-size:17pt; font-weight:700; letter-spacing:.01em; text-transform:uppercase; }
-.contact { font-size:8.35pt; margin-top:1mm; white-space:nowrap; }
-.contact span + span::before,
-.contact a + span::before,
-.contact span + a::before,
-.contact a + a::before { content:" | "; color:var(--ink); text-decoration:none; }
+html { background:var(--surface); }
+body[data-visual-contract="jobhuntai-classic-gold-v2"] {
+  font-family:var(--font);
+  font-size:var(--body-size);
+  line-height:var(--body-line-height);
+  color:var(--ink);
+  background:var(--surface);
+  -webkit-print-color-adjust:exact;
+  print-color-adjust:exact;
+}
+a { color:var(--link); text-decoration:none; border-bottom:.45pt solid var(--accent-soft); }
+header { text-align:left; display:flex; flex-direction:column; gap:1.1mm; padding-bottom:2.1mm; border-bottom:1.7pt solid var(--rule); }
+.name {
+  font-family:var(--font-heading);
+  font-size:27pt;
+  font-weight:400;
+  line-height:.94;
+  letter-spacing:.055em;
+  text-transform:uppercase;
+}
+.headline {
+  font-family:var(--font-heading);
+  font-size:10.1pt;
+  line-height:1.1;
+  letter-spacing:.018em;
+  color:#444141;
+}
+.contact {
+  font-size:7.75pt;
+  line-height:1.18;
+  letter-spacing:.018em;
+  color:var(--muted);
+  display:flex;
+  flex-wrap:wrap;
+  gap:.3mm 2.1mm;
+  align-items:baseline;
+}
+.sep { color:var(--accent); }
 .letter-column { width:100%; margin:0; padding:0; }
-.role { width:100%; margin:3mm 0 .6mm 0; padding:0 0 .5mm 0; font-size:11.5pt; font-weight:700; border-bottom:.55pt solid var(--rule); }
-.meta { width:100%; margin:0 0 3mm 0; padding:0; display:grid; grid-template-columns:minmax(0,1fr) auto; column-gap:4mm; align-items:baseline; }
-.letter-column p { width:100%; margin:0 0 2.2mm 0; padding:0; text-align:justify; }
-.signoff { width:100%; margin:2.4mm 0 0 0; padding:0; }
-.name-signature { font-weight:700; }
+.role {
+  width:100%;
+  margin:3mm 0 .6mm 0;
+  padding:0 0 .8mm 0;
+  font-family:var(--font-heading);
+  font-size:11.7pt;
+  font-weight:600;
+  line-height:1.1;
+  letter-spacing:.025em;
+  border-bottom:.65pt solid var(--divider);
+}
+.role::before { content:"Re: "; color:var(--ink); }
+.meta {
+  width:100%;
+  margin:0 0 3mm 0;
+  padding:0;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  column-gap:4mm;
+  align-items:baseline;
+  color:#444141;
+}
+.meta strong {
+  font-family:var(--font-heading);
+  font-size:10.5pt;
+  font-weight:600;
+  letter-spacing:.015em;
+  color:var(--ink);
+}
+.meta span {
+  font-size:8.3pt;
+  letter-spacing:.075em;
+  text-transform:uppercase;
+  color:var(--muted);
+  white-space:nowrap;
+}
+.recipient-details {
+  margin:-2.2mm 0 3.4mm 0;
+  font-size:9.1pt;
+  color:#444141;
+}
+.letter-column p { width:100%; margin:0 0 2.2mm 0; padding:0; text-align:left; orphans:3; widows:3; }
+.letter-body { width:100%; }
+.signoff { width:100%; margin:4.8mm 0 0 0; padding:0; }
+.name-signature {
+  display:block;
+  width:66mm;
+  font-family:var(--font-heading);
+  font-size:14.5pt;
+  font-weight:600;
+  letter-spacing:.035em;
+  padding:3.6mm 0 .6mm 0;
+  border-bottom:.6pt solid var(--divider);
+}
+.enclosed {
+  margin-top:3.3mm !important;
+  font-size:8.2pt;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--muted);
+}
 </style>
 </head>
-<body data-visual-contract="jobhuntai-serif-v1">
+<body data-visual-contract="jobhuntai-classic-gold-v2">
 <header>
   <div class="name">{{ identity.name }}</div>
+  <div class="headline">{{ identity.headline|default('', true) }}{% if identity.location|default('') %} <span class="sep">·</span> {{ identity.location }}{% endif %}</div>
   <div class="contact">
-    <span>{{ identity.phone }}</span><span><a href="mailto:{{ identity.email }}">{{ identity.email }}</a></span><span><a href="{{ identity.linkedin }}">LinkedIn</a></span><span><a href="{{ identity.portfolio }}">Portfolio</a></span><span><a href="{{ identity.github }}">GitHub</a></span><span>{{ identity.location }}</span>
+    <span>{{ identity.phone }}</span><span class="sep">|</span><a href="mailto:{{ identity.email }}">{{ identity.email }}</a><span class="sep">|</span><a href="{{ identity.linkedin }}">LinkedIn</a><span class="sep">|</span><a href="{{ identity.portfolio }}">Portfolio</a><span class="sep">|</span><a href="{{ identity.github }}">GitHub</a>
   </div>
 </header>
 <main class="letter-column">
 <div class="role">{{ role_title }}</div>
 <div class="meta"><strong>{{ company }}</strong><span>{{ date }}</span></div>
+{% if recipient_name|default('') or recipient_department|default('') or recipient_location|default('') %}<div class="recipient-details">{% if recipient_name|default('') %}<div>{{ recipient_name }}</div>{% endif %}{% if recipient_department|default('') %}<div>{{ recipient_department }}</div>{% endif %}{% if recipient_location|default('') %}<div>{{ recipient_location }}</div>{% endif %}</div>{% endif %}
 <p>{{ greeting }}</p>
-{% for paragraph in paragraphs %}<p>{{ paragraph }}</p>{% endfor %}
+<div class="letter-body">{% for paragraph in paragraphs %}<p>{{ paragraph }}</p>{% endfor %}</div>
 <div class="signoff">{{ sign_off|default('Kind regards,', true) }}<br><span class="name-signature">{{ identity.name }}</span></div>
+<p class="enclosed">Enclosed <span class="sep">·</span> Curriculum Vitae</p>
 </main>
 </body>
 </html>
