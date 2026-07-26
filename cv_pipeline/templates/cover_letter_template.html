@@ -3,10 +3,17 @@
 <head>
 <meta charset="utf-8">
 <style>
-:root { --ink:#111; --link:#0563c1; --rule:#333; --font:"Times New Roman","Liberation Serif",serif; }
-@page { size:A4; margin:14mm 17mm 14mm; }
+:root {
+  --ink:#111111;
+  --link:#0563c1;
+  --rule:#333333;
+  --font:"Times New Roman","Liberation Serif",serif;
+  --body-size:10.2pt;
+  --body-line-height:1.28;
+}
+@page { size:A4; margin:14mm 17mm 14mm 17mm; }
 * { box-sizing:border-box; margin:0; padding:0; }
-body { font-family:var(--font); font-size:10.2pt; line-height:1.28; color:var(--ink); }
+body[data-visual-contract="jobhuntai-serif-v1"] { font-family:var(--font); font-size:var(--body-size); line-height:var(--body-line-height); color:var(--ink); }
 a { color:var(--link); text-decoration:underline; }
 header { text-align:center; }
 .name { font-size:17pt; font-weight:700; letter-spacing:.01em; text-transform:uppercase; }
@@ -15,24 +22,27 @@ header { text-align:center; }
 .contact a + span::before,
 .contact span + a::before,
 .contact a + a::before { content:" | "; color:var(--ink); text-decoration:none; }
-.role { font-size:11.5pt; font-weight:700; border-bottom:.55pt solid var(--rule); padding-bottom:.5mm; margin:3mm 0 .6mm; }
-.meta { display:grid; grid-template-columns:minmax(0,1fr) auto; column-gap:4mm; align-items:baseline; margin-bottom:3mm; }
-p { margin:0 0 2.2mm 0; text-align:justify; }
-.signoff { margin-top:2.4mm; }
+.letter-column { width:100%; margin:0; padding:0; }
+.role { width:100%; margin:3mm 0 .6mm 0; padding:0 0 .5mm 0; font-size:11.5pt; font-weight:700; border-bottom:.55pt solid var(--rule); }
+.meta { width:100%; margin:0 0 3mm 0; padding:0; display:grid; grid-template-columns:minmax(0,1fr) auto; column-gap:4mm; align-items:baseline; }
+.letter-column p { width:100%; margin:0 0 2.2mm 0; padding:0; text-align:justify; }
+.signoff { width:100%; margin:2.4mm 0 0 0; padding:0; }
 .name-signature { font-weight:700; }
 </style>
 </head>
-<body>
+<body data-visual-contract="jobhuntai-serif-v1">
 <header>
   <div class="name">{{ identity.name }}</div>
   <div class="contact">
     <span>{{ identity.phone }}</span><span><a href="mailto:{{ identity.email }}">{{ identity.email }}</a></span><span><a href="{{ identity.linkedin }}">LinkedIn</a></span><span><a href="{{ identity.portfolio }}">Portfolio</a></span><span><a href="{{ identity.github }}">GitHub</a></span><span>{{ identity.location }}</span>
   </div>
 </header>
+<main class="letter-column">
 <div class="role">{{ role_title }}</div>
 <div class="meta"><strong>{{ company }}</strong><span>{{ date }}</span></div>
 <p>{{ greeting }}</p>
 {% for paragraph in paragraphs %}<p>{{ paragraph }}</p>{% endfor %}
-<div class="signoff">{{ sign_off or 'Kind regards,' }}<br><span class="name-signature">{{ identity.name }}</span></div>
+<div class="signoff">{{ sign_off|default('Kind regards,', true) }}<br><span class="name-signature">{{ identity.name }}</span></div>
+</main>
 </body>
 </html>
