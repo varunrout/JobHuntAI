@@ -1,3 +1,4 @@
+import json
 import sys
 import tempfile
 import unittest
@@ -13,6 +14,7 @@ import visual_gate
 
 CV_TEMPLATE = ROOT / "templates" / "cv_template.html"
 CL_TEMPLATE = ROOT / "templates" / "cover_letter_template.html"
+DIAGNOSTIC_PATH = ROOT / "visual-diagnostic.json"
 
 
 def environment():
@@ -110,6 +112,13 @@ def render_html(template_text, payload, target):
     HTML(string=rendered, base_url=str(ROOT / "templates")).write_pdf(str(target))
 
 
+def persist_diagnostic(kind, failures):
+    DIAGNOSTIC_PATH.write_text(
+        json.dumps({"kind": kind, "failures": failures}, indent=2),
+        encoding="utf-8",
+    )
+
+
 class VisualContractTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -139,7 +148,9 @@ class VisualContractTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp:
             pdf = Path(temp) / "cv.pdf"
             render_html(self.cv_html, cv_payload(), pdf)
-            self.assertEqual([], visual_gate.check_cv_pdf(pdf, cv_payload()))
+            failures = visual_gate.check_cv_pdf(pdf, cv_payload())
+            persist_diagnostic("cv", failures)
+            self.assertEqual([], failures)
 
     def test_wrapped_bullet_extra_indent_is_blocked(self):
         malformed = self.cv_html.replace("text-indent:0;", "text-indent:-2mm;", 1)
@@ -153,7 +164,9 @@ class VisualContractTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp:
             pdf = Path(temp) / "cl.pdf"
             render_html(self.cl_html, cl_payload(), pdf)
-            self.assertEqual([], visual_gate.check_cover_letter_pdf(pdf, cl_payload()))
+            failures = visual_gate.check_cover_letter_pdf(pdf, cl_payload())
+            persist_diagnostic("cover_letter", failures)
+            self.assertEqual([], failures)
 
     def test_shifted_cover_letter_meta_row_is_blocked(self):
         malformed = self.cl_html.replace("margin:0 0 3mm 0;", "margin:0 0 3mm -3mm;", 1)
