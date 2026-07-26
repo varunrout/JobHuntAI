@@ -5,6 +5,7 @@ import unittest
 from pathlib import Path
 
 from jinja2 import Environment, StrictUndefined, select_autoescape
+from markupsafe import Markup
 from weasyprint import HTML
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -153,11 +154,16 @@ class VisualContractTests(unittest.TestCase):
             self.assertEqual([], failures)
 
     def test_wrapped_bullet_extra_indent_is_blocked(self):
-        malformed = self.cv_html.replace("text-indent:0;", "text-indent:-2mm;", 1)
+        payload = cv_payload()
+        payload["experience"][0]["bullets"][0] = Markup(
+            "First line of deliberately malformed bullet"
+            "<br><span style='display:inline-block;margin-left:6mm'>"
+            "continuation line shifted to the right</span>"
+        )
         with tempfile.TemporaryDirectory() as temp:
             pdf = Path(temp) / "bad-cv.pdf"
-            render_html(malformed, cv_payload(), pdf)
-            codes = {code for code, _ in visual_gate.check_cv_pdf(pdf, cv_payload())}
+            render_html(self.cv_html, payload, pdf)
+            codes = {code for code, _ in visual_gate.check_cv_pdf(pdf, payload)}
             self.assertIn("BULLET_CONTINUATION_INDENT", codes)
 
     def test_rendered_cover_letter_passes_visual_geometry(self):
