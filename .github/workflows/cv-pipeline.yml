@@ -5,7 +5,7 @@ on:
     paths: ['cv_pipeline/**', 'RULES.md', 'MASTER_PROFILE.md', 'COMMAND.md', '.github/workflows/cv-pipeline.yml']
   push:
     branches: [main]
-    paths: ['cv_pipeline/**', 'RULES.md', 'MASTER_PROFILE.md', 'COMMAND.md']
+    paths: ['cv_pipeline/**', 'RULES.md', 'MASTER_PROFILE.md', 'COMMAND.md', '.github/workflows/cv-pipeline.yml']
 
 jobs:
   test:
@@ -20,6 +20,27 @@ jobs:
         run: python -m py_compile cv_pipeline/quality_gate.py cv_pipeline/render_gate.py cv_pipeline/cover_letter_render_gate.py cv_pipeline/visual_gate.py cv_pipeline/render.py cv_pipeline/lint.py
       - name: Locked HTML visual contract
         run: python cv_pipeline/visual_gate.py
-      - name: Structural, factual and rendered visual tests
+      - name: Canonical templates pass
+        working-directory: cv_pipeline
+        run: python tests/test_visual_contract.py VisualContractTests.test_locked_templates_pass -v
+      - name: Rendered CV geometry passes
+        working-directory: cv_pipeline
+        run: python tests/test_visual_contract.py VisualContractTests.test_rendered_cv_passes_visual_geometry -v
+      - name: Bullet-indent regression is caught
+        working-directory: cv_pipeline
+        run: python tests/test_visual_contract.py VisualContractTests.test_wrapped_bullet_extra_indent_is_blocked -v
+      - name: Rendered cover-letter geometry passes
+        working-directory: cv_pipeline
+        run: python tests/test_visual_contract.py VisualContractTests.test_rendered_cover_letter_passes_visual_geometry -v
+      - name: Cover-letter grid regression is caught
+        working-directory: cv_pipeline
+        run: python tests/test_visual_contract.py VisualContractTests.test_shifted_cover_letter_meta_row_is_blocked -v
+      - name: Static visual mutations are caught
+        working-directory: cv_pipeline
+        run: |
+          python tests/test_visual_contract.py VisualContractTests.test_selected_projects_is_blocked -v
+          python tests/test_visual_contract.py VisualContractTests.test_bullet_css_drift_is_blocked -v
+          python tests/test_visual_contract.py VisualContractTests.test_cover_letter_table_is_blocked -v
+      - name: Structural and factual regression suite
         working-directory: cv_pipeline
         run: python -m unittest discover -s tests -v
