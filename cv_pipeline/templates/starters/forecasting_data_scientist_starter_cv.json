@@ -2,7 +2,7 @@
   "cv_identity_mode": "forecasting_data_scientist",
   "dominant_identity": "Forecasting Data Scientist",
   "hybrid_secondary_identity": null,
-  "identity": {"name": "Varun Rout", "headline": "Forecasting Data Scientist | Demand Modelling, MLOps and Decision Support", "email": "", "phone": "", "location": "Birmingham, United Kingdom", "linkedin": "", "github": ""},
+  "identity": {"name": "Varun Rout", "headline": "Forecasting Data Scientist | Demand Modelling, MLOps and Decision Support", "email": "varun_rout@outlook.com", "phone": "+44 7830 212139", "location": "Birmingham, UK", "linkedin": "https://www.linkedin.com/in/varunrout", "portfolio": "https://varunrout.com", "github": "https://github.com/varunrout"},
   "summary": "",
   "skills": [
     {"category": "Modelling", "items": ""},
