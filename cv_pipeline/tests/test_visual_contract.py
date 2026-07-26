@@ -4,6 +4,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
+import fitz
 from jinja2 import Environment, StrictUndefined, select_autoescape
 from weasyprint import HTML
 
@@ -165,6 +166,10 @@ class VisualContractTests(unittest.TestCase):
     def test_locked_templates_pass(self):
         self.assertEqual([], visual_gate.check_template_contract(self.cv_html, self.cl_html))
 
+    def test_skills_binding_uses_explicit_dictionary_key(self):
+        self.assertIn('{{ s["items"] }}', self.cv_html)
+        self.assertNotIn("{{ s.items }}", self.cv_html)
+
     def test_selected_projects_is_blocked(self):
         mutated = self.cv_html.replace("<h2>Projects</h2>", "<h2>Selected Projects</h2>", 1)
         codes = {code for code, _ in visual_gate.check_template_contract(mutated, self.cl_html)}
@@ -187,6 +192,11 @@ class VisualContractTests(unittest.TestCase):
             render_html(self.cv_html, cv_payload(), pdf)
             failures = visual_gate.check_cv_pdf(pdf, cv_payload())
             persist_diagnostic("cv", failures)
+            with fitz.open(pdf) as document:
+                rendered_text = "\n".join(page.get_text() for page in document)
+            self.assertIn("forecasting, regression, classification", rendered_text)
+            self.assertNotIn("<built-in method", rendered_text)
+            self.assertNotIn("of dict object", rendered_text)
             self.assertEqual([], failures)
 
     def test_wrapped_bullet_extra_indent_is_blocked(self):
