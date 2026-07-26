@@ -7,16 +7,16 @@ Assess a role, apply stop-before-tailor gates, score fit and visa or work-author
 Find and rank sponsor-capable roles in the primary and secondary lanes.
 
 ## /tailor-cv
-Select one controlled CV identity, choose three to five signature proof points, generate the professional thesis and build a truthful role-specific CV from `MASTER_PROFILE.md`. Produce `cv.json`, `cv_diagnostic.json` and a visually verified PDF.
+Select one controlled CV identity, choose three to five signature proof points, generate the professional thesis and build a truthful role-specific CV from `MASTER_PROFILE.md`. Produce `cv.json`, `cv_diagnostic.json`, canonical HTML and a PDF that passes the hard visual contract. The project section heading is always `Projects`.
 
 ## /draft-cover-letter
-Create a concise targeted cover letter only when useful.
+Create a concise targeted cover letter, render it through the canonical HTML template and block release unless the cover-letter visual gate passes.
 
 ## /draft-outreach
 Create recruiter, hiring-manager or same-team outreach and log the plan in Networking.
 
 ## /apply-package
-Run intake, competency mapping, evidence mapping, identity selection, CV tailoring, rendering, independent review, cover letter, portal answers and submission checklist.
+Run intake, competency mapping, evidence mapping, identity selection, CV tailoring, canonical HTML rendering, hard visual checks, independent review, cover letter, portal answers and submission checklist.
 
 ## /log-job
 Create or update the Jobs record.

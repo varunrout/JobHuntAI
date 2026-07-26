@@ -1,0 +1,35 @@
+{
+  "version": "jobhuntai-serif-v1",
+  "shared": {
+    "font_family_tokens": ["Times New Roman", "Liberation Serif"],
+    "allowed_pdf_font_fragments": ["TimesNewRoman", "LiberationSerif", "NimbusRoman", "Tinos", "DejaVuSerif", "FreeSerif"],
+    "name_size_pt": 17.0,
+    "contact_size_pt": 8.35,
+    "ink": "#111111",
+    "link": "#0563c1",
+    "rule": "#333333",
+    "contact_links": ["LinkedIn", "Portfolio", "GitHub"],
+    "portfolio_uri_contains": "varunrout.com",
+    "geometry_tolerance_pt": 1.0,
+    "font_tolerance_pt": 0.3
+  },
+  "cv": {
+    "page_margin_mm": [12.0, 13.0, 11.0, 13.0],
+    "body_size_pt": 9.25,
+    "body_line_height": 1.17,
+    "heading_size_pt": 10.7,
+    "section_headings": ["Professional Summary", "Skills", "Experience", "Projects", "Education"],
+    "forbidden_headings": ["Selected Projects"],
+    "bullet_text_indent_mm": 1.9,
+    "bullet_marker_offset_mm": 0.2,
+    "bullet_alignment_tolerance_pt": 0.75,
+    "default_max_pages": 1
+  },
+  "cover_letter": {
+    "page_margin_mm": [14.0, 17.0, 14.0, 17.0],
+    "body_size_pt": 10.2,
+    "body_line_height": 1.28,
+    "role_size_pt": 11.5,
+    "default_max_pages": 1
+  }
+}

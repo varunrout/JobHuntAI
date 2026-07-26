@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Artefact-level page and first-page checks for generated CV PDFs."""
+"""Content, page and hard visual checks for generated CV PDFs."""
 from __future__ import annotations
 
 import argparse
@@ -7,6 +7,8 @@ import json
 import re
 import sys
 from pathlib import Path
+
+from visual_gate import check_cv_pdf, check_template_contract
 
 
 def normalise(text: str) -> str:
@@ -29,6 +31,9 @@ def check(pdf_path: Path, cv_path: Path, diagnostic_path: Path) -> list[tuple[st
     reader = PdfReader(str(pdf_path))
     pages = [page.extract_text() or "" for page in reader.pages]
     failures: list[tuple[str, str]] = []
+
+    failures.extend(check_template_contract())
+    failures.extend(check_cv_pdf(pdf_path, cv))
 
     exception = bool(cv.get("page_limit_exception"))
     if len(pages) > 2 and not exception:
@@ -55,6 +60,7 @@ def check(pdf_path: Path, cv_path: Path, diagnostic_path: Path) -> list[tuple[st
     result["final_page_count"] = len(pages)
     result["first_page_sufficiency"] = "fail" if any(code.startswith("FIRST_PAGE") for code, _ in failures) else "pass"
     result["layout_quality"] = "fail" if failures else "pass"
+    result["visual_contract"] = "fail" if any(code.startswith(("VISUAL", "BULLET", "LETTER", "SECTION", "PROJECT", "PORTFOLIO")) for code, _ in failures) else "pass"
     diagnostic_path.write_text(json.dumps(diagnostic, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     return failures
 
@@ -70,7 +76,7 @@ def main() -> int:
         for code, detail in failures:
             print(f"[{code}] {detail}")
         return 2
-    print("CV RENDER GATES CLEAN.")
+    print("CV RENDER AND VISUAL GATES CLEAN.")
     return 0
 
 
