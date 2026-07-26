@@ -1,0 +1,15 @@
+{
+  "cv_identity_mode": "football_research_engineer",
+  "dominant_identity": "Football Research Engineer",
+  "hybrid_secondary_identity": null,
+  "identity": {"name": "Varun Rout", "headline": "Football Research Engineer | Applied ML, Analytics Products and Full-Stack Delivery", "email": "", "phone": "", "location": "Birmingham, United Kingdom", "linkedin": "", "github": ""},
+  "summary": "",
+  "skills": [
+    {"category": "Football Modelling", "items": ""},
+    {"category": "Machine Learning", "items": ""},
+    {"category": "Evaluation", "items": ""},
+    {"category": "Product Engineering", "items": ""},
+    {"category": "Research Delivery", "items": ""}
+  ],
+  "experience": [], "projects": [], "education": [], "projects_lead": true
+}

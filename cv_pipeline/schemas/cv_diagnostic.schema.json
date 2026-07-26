@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://jobhuntai.local/schemas/cv_diagnostic.schema.json",
+  "title": "JobHuntAI CV diagnostic",
+  "type": "object",
+  "required": ["cv_identity_mode", "target_headline", "professional_thesis", "signature_proof_points", "evidence_excluded", "projects_selected", "projects_excluded", "current_role_bullet_order_rationale", "first_page_evidence_markers", "results"],
+  "properties": {
+    "cv_identity_mode": {"type": "string"},
+    "target_headline": {"type": "string"},
+    "professional_thesis": {"type": "string", "minLength": 40},
+    "signature_proof_points": {
+      "type": "array", "minItems": 3, "maxItems": 5,
+      "items": {"type": "object", "required": ["label", "source", "location"], "properties": {"label": {"type": "string"}, "source": {"type": "string"}, "location": {"type": "string"}}}
+    },
+    "evidence_excluded": {"type": "array"},
+    "projects_selected": {"type": "array"},
+    "projects_excluded": {"type": "array"},
+    "current_role_bullet_order_rationale": {"type": "string", "minLength": 20},
+    "first_page_evidence_markers": {
+      "type": "object",
+      "required": ["target_identity", "technical_stack", "strongest_achievement", "operating_context", "consequence"],
+      "properties": {
+        "target_identity": {"type": "string"},
+        "technical_stack": {"type": "array", "minItems": 2, "maxItems": 5, "items": {"type": "string"}},
+        "strongest_achievement": {"type": "string"}, "operating_context": {"type": "string"}, "consequence": {"type": "string"}
+      }
+    },
+    "results": {
+      "type": "object",
+      "required": ["final_word_count", "final_page_count", "first_page_sufficiency", "identity_consistency", "evidence_integrity", "layout_quality"],
+      "properties": {
+        "final_word_count": {"type": ["integer", "null"]}, "final_page_count": {"type": ["integer", "null"]},
+        "first_page_sufficiency": {"enum": ["pending", "pass", "fail"]},
+        "identity_consistency": {"enum": ["pending", "pass", "fail"]},
+        "evidence_integrity": {"enum": ["pending", "pass", "fail"]},
+        "layout_quality": {"enum": ["pending", "pass", "fail"]}
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,23 @@
+name: CV pipeline checks
+
+on:
+  pull_request:
+    paths: ['cv_pipeline/**', 'RULES.md', 'MASTER_PROFILE.md', 'COMMAND.md', '.github/workflows/cv-pipeline.yml']
+  push:
+    branches: [main]
+    paths: ['cv_pipeline/**', 'RULES.md', 'MASTER_PROFILE.md', 'COMMAND.md']
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --upgrade pip jsonschema pypdf
+      - name: Compile
+        run: python -m py_compile cv_pipeline/quality_gate.py cv_pipeline/render_gate.py
+      - name: Structural tests
+        working-directory: cv_pipeline
+        run: python -m unittest discover -s tests -v

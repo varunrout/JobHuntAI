@@ -1,0 +1,50 @@
+{
+  "version": "2.0.0",
+  "hybrid_policy": {
+    "allowed": true,
+    "rule": "A hybrid CV must declare one dominant identity. The secondary identity may change at most one capability category and one proof point, and must be required by the job description.",
+    "dominant_identity_required": true
+  },
+  "modes": {
+    "forecasting_data_scientist": {
+      "label": "Forecasting Data Scientist",
+      "default_headline": "Forecasting Data Scientist | Demand Modelling, MLOps and Decision Support",
+      "problem_class": "forecasting demand, prices and operational outcomes under uncertainty",
+      "capability_categories": ["Modelling", "Evaluation", "Engineering", "Production", "Decision Support"],
+      "bullet_priority": ["model_or_problem", "measured_result", "evaluation_rigour", "production_reliability", "decision_consequence"],
+      "signature_evidence_preferences": ["Residual-load framework and forward-curve improvement", "Holiday-period forecasting improvement", "Multi-horizon forecasting across approximately 7,000 SKUs", "Production deployment, monitoring and drift detection", "Meaningful baseline or incumbent comparison"],
+      "project_preferences": ["Retail Growth Intelligence System", "Energy Market Tracker", "Opponent-Adjusted Football Metrics"],
+      "terminology": ["forecasting", "held-out testing", "calibration", "drift monitoring", "decision support"]
+    },
+    "data_engineer": {
+      "label": "Data Engineer",
+      "default_headline": "Data Engineer | Python, SQL, Azure and Reliable Data Pipelines",
+      "problem_class": "building reliable data pipelines and model-ready data products",
+      "capability_categories": ["Pipeline Engineering", "Data Quality", "Storage and Transformation", "Cloud and Delivery", "Data Products"],
+      "bullet_priority": ["pipeline_or_platform", "scale_or_reliability", "data_quality", "operational_ownership", "consumer_consequence"],
+      "signature_evidence_preferences": ["GB-wide market-data ingestion every 12 minutes", "Validation for missing timestamps, duplicates, stale feeds, units and schema changes", "Migration from Access and spreadsheets into Python, SQL and Snowflake", "Production ETL and ELT work at Infosys", "Logging, monitoring, backfills and layered data architecture"],
+      "project_preferences": ["GB Electricity Market Data Pipeline", "Opponent-Adjusted Football Metrics", "Sales Insight Agent"],
+      "terminology": ["incremental ingestion", "backfills", "schema validation", "layered data architecture", "production monitoring"]
+    },
+    "energy_market_analyst": {
+      "label": "Energy Market Analyst",
+      "default_headline": "Energy Market Analyst | Power Forecasting, Pricing and Risk Analytics",
+      "problem_class": "explaining and forecasting power-market outcomes for pricing and risk decisions",
+      "capability_categories": ["Power Markets", "Quantitative Methods", "Data and Automation", "Commercial Delivery", "Risk and Uncertainty"],
+      "bullet_priority": ["market_methodology", "pricing_or_risk_result", "quantitative_rigour", "automation_or_reliability", "commercial_use"],
+      "signature_evidence_preferences": ["Residual-load and electricity-price relationship", "Forward-curve performance improvement", "DUoS and TNUoS forecast improvement", "10,000-run Monte Carlo simulation", "Commercial shape meetings, pricing and accrual decisions"],
+      "project_preferences": ["Energy Market Tracker", "GB Electricity Market Data Pipeline", "Energy Market Intelligence and Risk Analytics"],
+      "terminology": ["residual load", "forward curve", "shape analysis", "network charges", "portfolio exposure"]
+    },
+    "football_research_engineer": {
+      "label": "Football Research Engineer",
+      "default_headline": "Football Research Engineer | Applied ML, Analytics Products and Full-Stack Delivery",
+      "problem_class": "turning football research questions into evaluated models and analyst-facing products",
+      "capability_categories": ["Football Modelling", "Machine Learning", "Evaluation", "Product Engineering", "Research Delivery"],
+      "bullet_priority": ["research_question", "model_architecture", "evaluation_and_benchmark", "engineering_reliability", "analyst_facing_delivery"],
+      "signature_evidence_preferences": ["Frame2Threat sequence modelling", "Same-sample comparison against an incumbent metric", "Possession, passing-lane or opponent-adjusted metric development", "Full-stack application or analyst interface", "Testing, experiment tracking and honest negative findings"],
+      "project_preferences": ["Frame2Threat", "Between-Lines Availability", "Opponent-Adjusted Football Metrics", "Contextual Football Metrics"],
+      "terminology": ["possession value", "sequence modelling", "chronological testing", "benchmark comparison", "analyst interface"]
+    }
+  }
+}

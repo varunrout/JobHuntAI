@@ -1,13 +1,13 @@
 # JobHuntAI Command Interface
 
 ## /intake-job
-Assess a role, apply stop-before-tailor gates, score fit and visa/work-authorisation viability, log the job and create the intake artefacts.
+Assess a role, apply stop-before-tailor gates, score fit and visa or work-authorisation viability, log the job and create the intake artefacts.
 
 ## /find-jobs
 Find and rank sponsor-capable roles in the primary and secondary lanes.
 
 ## /tailor-cv
-Create a truthful role-specific CV using `MASTER_PROFILE.md` and the selected CV mode.
+Select one controlled CV identity, choose three to five signature proof points, generate the professional thesis and build a truthful role-specific CV from `MASTER_PROFILE.md`. Produce `cv.json`, `cv_diagnostic.json` and a visually verified PDF.
 
 ## /draft-cover-letter
 Create a concise targeted cover letter only when useful.
@@ -16,7 +16,7 @@ Create a concise targeted cover letter only when useful.
 Create recruiter, hiring-manager or same-team outreach and log the plan in Networking.
 
 ## /apply-package
-Run intake, competency mapping, evidence mapping, tailoring, cold review, final review, cover letter, portal answers and submission checklist.
+Run intake, competency mapping, evidence mapping, identity selection, CV tailoring, rendering, independent review, cover letter, portal answers and submission checklist.
 
 ## /log-job
 Create or update the Jobs record.
