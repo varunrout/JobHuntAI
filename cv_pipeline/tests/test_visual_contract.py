@@ -119,6 +119,43 @@ def persist_diagnostic(kind, failures):
     )
 
 
+def raw_span(text, x, y, size=9.25, character_width=4.5):
+    chars = []
+    current_x = x
+    for character in text:
+        width = character_width if character != " " else character_width / 2
+        chars.append({"c": character, "bbox": [current_x, y, current_x + width, y + 10]})
+        current_x += width
+    return {"size": size, "chars": chars}
+
+
+class FakeRawPage:
+    def __init__(self, rawdict):
+        self.rawdict = rawdict
+
+    def get_text(self, mode):
+        if mode != "rawdict":
+            raise AssertionError(f"unexpected mode {mode}")
+        return self.rawdict
+
+
+def malformed_bullet_page():
+    marker = raw_span("•", 37.0, 100.0)
+    first_line = raw_span("Built first line", 42.0, 100.0)
+    continuation = raw_span("continuation shifted right", 58.0, 111.0)
+    return FakeRawPage({
+        "blocks": [
+            {
+                "type": 0,
+                "lines": [
+                    {"spans": [marker, first_line]},
+                    {"spans": [continuation]},
+                ],
+            }
+        ]
+    })
+
+
 class VisualContractTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -153,19 +190,10 @@ class VisualContractTests(unittest.TestCase):
             self.assertEqual([], failures)
 
     def test_wrapped_bullet_extra_indent_is_blocked(self):
-        malformed = self.cv_html.replace("text-indent:0;", "text-indent:-4mm;", 1)
-        payload = cv_payload()
-        with tempfile.TemporaryDirectory() as temp:
-            pdf = Path(temp) / "bad-cv.pdf"
-            render_html(malformed, payload, pdf)
-            codes = {code for code, _ in visual_gate.check_cv_pdf(pdf, payload)}
-            bullet_failures = {
-                "BULLET_CONTINUATION_INDENT",
-                "BULLET_TEXT_MISSING",
-                "BULLET_GEOMETRY_MISSING",
-                "BULLET_MARKER_POSITION",
-            }
-            self.assertTrue(codes & bullet_failures, codes)
+        contract = visual_gate.load_json(visual_gate.CONTRACT_PATH)
+        failures = visual_gate._check_bullets(malformed_bullet_page(), contract)
+        codes = {code for code, _ in failures}
+        self.assertIn("BULLET_CONTINUATION_INDENT", codes)
 
     def test_rendered_cover_letter_passes_visual_geometry(self):
         with tempfile.TemporaryDirectory() as temp:
