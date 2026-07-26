@@ -1,0 +1,63 @@
+{
+  "identity": {
+    "name": "Alex Morgan",
+    "phone": "+44 7700 900000",
+    "email": "alex.morgan@example.com",
+    "linkedin": "https://www.linkedin.com/in/example",
+    "portfolio": "https://example.com",
+    "github": "https://github.com/example",
+    "location": "London, UK"
+  },
+  "summary": "Applied data professional with experience building reliable analytical pipelines, evaluated predictive models and clear decision-support tools. Combines structured problem framing, careful validation and concise communication to move work from raw data to practical use without overstating results or hiding limitations.",
+  "skills": [
+    {"category": "Programming", "items": "Python, SQL, pandas, NumPy and Git"},
+    {"category": "Modelling", "items": "forecasting, regression, classification, cross-validation and calibration"},
+    {"category": "Data and delivery", "items": "ETL, data-quality checks, CI/CD, testing, dashboards and documentation"}
+  ],
+  "experience": [
+    {
+      "role": "Data Analyst",
+      "employer": "Northstar Analytics",
+      "location": "London, UK",
+      "dates": "2024 - Present",
+      "bullets": [
+        "Built a repeatable forecasting workflow from operational data, benchmarked candidate methods on held-out periods and documented the assumptions used in monthly planning.",
+        "Automated validation and reporting checks, reducing manual preparation time and giving stakeholders a clearer view of missing, stale and inconsistent inputs.",
+        "Created compact dashboards and written summaries that translated model behaviour into concrete planning decisions for non-technical colleagues."
+      ]
+    },
+    {
+      "role": "Junior Data Engineer",
+      "employer": "Cedar Systems",
+      "location": "Manchester, UK",
+      "dates": "2022 - 2024",
+      "bullets": [
+        "Developed Python and SQL transformations for scheduled data pipelines and added checks for schema drift, duplicate records and failed loads.",
+        "Worked with analysts and software engineers to trace data issues, improve documentation and stabilise recurring production jobs."
+      ]
+    }
+  ],
+  "education": [
+    {
+      "degree": "MSc Business Analytics",
+      "institution": "Example University",
+      "location": "UK",
+      "dates": "2021 - 2022",
+      "details": "Modules included predictive modelling, data management and decision analytics."
+    }
+  ],
+  "projects": [
+    {
+      "title": "Demand Forecasting Workbench",
+      "tools": "Python, scikit-learn, Streamlit",
+      "link": "https://github.com/example/demand-workbench",
+      "link_label": "GitHub",
+      "dates": "2025",
+      "bullets": [
+        "Built a reproducible forecasting comparison with baseline, tree-based and statistical models across multiple horizons.",
+        "Added a lightweight interface, tests and clear notes on data leakage, evaluation windows and model limitations."
+      ]
+    }
+  ],
+  "supporting_sections": []
+}
