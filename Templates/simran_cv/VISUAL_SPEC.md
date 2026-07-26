@@ -2,46 +2,54 @@
 
 ## Basis
 
-This specification captures the recurring layout grammar observed across the supplied Simran CV references. It deliberately separates source-derived patterns from measurements that still require rendered side-by-side validation.
+This specification captures the recurring layout grammar across the supplied Blakbear, Clio, Expleo, Paires and Toyota CVs. The reference set contains both dense one-page CVs and longer two-page CVs, so the template must support both without changing its typography.
 
 ## Source-derived recurring patterns
 
 - A4 portrait, single-column layout.
-- Serif body typography.
+- Plain serif typography with a compact LaTeX-like density.
 - Name centred at the top in bold uppercase.
 - Contact information compressed into one centred line.
-- Black body text with minimal decorative treatment.
-- Section names are visually strong but compact.
-- Thin rules separate or extend section headings.
-- Dates align to the right edge while role, degree or project titles remain left aligned.
-- Employer or institution text is subordinate to the role or degree line, commonly through italics.
-- Bullet lists are dense, with restrained vertical gaps and consistent hanging indentation.
-- Experience carries the largest share of the page.
-- Skills are grouped by capability rather than shown as a tag cloud.
-- Supporting sections such as education, projects, certifications, publications and volunteering compress cleanly and may continue onto page two.
-- The system remains visually plain: no sidebar, cards, icons, profile photo or decorative colour palette.
+- Black body text with blue hyperlinks and almost no decoration.
+- Section names are bold, title case and compact. The supplied references do not use decorative rules beside the headings.
+- Dates share a right-aligned column while role, degree and project titles remain left aligned.
+- Employer and location appear directly below the role line in regular text, not as a large or decorative subheading.
+- Bullet lists use small solid markers, tight line spacing and a consistent hanging indent.
+- Experience carries most of page one.
+- Skills appear as labelled capability lines, not tags, columns or cards.
+- Education and condensed achievements can close a one-page CV.
+- Projects, publications, certifications and volunteering expand naturally onto page two in the longer references.
+- No sidebar, icons, profile image, cards, coloured panels or layout tables.
 
-## Initial implementation tokens
+## Tuned implementation tokens
 
-These are starting values, not claimed exact measurements from the PDFs.
+These values were tuned after rendering neutral fixtures against the recurring proportions of the five references.
 
-| Token | Initial value |
+| Token | Tuned value |
 |---|---:|
-| Page top margin | 11.5 mm |
-| Page side margins | 13 mm |
-| Page bottom margin | 10.5 mm |
+| Page top margin | 10 mm |
+| Page side margins | 12.5 mm |
+| Page bottom margin | 9.5 mm |
 | Body font | Times New Roman compatible serif |
-| Body size | 9.15 pt |
-| Body line height | 1.14 |
-| Name size | 16.8 pt |
-| Contact size | 8.15 pt |
-| Section size | 9.7 pt |
-| Section top gap | 1.75 mm |
-| Entry bottom gap | 1.05 mm |
-| Bullet text indent | 3.5 mm |
-| Rule width | 0.55 pt |
+| Body size | 9 pt |
+| Body line height | 1.12 |
+| Name size | 16.5 pt |
+| Contact size | 8.05 pt |
+| Section size | 9.55 pt |
+| Section top gap | 1.25 mm |
+| Entry bottom gap | 0.72 mm |
+| Bullet text indent | 3.15 mm |
 
-All tunable dimensions are CSS custom properties in `simran_cv_template.html`.
+All tunable dimensions remain CSS custom properties in `simran_cv_template.html`.
+
+## Structural corrections from the first render
+
+- Removed the experimental heading rules because they were not supported by the supplied references.
+- Changed section headings from uppercase to title case.
+- Removed default italics from employer, institution and supporting metadata.
+- Reduced margins, line height and inter-block spacing to match the reference density.
+- Changed dictionary access from attribute syntax to explicit keys for `skill["items"]` and `section["items"]`; the first implementation could render Python built-in method text instead of CV content.
+- Replaced short demonstration payloads with realistic dense fixtures.
 
 ## Semantic structure
 
@@ -54,54 +62,51 @@ All tunable dimensions are CSS custom properties in `simran_cv_template.html`.
 5. Education
 6. Projects
 7. Optional supporting sections
-   - Certifications
-   - Publications
-   - Volunteering
-   - Awards
+   - achievements and certifications
+   - publications
+   - volunteering
+   - awards
 
-The order is fixture-controlled except for the fixed primary section order in the first implementation. A later version may accept an explicit section-order array once visual behaviour is stable.
+The payload controls whether optional sections appear. The template does not create empty gaps for omitted content.
 
 ## Pagination rules
 
 - No absolute positioning.
 - No content tables.
 - No default manual page break.
-- Section headings should remain with the next content block.
-- Individual entries and projects should avoid splitting where practical.
-- A two-page CV should arise from content volume, not a preselected page target.
-- The template must not reduce typography to solve overflow automatically.
+- Section headings remain with the next content block.
+- Individual entries and projects avoid splitting where practical.
+- The same typography is used for one-page and two-page output.
+- A second page arises from content volume, not a selected page target.
+- Content selection, not font shrinking, is the correct response to overflow.
 
-## Comparison checklist
+## Current render QA
 
-For each reference comparison, record:
+The tuned fixtures were rendered with WeasyPrint and rasterised for visual inspection.
 
-- page count
-- top, side and bottom whitespace
-- name and contact baseline positions
-- section heading baseline and rule position
-- body line count per page
-- date-column right edge
-- bullet marker and continuation-line alignment
-- average gap between role blocks
-- location of the first page break
-- last-page fill
-- orphaned headings or stranded titles
+- Dense fixture: 1 page, approximately 79% bottom-most vertical occupancy.
+- Long fixture: 2 pages, approximately 95% occupancy on page one and 47% on page two.
+- Contact line remains on one line.
+- Dates share a common right edge.
+- Bullet continuation lines align under the bullet text.
+- No clipping, overlap, missing primary section or leaked Python method text was observed.
 
-## Open questions for the next pass
+`qa_render.py` now blocks page-count drift, obviously sparse fixtures, missing primary sections and dictionary-method leakage.
 
-- Exact serif face used in the references.
-- Whether section headings are consistently uppercase across every version or vary by tailored CV.
-- Exact margin differences between one-page and two-page references.
-- Whether dates use the same font size as body text or a slightly smaller size.
-- Whether project and education blocks use identical spacing to experience blocks.
-- How much of the perceived density comes from font metrics versus line height and margins.
+## Remaining differences and limitations
+
+- The original PDFs appear to use a LaTeX-style serif with slightly different glyph widths. The repository environment does not currently contain that exact face, so the implementation uses a metrically stable serif fallback chain.
+- Exact source-PDF coordinates were not available as editable layout metadata. The tuned dimensions are based on rendered comparison and recurring visual proportions, not claimed source measurements.
+- Chromium parity remains to be tested before this template can replace the live pipeline template.
+- The two-page fixture is designed to test pagination and optional sections, not to reproduce the exact section break of any one reference CV.
 
 ## Acceptance criteria before pipeline integration
 
-- Neutral one-page fixture renders without clipping or wrapping the contact line.
-- Neutral two-page fixture paginates naturally with no sparse page caused by a forced break.
-- All wrapped bullet lines align under the first word after the bullet.
+- `python Templates/simran_cv/qa_render.py` passes.
+- Neutral one-page fixture renders without clipping or contact-line wrapping.
+- Neutral two-page fixture paginates naturally and has a materially populated second page.
+- Wrapped bullet lines align under the first word after the bullet.
 - Dates remain aligned to a common right edge.
-- Optional supporting sections can be omitted without leaving spacing artefacts.
-- The rendered output survives Chromium and WeasyPrint comparison without material layout drift.
-- A side-by-side review against all five references records the remaining differences explicitly.
+- Optional supporting sections can be omitted without spacing artefacts.
+- Chromium and WeasyPrint show no material page-count or geometry drift.
+- The template remains independent of candidate evidence and application-selection logic.
