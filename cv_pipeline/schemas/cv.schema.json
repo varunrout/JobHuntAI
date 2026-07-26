@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://jobhuntai.local/schemas/cv.schema.json",
+  "title": "JobHuntAI CV payload",
+  "type": "object",
+  "required": ["cv_identity_mode", "identity", "summary", "skills", "experience", "projects", "education"],
+  "properties": {
+    "cv_identity_mode": {"enum": ["forecasting_data_scientist", "data_engineer", "energy_market_analyst", "football_research_engineer"]},
+    "dominant_identity": {"type": "string", "minLength": 3},
+    "hybrid_secondary_identity": {"type": ["string", "null"], "enum": [null, "forecasting_data_scientist", "data_engineer", "energy_market_analyst", "football_research_engineer"]},
+    "identity": {
+      "type": "object",
+      "required": ["name", "headline", "email", "phone", "location", "linkedin", "github"],
+      "properties": {
+        "name": {"type": "string"}, "headline": {"type": "string", "minLength": 12},
+        "email": {"type": "string"}, "phone": {"type": "string"}, "location": {"type": "string"},
+        "linkedin": {"type": "string"}, "github": {"type": "string"}
+      },
+      "additionalProperties": true
+    },
+    "summary": {"type": "string", "minLength": 80},
+    "skills": {
+      "type": "array", "minItems": 3, "maxItems": 5,
+      "items": {"type": "object", "required": ["category", "items"], "properties": {"category": {"type": "string"}, "items": {"type": "string"}}, "additionalProperties": true}
+    },
+    "experience": {"type": "array", "minItems": 1},
+    "projects": {"type": "array", "maxItems": 3},
+    "education": {"type": "array", "minItems": 1},
+    "projects_lead": {"type": "boolean"}
+  },
+  "additionalProperties": true
+}

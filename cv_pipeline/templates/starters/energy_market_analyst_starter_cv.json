@@ -1,0 +1,15 @@
+{
+  "cv_identity_mode": "energy_market_analyst",
+  "dominant_identity": "Energy Market Analyst",
+  "hybrid_secondary_identity": null,
+  "identity": {"name": "Varun Rout", "headline": "Energy Market Analyst | Power Forecasting, Pricing and Risk Analytics", "email": "", "phone": "", "location": "Birmingham, United Kingdom", "linkedin": "", "github": ""},
+  "summary": "",
+  "skills": [
+    {"category": "Power Markets", "items": ""},
+    {"category": "Quantitative Methods", "items": ""},
+    {"category": "Data and Automation", "items": ""},
+    {"category": "Commercial Delivery", "items": ""},
+    {"category": "Risk and Uncertainty", "items": ""}
+  ],
+  "experience": [], "projects": [], "education": [], "projects_lead": false
+}

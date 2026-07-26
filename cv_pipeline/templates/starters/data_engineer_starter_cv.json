@@ -1,0 +1,15 @@
+{
+  "cv_identity_mode": "data_engineer",
+  "dominant_identity": "Data Engineer",
+  "hybrid_secondary_identity": null,
+  "identity": {"name": "Varun Rout", "headline": "Data Engineer | Python, SQL, Azure and Reliable Data Pipelines", "email": "", "phone": "", "location": "Birmingham, United Kingdom", "linkedin": "", "github": ""},
+  "summary": "",
+  "skills": [
+    {"category": "Pipeline Engineering", "items": ""},
+    {"category": "Data Quality", "items": ""},
+    {"category": "Storage and Transformation", "items": ""},
+    {"category": "Cloud and Delivery", "items": ""},
+    {"category": "Data Products", "items": ""}
+  ],
+  "experience": [], "projects": [], "education": [], "projects_lead": false
+}

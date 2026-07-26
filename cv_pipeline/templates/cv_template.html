@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<style>
+:root { --accent:#14385c; --ink:#1c1c1c; --soft:#444; --rule:#c9d2dc; --font:"Lato","Carlito",sans-serif; }
+@page { size:A4; margin:16mm 15mm; }
+* { box-sizing:border-box; margin:0; padding:0; }
+body { font-family:var(--font); font-size:10.4pt; line-height:1.38; color:var(--ink); }
+a { color:var(--soft); text-decoration:none; }
+.name { font-size:21pt; font-weight:700; letter-spacing:.06em; color:var(--accent); text-align:center; text-transform:uppercase; }
+.headline { text-align:center; font-size:11pt; font-weight:600; color:var(--soft); margin-top:1mm; }
+.contact { text-align:center; font-size:9.2pt; color:var(--soft); margin-top:1.6mm; }
+.contact span { white-space:nowrap; }
+.contact span + span::before { content:"  •  "; color:var(--rule); }
+section { margin-top:4.2mm; }
+h2 { font-size:10pt; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--accent); border-bottom:.6pt solid var(--rule); padding-bottom:.8mm; margin-bottom:2mm; break-after:avoid; }
+.summary { text-align:justify; }
+.capabilities p { margin-bottom:1mm; break-inside:avoid; }
+.capabilities .cat { font-weight:700; }
+.block { margin-bottom:3mm; break-inside:avoid; }
+.block-head { display:flex; justify-content:space-between; align-items:baseline; break-after:avoid; }
+.block-title { font-weight:700; font-size:10.6pt; min-width:0; }
+.org,.block-dates,.block-sub { color:var(--soft); }
+.block-dates { font-size:9.4pt; white-space:nowrap; padding-left:10px; }
+.block-sub { font-size:9.2pt; margin-top:.2mm; }
+ul { list-style:none; margin-top:1mm; }
+li { padding-left:4.2mm; position:relative; margin-bottom:.9mm; break-inside:avoid; }
+li::before { content:"•"; position:absolute; left:.6mm; color:var(--accent); }
+.page-break-before { break-before:page; }
+</style>
+</head>
+<body>
+<header>
+  <div class="name">{{ identity.name }}</div>
+  <div class="headline">{{ identity.headline }}</div>
+  <div class="contact"><span>{{ identity.email }}</span><span>{{ identity.phone }}</span><span>{{ identity.location }}</span><span>{{ identity.linkedin }}</span><span>{{ identity.github }}</span></div>
+</header>
+<section><h2>Professional Summary</h2><p class="summary">{{ summary }}</p></section>
+<section class="capabilities"><h2>Core Capabilities</h2>{% for s in skills %}<p><span class="cat">{{ s.category }}:</span> {{ s.items }}</p>{% endfor %}</section>
+{% if projects_lead %}{% include 'projects.html' %}{% endif %}
+<section><h2>Work Experience</h2>{% for role in experience %}<div class="block{% if role.page_break_before %} page-break-before{% endif %}"><div class="block-head"><div class="block-title">{% if role.roles %}{{ role.org }}{% else %}{{ role.title }} <span class="org"> · {{ role.org }}</span>{% endif %}</div><div class="block-dates">{{ role.dates }}</div></div>{% if role.sub %}<div class="block-sub">{{ role.sub }}</div>{% endif %}{% if role.roles %}{% for sr in role.roles %}<div class="block-head"><div class="block-title">{{ sr.title }}</div><div class="block-dates">{{ sr.dates }}</div></div><ul>{% for b in sr.bullets %}<li>{{ b }}</li>{% endfor %}</ul>{% endfor %}{% else %}<ul>{% for b in role.bullets %}<li>{{ b }}</li>{% endfor %}</ul>{% endif %}</div>{% endfor %}</section>
+{% if not projects_lead and projects %}<section><h2>Projects</h2>{% for p in projects %}<div class="block"><div class="block-head"><div class="block-title">{{ p.title }} <span class="org">({{ p.tools }})</span></div><div class="block-dates">{{ p.dates }}</div></div><ul>{% for b in p.bullets %}<li>{{ b }}</li>{% endfor %}</ul></div>{% endfor %}</section>{% endif %}
+<section><h2>Education</h2>{% for e in education %}<div class="block"><div class="block-head"><div class="block-title">{{ e.degree }} <span class="org"> · {{ e.school }}</span></div><div class="block-dates">{{ e.dates }}</div></div></div>{% endfor %}</section>
+</body>
+</html>

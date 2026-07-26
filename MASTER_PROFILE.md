@@ -4,27 +4,28 @@
 Varun Rout
 
 ## Positioning
-Energy Data Analyst / Forecasting Analyst / Market & Risk Analytics candidate with Python, SQL, forecasting, data engineering and stakeholder-facing modelling experience.
+Evidence-backed candidate across energy-market analytics, forecasting data science, data engineering and selected football research engineering roles. The application pipeline chooses one dominant identity per role rather than presenting all four at once.
 
 ## Primary lane
 Energy analytics, forecasting, pricing, market risk, portfolio analysis and trading analytics.
 
-## Secondary lane
-Commercial analytics, demand planning, segmentation, pricing and BI automation.
+## Secondary lanes
+Data engineering, commercial forecasting and selected football research engineering.
 
 ## Visa constraint
 Full UK working rights on a Graduate visa until 13 December 2026. Long-term UK employment requires Skilled Worker sponsorship. International roles may require local employer-supported work authorisation.
 
-## Primary pitch
-Experience across GB power-market analytics, residual-load forecasting, price-curve support, network-charge forecasting, Monte Carlo risk simulation and Python/SQL data pipelines.
-
 ## Strongest evidence
-- E.ON Energy Markets: residual-load modelling, price-curve support, GB market-data pipelines, DUoS/TNUoS forecasting, Monte Carlo scenarios, Snowflake and Power BI.
+- E.ON Energy Markets: residual-load modelling, forward-price-curve support, GB market-data pipelines, DUoS/TNUoS forecasting, Monte Carlo scenarios, Snowflake, Azure ML Studio, Azure DevOps and Power BI.
 - Manor Park Trading Company: demand forecasting across roughly 7,000 SKUs, segmentation and reporting automation.
-- University of Birmingham Sport & Fitness: analytics consultancy, attendance forecasting and stakeholder planning.
+- University of Birmingham Sport & Fitness: attendance forecasting and stakeholder planning.
 - Infosys: production pipelines, SQL transformations, Azure Data Factory, Azure Databricks and reliability documentation.
+- Independent football portfolio: sequence modelling, contextual and opponent-adjusted metrics, honest benchmark comparison and analyst-facing delivery.
 
-## CV modes
-1. Energy Forecasting & Risk CV
-2. Commercial Data Analyst CV
-3. Applied Data Science CV
+## Controlled CV identities
+1. Forecasting Data Scientist
+2. Data Engineer
+3. Energy Market Analyst
+4. Football Research Engineer
+
+The target headline is generated from the selected identity and target role. Official employment titles remain unchanged in work experience. The detailed live evidence bank and claim-status tags remain the sole source for generated claims.
