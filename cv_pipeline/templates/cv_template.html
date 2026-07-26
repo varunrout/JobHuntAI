@@ -4,41 +4,86 @@
 <meta charset="utf-8">
 <style>
 :root {
-  --ink:#111111;
-  --link:#0563c1;
-  --rule:#333333;
-  --font:"Times New Roman","Liberation Serif",serif;
-  --body-size:9.25pt;
-  --body-line-height:1.17;
-  --bullet-text-indent:1.9mm;
-  --bullet-marker-offset:0.2mm;
+  --ink:#201f1d;
+  --link:#7d5411;
+  --rule:#201f1d;
+  --divider:#d7d3d3;
+  --muted:#605d5d;
+  --accent:#c28d41;
+  --accent-soft:#facb8d;
+  --surface:#fffdf9;
+  --font:"Lora","Georgia","DejaVu Serif","Liberation Serif",serif;
+  --font-heading:"Cormorant Garamond","Georgia","DejaVu Serif","Liberation Serif",serif;
+  --body-size:8.45pt;
+  --body-line-height:1.235;
+  --bullet-text-indent:2.4mm;
+  --bullet-marker-offset:0.25mm;
 }
-@page { size:A4; margin:12mm 13mm 11mm 13mm; }
+@page { size:A4; margin:10.2mm 13mm 9.5mm 13mm; }
 * { box-sizing:border-box; margin:0; padding:0; }
-body[data-visual-contract="jobhuntai-serif-v1"] { font-family:var(--font); font-size:var(--body-size); line-height:var(--body-line-height); color:var(--ink); }
-a { color:var(--link); text-decoration:underline; }
-header { text-align:center; }
-.name { font-size:17pt; font-weight:700; letter-spacing:.01em; text-transform:uppercase; }
-.contact { font-size:8.35pt; margin-top:1mm; white-space:nowrap; }
-.contact span + span::before,
-.contact a + span::before,
-.contact span + a::before,
-.contact a + a::before { content:" | "; color:var(--ink); text-decoration:none; }
+html { background:var(--surface); }
+body[data-visual-contract="jobhuntai-classic-gold-v2"] {
+  font-family:var(--font);
+  font-size:var(--body-size);
+  line-height:var(--body-line-height);
+  color:var(--ink);
+  background:var(--surface);
+  -webkit-print-color-adjust:exact;
+  print-color-adjust:exact;
+}
+a { color:var(--link); text-decoration:none; border-bottom:.45pt solid var(--accent-soft); }
+header { text-align:left; display:flex; flex-direction:column; gap:1.1mm; padding-bottom:1.7mm; border-bottom:1.6pt solid var(--rule); }
+.name {
+  font-family:var(--font-heading);
+  font-size:27pt;
+  font-weight:400;
+  line-height:.92;
+  letter-spacing:.055em;
+  text-transform:uppercase;
+}
+.headline {
+  font-family:var(--font-heading);
+  font-size:9.55pt;
+  line-height:1.1;
+  letter-spacing:.018em;
+  color:#444141;
+}
+.contact {
+  font-size:7.45pt;
+  line-height:1.18;
+  letter-spacing:.015em;
+  color:var(--muted);
+  display:flex;
+  flex-wrap:wrap;
+  gap:.3mm 1.9mm;
+  align-items:baseline;
+}
+.sep { color:var(--accent); }
 .content-column { width:100%; margin:0; padding:0; }
-section { margin-top:2mm; }
+section { margin-top:1.9mm; }
 h2 {
-  font-size:10.7pt;
-  font-weight:700;
-  line-height:1.05;
-  border-bottom:.55pt solid var(--rule);
-  padding-bottom:.35mm;
-  margin-bottom:.75mm;
+  font-family:var(--font-heading);
+  font-size:9.05pt;
+  font-weight:600;
+  line-height:1;
+  letter-spacing:.08em;
+  text-transform:none;
+  color:var(--link);
+  border-bottom:.65pt solid var(--divider);
+  padding-bottom:.55mm;
+  margin-bottom:1.05mm;
   break-after:avoid;
 }
 .summary { text-align:left; }
 .capabilities p { margin-bottom:.25mm; break-inside:avoid; }
-.capabilities .cat { font-weight:700; }
+.capabilities .cat {
+  font-family:var(--font-heading);
+  font-size:8.75pt;
+  font-weight:600;
+  letter-spacing:.025em;
+}
 .block { margin-bottom:1.15mm; break-inside:avoid; }
+.block:last-child { margin-bottom:0; }
 .row {
   display:grid;
   grid-template-columns:minmax(0,1fr) auto;
@@ -46,13 +91,41 @@ h2 {
   align-items:baseline;
   break-after:avoid;
 }
-.block-title,.project-title,.education-title { font-weight:700; }
-.block-dates { white-space:nowrap; }
-.org { font-style:italic; margin-top:.05mm; break-after:avoid; }
+.block-title,.project-title,.education-title {
+  font-family:var(--font-heading);
+  font-size:10.15pt;
+  font-weight:600;
+  line-height:1.05;
+  letter-spacing:.012em;
+}
+.block-dates {
+  font-size:7.25pt;
+  line-height:1;
+  letter-spacing:.055em;
+  text-transform:uppercase;
+  color:var(--muted);
+  white-space:nowrap;
+  font-variant-numeric:tabular-nums;
+}
+.org {
+  font-style:italic;
+  font-size:7.85pt;
+  color:#444141;
+  margin-top:.15mm;
+  break-after:avoid;
+}
 .tools { font-style:italic; font-weight:400; }
+.subroles {
+  margin-top:.65mm;
+  padding-left:2.1mm;
+  border-left:.6pt solid var(--divider);
+}
+.subrole { margin-bottom:1mm; break-inside:avoid; }
+.subrole:last-child { margin-bottom:0; }
+.subrole .block-title { font-size:9.35pt; }
 .evidence-list {
   list-style:none;
-  margin:.25mm 0 0 0;
+  margin:.55mm 0 0 0;
   padding:0;
   font-family:var(--font);
   font-size:var(--body-size);
@@ -60,7 +133,7 @@ h2 {
 }
 .evidence-list li {
   position:relative;
-  margin:0 0 .15mm 0;
+  margin:0 0 .22mm 0;
   padding-left:var(--bullet-text-indent);
   text-indent:0;
   font-family:var(--font);
@@ -73,36 +146,48 @@ h2 {
   position:absolute;
   left:var(--bullet-marker-offset);
   top:0;
+  color:var(--link);
   font-family:var(--font);
   font-size:var(--body-size);
   line-height:var(--body-line-height);
+  display:none;
 }
-.project { margin-bottom:.65mm; break-inside:avoid; }
+.bullet-marker {
+  display:inline-block;
+  width:2.15mm;
+  margin-left:-2.15mm;
+  color:var(--link);
+}
+.bullet-text { display:inline; }
+.project { margin-bottom:.75mm; break-inside:avoid; }
+.project:last-child { margin-bottom:0; }
 .project-head { break-after:avoid; }
-.education .block { margin-bottom:.1mm; }
+.project-meta { font-style:italic; font-size:7.85pt; color:#444141; margin-top:.15mm; }
+.education .block { margin-bottom:.45mm; }
 .page-break-before { break-before:page; }
 </style>
 </head>
-<body data-visual-contract="jobhuntai-serif-v1">
+<body data-visual-contract="jobhuntai-classic-gold-v2">
 <header>
   <div class="name">{{ identity.name }}</div>
+  <div class="headline">{{ identity.headline|default(dominant_identity|default(''), true) }}{% if identity.location|default('') %} <span class="sep">·</span> {{ identity.location }}{% endif %}</div>
   <div class="contact">
-    <span>{{ identity.phone }}</span><span><a href="mailto:{{ identity.email }}">{{ identity.email }}</a></span><span><a href="{{ identity.linkedin }}">LinkedIn</a></span><span><a href="{{ identity.portfolio }}">Portfolio</a></span><span><a href="{{ identity.github }}">GitHub</a></span><span>{{ identity.location }}</span>
+    <span>{{ identity.phone }}</span><span class="sep">|</span><a href="mailto:{{ identity.email }}">{{ identity.email }}</a><span class="sep">|</span><a href="{{ identity.linkedin }}">LinkedIn</a><span class="sep">|</span><a href="{{ identity.portfolio }}">Portfolio</a><span class="sep">|</span><a href="{{ identity.github }}">GitHub</a>
   </div>
 </header>
 <main class="content-column">
 {% set project_items = projects|default([]) %}
 {% set lead_projects = projects_lead|default(false) %}
 <section data-section="summary"><h2>Professional Summary</h2><p class="summary">{{ summary }}</p></section>
-<section class="capabilities" data-section="skills"><h2>Skills</h2>{% for s in skills %}<p><span class="cat">{{ s.category }}:</span> {{ s["items"] }}</p>{% endfor %}</section>
+<section class="capabilities" data-section="skills"><h2>Skills</h2>{% for s in skills %}<p><span class="cat">{{ s.category }} ·</span> {{ s["items"] }}</p>{% endfor %}</section>
 {% if lead_projects and project_items %}
-<section data-section="projects"><h2>Projects</h2>{% for p in project_items %}<div class="project"><div class="row project-head"><div><span class="project-title">{{ p.title }}</span>{% if p.tools|default('') %} <span class="tools">({{ p.tools }})</span>{% endif %}{% if p.link|default('') %} | <a href="{{ p.link }}">{{ p.link_label|default('GitHub', true) }}</a>{% endif %}</div><div class="block-dates">{{ p.dates|default('') }}</div></div><ul class="evidence-list">{% for b in p.bullets %}<li>{{ b }}</li>{% endfor %}</ul></div>{% endfor %}</section>
+<section data-section="projects"><h2>Projects</h2>{% for p in project_items %}<div class="project"><div class="row project-head"><div><span class="project-title">{{ p.title }}</span>{% if p.link|default('') %} <span class="sep">·</span> <a href="{{ p.link }}">{{ p.link_label|default('GitHub', true) }}</a>{% endif %}</div><div class="block-dates">{{ p.dates|default('') }}</div></div>{% if p.tools|default('') %}<div class="project-meta">{{ p.tools }}</div>{% endif %}<ul class="evidence-list">{% for b in p.bullets %}<li><span class="bullet-marker">•</span><span class="bullet-text">{{ b }}</span></li>{% endfor %}</ul></div>{% endfor %}</section>
 {% endif %}
-<section data-section="experience"><h2>Experience</h2>{% for role in experience %}{% set subroles = role.roles|default([]) %}<div class="block{% if role.page_break_before|default(false) %} page-break-before{% endif %}">{% if subroles %}{% for sr in subroles %}<div class="row"><div class="block-title">{{ sr.title }}</div><div class="block-dates">{{ sr.dates|default('') }}</div></div>{% if loop.first %}<div class="org">{{ role.org }}{% if role.sub|default('') %}, {{ role.sub }}{% endif %}</div>{% endif %}<ul class="evidence-list">{% for b in sr.bullets %}<li>{{ b }}</li>{% endfor %}</ul>{% endfor %}{% else %}<div class="row"><div class="block-title">{{ role.title }}</div><div class="block-dates">{{ role.dates|default('') }}</div></div><div class="org">{{ role.org }}{% if role.sub|default('') %}, {{ role.sub }}{% endif %}</div><ul class="evidence-list">{% for b in role.bullets %}<li>{{ b }}</li>{% endfor %}</ul>{% endif %}</div>{% endfor %}</section>
+<section data-section="experience"><h2>Experience</h2>{% for role in experience %}{% set subroles = role.roles|default([]) %}<div class="block{% if role.page_break_before|default(false) %} page-break-before{% endif %}">{% if subroles %}<div class="row"><div class="block-title">{{ role.org }}</div><div class="block-dates">{{ role.dates|default('') }}</div></div>{% if role.sub|default('') %}<div class="org">{{ role.sub }}</div>{% endif %}<div class="subroles">{% for sr in subroles %}<div class="subrole"><div class="row"><div class="block-title">{{ sr.title }}</div><div class="block-dates">{{ sr.dates|default('') }}</div></div><ul class="evidence-list">{% for b in sr.bullets %}<li><span class="bullet-marker">•</span><span class="bullet-text">{{ b }}</span></li>{% endfor %}</ul></div>{% endfor %}</div>{% else %}<div class="row"><div class="block-title">{{ role.title }}</div><div class="block-dates">{{ role.dates|default('') }}</div></div><div class="org">{{ role.org }}{% if role.sub|default('') %} · {{ role.sub }}{% endif %}</div><ul class="evidence-list">{% for b in role.bullets %}<li><span class="bullet-marker">•</span><span class="bullet-text">{{ b }}</span></li>{% endfor %}</ul>{% endif %}</div>{% endfor %}</section>
 {% if not lead_projects and project_items %}
-<section data-section="projects"><h2>Projects</h2>{% for p in project_items %}<div class="project"><div class="row project-head"><div><span class="project-title">{{ p.title }}</span>{% if p.tools|default('') %} <span class="tools">({{ p.tools }})</span>{% endif %}{% if p.link|default('') %} | <a href="{{ p.link }}">{{ p.link_label|default('GitHub', true) }}</a>{% endif %}</div><div class="block-dates">{{ p.dates|default('') }}</div></div><ul class="evidence-list">{% for b in p.bullets %}<li>{{ b }}</li>{% endfor %}</ul></div>{% endfor %}</section>
+<section data-section="projects"><h2>Projects</h2>{% for p in project_items %}<div class="project"><div class="row project-head"><div><span class="project-title">{{ p.title }}</span>{% if p.link|default('') %} <span class="sep">·</span> <a href="{{ p.link }}">{{ p.link_label|default('GitHub', true) }}</a>{% endif %}</div><div class="block-dates">{{ p.dates|default('') }}</div></div>{% if p.tools|default('') %}<div class="project-meta">{{ p.tools }}</div>{% endif %}<ul class="evidence-list">{% for b in p.bullets %}<li><span class="bullet-marker">•</span><span class="bullet-text">{{ b }}</span></li>{% endfor %}</ul></div>{% endfor %}</section>
 {% endif %}
-<section class="education" data-section="education"><h2>Education</h2>{% for e in education %}<div class="block row"><div class="education-title">{{ e.degree }}, {{ e.school }}</div><div class="block-dates">{{ e.dates|default('') }}</div></div>{% endfor %}</section>
+<section class="education" data-section="education"><h2>Education</h2>{% for e in education %}<div class="block row"><div><div class="education-title">{{ e.degree }}</div><div class="org">{{ e.school }}</div></div><div class="block-dates">{{ e.dates|default('') }}</div></div>{% endfor %}</section>
 </main>
 </body>
 </html>
