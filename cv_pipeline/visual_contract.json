@@ -1,0 +1,69 @@
+{
+  "version": "1.0.0",
+  "renderer": "html",
+  "authoritative_templates": {
+    "shared_css": {
+      "path": "templates/shared_visual.css",
+      "sha256": "9cc378f684c26cbb147c7badc89754dd4c44d6583072e4b66b71b728309ad9f1"
+    },
+    "cv": {
+      "path": "templates/cv_template.html",
+      "sha256": "b0c306b073a543ae18ec92fa46355595e2f9538d212a462863abd4f4116239b9"
+    },
+    "cover_letter": {
+      "path": "templates/cover_letter_template.html",
+      "sha256": "3c0173f1eb35fe455bd3016979c5831df8d196bc2ecf53e92e288b2df2fa3acd"
+    }
+  },
+  "cv": {
+    "required_headings": [
+      "Professional Summary",
+      "Skills",
+      "Experience",
+      "Projects",
+      "Education"
+    ],
+    "forbidden_text": [
+      "Selected Projects"
+    ],
+    "required_fragments": [
+      "{% include 'shared_visual.css' %}",
+      "--body-size:9.25pt;",
+      "--bullet-text-indent:2.2mm;",
+      "--bullet-marker-offset:.15mm;",
+      "grid-template-columns:minmax(0,1fr) auto;",
+      "align-items:baseline;",
+      "width:100%;",
+      "padding-left:var(--bullet-text-indent);",
+      "left:var(--bullet-marker-offset);",
+      "<ul class=\"evidence-list\">",
+      "<h2>Projects</h2>"
+    ]
+  },
+  "cover_letter": {
+    "forbidden_text": [
+      "<table",
+      "text-align:justify"
+    ],
+    "required_fragments": [
+      "{% include 'shared_visual.css' %}",
+      "<main class=\"letter-body\">",
+      "grid-template-columns:minmax(0,1fr) auto;",
+      "align-items:baseline;",
+      "width:100%;",
+      "margin:0 0 3mm 0;",
+      "padding:0;",
+      "<span class=\"date\">{{ date }}</span>",
+      ".letter-body p",
+      "text-align:left;"
+    ]
+  },
+  "contact_order": [
+    "phone",
+    "email",
+    "linkedin",
+    "portfolio",
+    "github",
+    "location"
+  ]
+}
