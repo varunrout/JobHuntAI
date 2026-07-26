@@ -20,7 +20,7 @@ This directory is the version-controlled implementation snapshot for JobHuntAI C
 - Energy Market Analyst
 - Football Research Engineer
 
-Official employment titles are never changed. The target headline remains an internal framing field and is not rendered as a separate visual line.
+Official employment titles are never changed. The role-specific professional headline is rendered in the document header and remains separate from official employment titles.
 
 ## Canonical templates
 
@@ -32,17 +32,17 @@ The HTML templates are authoritative. PDF is the authoritative application artef
 
 ## Locked output design
 
-- One-column A4 layout based on the approved Simran reference CVs.
-- Times New Roman-compatible serif typography.
-- Centred uppercase name and a compact contact line containing LinkedIn, Portfolio and GitHub.
-- Black text, blue underlined hyperlinks and thin black rules.
+- One-column A4 layout based on the approved standalone CV and cover-letter templates.
+- Classical serif hierarchy using Cormorant Garamond and Lora tokens with approved serif fallbacks.
+- Left-aligned uppercase name, visible professional headline and compact contact line containing LinkedIn, Portfolio and GitHub.
+- Warm off-white surface, charcoal text, restrained gold accents and fine neutral divider rules.
 - Exact CV section labels: Professional Summary, Skills, Experience, Projects and Education.
 - The heading `Selected Projects` is forbidden.
-- Bold roles, italic employer lines, right-aligned dates and one shared left edge.
+- Strong role hierarchy, italic employer or context lines, right-aligned dates and one shared left edge.
 - Wrapped bullet lines start directly under the first word after the bullet.
 - Every project requires a direct GitHub link and two or three evidence bullets.
-- Cover-letter role, company/date, greeting and body use one shared content column.
-- Tables, negative alignment offsets and manual Word-only layout fixes are forbidden.
+- Cover-letter header, role subject, company/date row, greeting and body use one shared content column.
+- Tables, sidebars, icons, negative alignment offsets and manual Word-only layout fixes are forbidden.
 
 ## Hard visual gate
 
@@ -66,6 +66,7 @@ The complete static and rendered visual suite runs in GitHub Actions for every p
 
 ```bash
 python visual_gate.py
+python visual_contract_gate.py
 python -m unittest discover -s tests -v
 python tests_gate10_tenure.py
 python tests_gate11_repo_claims.py
