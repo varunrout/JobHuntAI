@@ -35,7 +35,7 @@ Every application CV has one dominant identity. A hybrid is permitted only when 
 Before drafting, select:
 
 - the dominant identity;
-- a target professional headline for internal framing, separate from official employment titles;
+- a target professional headline for the document header, separate from official employment titles;
 - a one-sentence professional thesis;
 - three to five signature proof points;
 - the evidence and projects to include or exclude;
@@ -53,7 +53,7 @@ The submitted CV must:
 - include the fixed contact links: LinkedIn, `https://varunrout.com` and GitHub;
 - include a direct GitHub link and two or three evidence bullets for every project;
 - use the exact section heading `Projects`; `Selected Projects` is never permitted;
-- default to the approved dense one-page serif layout, with a second page only when explicitly justified;
+- default to the approved dense one-page classical serif layout, with a second page only when explicitly justified;
 - prefer deleting lower-priority content or reducing project count over reducing typography.
 
 ## Canonical visual source
@@ -68,18 +68,18 @@ All application PDFs must be generated through `cv_pipeline/render.py`. A DOCX, 
 
 ## Approved visual system
 
-The default CV and cover-letter design is the approved Simran-reference system:
+The default CV and cover-letter design is the approved standalone-template system:
 
 - single-column A4 layout;
-- Times New Roman or metrically compatible serif type;
-- centred uppercase name and compact contact line;
-- black text, blue underlined links and thin black section rules;
+- Cormorant Garamond and Lora visual hierarchy, with approved serif fallbacks when those fonts are unavailable;
+- left-aligned uppercase name, visible role-specific professional headline and compact contact line;
+- warm off-white surface, charcoal text, restrained gold accents and fine neutral rules;
 - exact title-case CV section headings: Professional Summary, Skills, Experience, Projects and Education;
-- bold role titles, italic employer lines and right-aligned dates;
+- strong role titles, italic employer or context lines and right-aligned dates;
 - one consistent left edge for section headings, role titles, employer lines and bullet text;
 - wrapped bullet lines begin directly under the first word after the bullet;
-- cover-letter role, company/date row, greeting and body share one left and right content grid;
-- no decorative colour palette, cards, sidebars, icons, tables, negative alignment offsets or oversized whitespace.
+- cover-letter header, role subject, company/date row, greeting and body share one left and right content grid;
+- no cards, sidebars, icons, tables, negative alignment offsets or oversized whitespace.
 
 ## Hard visual gate
 
