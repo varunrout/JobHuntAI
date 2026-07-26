@@ -5,7 +5,7 @@ on:
     paths: ['cv_pipeline/**', 'RULES.md', 'MASTER_PROFILE.md', 'COMMAND.md', '.github/workflows/cv-pipeline.yml']
   push:
     branches: [main]
-    paths: ['cv_pipeline/**', 'RULES.md', 'MASTER_PROFILE.md', 'COMMAND.md']
+    paths: ['cv_pipeline/**', 'RULES.md', 'MASTER_PROFILE.md', 'COMMAND.md', '.github/workflows/cv-pipeline.yml']
 
 jobs:
   test:
@@ -17,7 +17,9 @@ jobs:
           python-version: '3.12'
       - run: python -m pip install --upgrade pip jsonschema pypdf
       - name: Compile
-        run: python -m py_compile cv_pipeline/quality_gate.py cv_pipeline/render_gate.py cv_pipeline/lint.py
+        run: python -m py_compile cv_pipeline/quality_gate.py cv_pipeline/render_gate.py cv_pipeline/lint.py cv_pipeline/visual_contract_gate.py
+      - name: Locked HTML visual contract
+        run: python cv_pipeline/visual_contract_gate.py
       - name: Structural and factual tests
         working-directory: cv_pipeline
         run: python -m unittest discover -s tests -v
