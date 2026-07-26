@@ -51,9 +51,21 @@ The submitted CV must:
 - keep official work titles and dates unchanged;
 - avoid defensive title, transition or gap-explaining language;
 - include the fixed contact links: LinkedIn, `https://varunrout.com` and GitHub;
-- include a direct GitHub link and two or three evidence bullets for every selected project;
+- include a direct GitHub link and two or three evidence bullets for every project;
+- use the exact section heading `Projects`; `Selected Projects` is forbidden;
 - default to the approved dense one-page serif layout, with a second page only when explicitly justified;
 - prefer deleting lower-priority content or reducing project count over reducing typography.
+
+## Authoritative visual source
+
+The only visual source of truth is:
+
+- `cv_pipeline/templates/shared_visual.css`;
+- `cv_pipeline/templates/cv_template.html`;
+- `cv_pipeline/templates/cover_letter_template.html`;
+- `cv_pipeline/visual_contract.json`.
+
+PDFs must be rendered directly from HTML. DOCX may exist only as a secondary editable export and must never become the render source or receive manual layout repairs.
 
 ## Approved visual system
 
@@ -65,22 +77,28 @@ The default CV and cover-letter design is the approved Simran-reference system:
 - black text, blue underlined links and thin black section rules;
 - title-case section headings;
 - bold role titles, italic employer lines and right-aligned dates;
-- one consistent left edge for section headings, role titles, employer lines and bullets;
-- no decorative colour palette, cards, sidebars, icons or oversized whitespace;
-- cover letter uses the same header, typeface, rules and spacing.
+- one consistent left edge for section headings, role titles, employer lines and bullet text;
+- wrapped bullet lines start under the first word of the bullet, never farther to the right;
+- no decorative colour palette, cards, sidebars, icons, tables or oversized whitespace;
+- cover-letter role, company/date row, greeting, paragraphs and sign-off share one content width.
 
 ## Quality gates
 
-A CV fails when:
+A CV or cover letter fails when:
 
+- the locked HTML or CSS hash changes without an explicit visual-contract version update;
 - headline framing, summary, capabilities and evidence tell different stories;
 - more than one identity competes for attention;
 - skills lack supporting evidence in the same document;
-- the selected projects do not support the professional thesis;
-- a selected project has fewer than two bullets or lacks a direct GitHub repository link;
+- the projects do not support the professional thesis;
+- a project has fewer than two bullets or lacks a direct GitHub repository link;
+- `Selected Projects` appears anywhere;
 - page one lacks identity, stack, strongest result, operating context or consequence;
-- a required contact link is missing or the contact line wraps awkwardly;
+- a required contact link is missing, reordered or wraps awkwardly;
+- a project or experience list stops using the shared evidence-list class;
+- bullet font size, marker position or hanging alignment drifts;
 - job titles, employer lines, bullets or dates do not align to the approved grid;
+- a cover-letter element sits outside the shared content width;
 - a heading or project title is stranded;
 - any factual or evidence-control gate fails.
 
