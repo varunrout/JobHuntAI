@@ -94,7 +94,7 @@ h2 {
 {% set project_items = projects|default([]) %}
 {% set lead_projects = projects_lead|default(false) %}
 <section data-section="summary"><h2>Professional Summary</h2><p class="summary">{{ summary }}</p></section>
-<section class="capabilities" data-section="skills"><h2>Skills</h2>{% for s in skills %}<p><span class="cat">{{ s.category }}:</span> {{ s.items }}</p>{% endfor %}</section>
+<section class="capabilities" data-section="skills"><h2>Skills</h2>{% for s in skills %}<p><span class="cat">{{ s.category }}:</span> {{ s["items"] }}</p>{% endfor %}</section>
 {% if lead_projects and project_items %}
 <section data-section="projects"><h2>Projects</h2>{% for p in project_items %}<div class="project"><div class="row project-head"><div><span class="project-title">{{ p.title }}</span>{% if p.tools|default('') %} <span class="tools">({{ p.tools }})</span>{% endif %}{% if p.link|default('') %} | <a href="{{ p.link }}">{{ p.link_label|default('GitHub', true) }}</a>{% endif %}</div><div class="block-dates">{{ p.dates|default('') }}</div></div><ul class="evidence-list">{% for b in p.bullets %}<li>{{ b }}</li>{% endfor %}</ul></div>{% endfor %}</section>
 {% endif %}
