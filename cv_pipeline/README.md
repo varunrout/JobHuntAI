@@ -60,6 +60,8 @@ The gate fails on:
 - unexpected page count;
 - table-based layout.
 
+The complete static and rendered visual suite runs in GitHub Actions for every pull request that changes the pipeline or templates.
+
 ## Local checks
 
 ```bash
