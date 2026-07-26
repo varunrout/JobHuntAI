@@ -3,44 +3,72 @@
 <head>
 <meta charset="utf-8">
 <style>
-:root { --accent:#14385c; --ink:#1c1c1c; --soft:#444; --rule:#c9d2dc; --font:"Lato","Carlito",sans-serif; }
-@page { size:A4; margin:16mm 15mm; }
+:root {
+  --ink:#111;
+  --link:#0563c1;
+  --rule:#333;
+  --font:"Times New Roman","Liberation Serif",serif;
+}
+@page { size:A4; margin:12mm 13mm 11mm; }
 * { box-sizing:border-box; margin:0; padding:0; }
-body { font-family:var(--font); font-size:10.4pt; line-height:1.38; color:var(--ink); }
-a { color:var(--soft); text-decoration:none; }
-.name { font-size:21pt; font-weight:700; letter-spacing:.06em; color:var(--accent); text-align:center; text-transform:uppercase; }
-.headline { text-align:center; font-size:11pt; font-weight:600; color:var(--soft); margin-top:1mm; }
-.contact { text-align:center; font-size:9.2pt; color:var(--soft); margin-top:1.6mm; }
-.contact span { white-space:nowrap; }
-.contact span + span::before { content:"  •  "; color:var(--rule); }
-section { margin-top:4.2mm; }
-h2 { font-size:10pt; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--accent); border-bottom:.6pt solid var(--rule); padding-bottom:.8mm; margin-bottom:2mm; break-after:avoid; }
-.summary { text-align:justify; }
-.capabilities p { margin-bottom:1mm; break-inside:avoid; }
+body { font-family:var(--font); font-size:9.25pt; line-height:1.17; color:var(--ink); }
+a { color:var(--link); text-decoration:underline; }
+header { text-align:center; }
+.name { font-size:17pt; font-weight:700; letter-spacing:.01em; text-transform:uppercase; }
+.contact { font-size:8.35pt; margin-top:1mm; white-space:nowrap; }
+.contact span + span::before,
+.contact a + span::before,
+.contact span + a::before,
+.contact a + a::before { content:" | "; color:var(--ink); text-decoration:none; }
+section { margin-top:2mm; }
+h2 {
+  font-size:10.7pt;
+  font-weight:700;
+  line-height:1.05;
+  border-bottom:.55pt solid var(--rule);
+  padding-bottom:.35mm;
+  margin-bottom:.75mm;
+  break-after:avoid;
+}
+.summary { text-align:left; }
+.capabilities p { margin-bottom:.25mm; break-inside:avoid; }
 .capabilities .cat { font-weight:700; }
-.block { margin-bottom:3mm; break-inside:avoid; }
-.block-head { display:flex; justify-content:space-between; align-items:baseline; break-after:avoid; }
-.block-title { font-weight:700; font-size:10.6pt; min-width:0; }
-.org,.block-dates,.block-sub { color:var(--soft); }
-.block-dates { font-size:9.4pt; white-space:nowrap; padding-left:10px; }
-.block-sub { font-size:9.2pt; margin-top:.2mm; }
-ul { list-style:none; margin-top:1mm; }
-li { padding-left:4.2mm; position:relative; margin-bottom:.9mm; break-inside:avoid; }
-li::before { content:"•"; position:absolute; left:.6mm; color:var(--accent); }
+.block { margin-bottom:1.15mm; break-inside:avoid; }
+.row {
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  column-gap:4mm;
+  align-items:baseline;
+  break-after:avoid;
+}
+.block-title,.project-title,.education-title { font-weight:700; }
+.block-dates { white-space:nowrap; }
+.org { font-style:italic; margin-top:.05mm; break-after:avoid; }
+.tools { font-style:italic; font-weight:400; }
+ul { margin:.25mm 0 0 3.8mm; padding:0; }
+li { margin:0 0 .15mm 0; padding-left:.25mm; break-inside:avoid; }
+.project { margin-bottom:.65mm; break-inside:avoid; }
+.project-head { break-after:avoid; }
+.education .block { margin-bottom:.1mm; }
 .page-break-before { break-before:page; }
 </style>
 </head>
 <body>
 <header>
   <div class="name">{{ identity.name }}</div>
-  <div class="headline">{{ identity.headline }}</div>
-  <div class="contact"><span>{{ identity.email }}</span><span>{{ identity.phone }}</span><span>{{ identity.location }}</span><span>{{ identity.linkedin }}</span><span>{{ identity.github }}</span></div>
+  <div class="contact">
+    <span>{{ identity.phone }}</span><span><a href="mailto:{{ identity.email }}">{{ identity.email }}</a></span><span><a href="{{ identity.linkedin }}">LinkedIn</a></span><span><a href="{{ identity.portfolio }}">Portfolio</a></span><span><a href="{{ identity.github }}">GitHub</a></span><span>{{ identity.location }}</span>
+  </div>
 </header>
 <section><h2>Professional Summary</h2><p class="summary">{{ summary }}</p></section>
-<section class="capabilities"><h2>Core Capabilities</h2>{% for s in skills %}<p><span class="cat">{{ s.category }}:</span> {{ s.items }}</p>{% endfor %}</section>
-{% if projects_lead %}{% include 'projects.html' %}{% endif %}
-<section><h2>Work Experience</h2>{% for role in experience %}<div class="block{% if role.page_break_before %} page-break-before{% endif %}"><div class="block-head"><div class="block-title">{% if role.roles %}{{ role.org }}{% else %}{{ role.title }} <span class="org"> · {{ role.org }}</span>{% endif %}</div><div class="block-dates">{{ role.dates }}</div></div>{% if role.sub %}<div class="block-sub">{{ role.sub }}</div>{% endif %}{% if role.roles %}{% for sr in role.roles %}<div class="block-head"><div class="block-title">{{ sr.title }}</div><div class="block-dates">{{ sr.dates }}</div></div><ul>{% for b in sr.bullets %}<li>{{ b }}</li>{% endfor %}</ul>{% endfor %}{% else %}<ul>{% for b in role.bullets %}<li>{{ b }}</li>{% endfor %}</ul>{% endif %}</div>{% endfor %}</section>
-{% if not projects_lead and projects %}<section><h2>Projects</h2>{% for p in projects %}<div class="block"><div class="block-head"><div class="block-title">{{ p.title }} <span class="org">({{ p.tools }})</span></div><div class="block-dates">{{ p.dates }}</div></div><ul>{% for b in p.bullets %}<li>{{ b }}</li>{% endfor %}</ul></div>{% endfor %}</section>{% endif %}
-<section><h2>Education</h2>{% for e in education %}<div class="block"><div class="block-head"><div class="block-title">{{ e.degree }} <span class="org"> · {{ e.school }}</span></div><div class="block-dates">{{ e.dates }}</div></div></div>{% endfor %}</section>
+<section class="capabilities"><h2>Skills</h2>{% for s in skills %}<p><span class="cat">{{ s.category }}:</span> {{ s.items }}</p>{% endfor %}</section>
+{% if projects_lead and projects %}
+<section><h2>Selected Projects</h2>{% for p in projects %}<div class="project"><div class="row project-head"><div><span class="project-title">{{ p.title }}</span>{% if p.tools %} <span class="tools">({{ p.tools }})</span>{% endif %}{% if p.link %} | <a href="{{ p.link }}">{{ p.link_label or 'GitHub' }}</a>{% endif %}</div><div class="block-dates">{{ p.dates }}</div></div><ul>{% for b in p.bullets %}<li>{{ b }}</li>{% endfor %}</ul></div>{% endfor %}</section>
+{% endif %}
+<section><h2>Experience</h2>{% for role in experience %}<div class="block{% if role.page_break_before %} page-break-before{% endif %}">{% if role.roles %}{% for sr in role.roles %}<div class="row"><div class="block-title">{{ sr.title }}</div><div class="block-dates">{{ sr.dates }}</div></div>{% if loop.first %}<div class="org">{{ role.org }}{% if role.sub %}, {{ role.sub }}{% endif %}</div>{% endif %}<ul>{% for b in sr.bullets %}<li>{{ b }}</li>{% endfor %}</ul>{% endfor %}{% else %}<div class="row"><div class="block-title">{{ role.title }}</div><div class="block-dates">{{ role.dates }}</div></div><div class="org">{{ role.org }}{% if role.sub %}, {{ role.sub }}{% endif %}</div><ul>{% for b in role.bullets %}<li>{{ b }}</li>{% endfor %}</ul>{% endif %}</div>{% endfor %}</section>
+{% if not projects_lead and projects %}
+<section><h2>Selected Projects</h2>{% for p in projects %}<div class="project"><div class="row project-head"><div><span class="project-title">{{ p.title }}</span>{% if p.tools %} <span class="tools">({{ p.tools }})</span>{% endif %}{% if p.link %} | <a href="{{ p.link }}">{{ p.link_label or 'GitHub' }}</a>{% endif %}</div><div class="block-dates">{{ p.dates }}</div></div><ul>{% for b in p.bullets %}<li>{{ b }}</li>{% endfor %}</ul></div>{% endfor %}</section>
+{% endif %}
+<section class="education"><h2>Education</h2>{% for e in education %}<div class="block row"><div class="education-title">{{ e.degree }}, {{ e.school }}</div><div class="block-dates">{{ e.dates }}</div></div>{% endfor %}</section>
 </body>
 </html>
