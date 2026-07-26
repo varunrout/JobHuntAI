@@ -1,0 +1,114 @@
+{
+  "identity": {
+    "name": "Alex Morgan",
+    "phone": "+44 7700 900000",
+    "email": "alex.morgan@example.com",
+    "linkedin": "https://www.linkedin.com/in/example",
+    "portfolio": "https://example.com",
+    "github": "https://github.com/example",
+    "location": "London, UK"
+  },
+  "summary": "Applied data professional with experience building reliable analytical pipelines, evaluated predictive models and clear decision-support tools across operational and product settings. Combines structured problem framing, careful validation and concise communication to move work from raw data to practical use without overstating results or hiding limitations.",
+  "skills": [
+    {"category": "Programming", "items": "Python, SQL, pandas, NumPy, scikit-learn, Git and Bash"},
+    {"category": "Modelling", "items": "forecasting, regression, classification, clustering, cross-validation and calibration"},
+    {"category": "Data engineering", "items": "ETL, orchestration, relational databases, data-quality checks and schema validation"},
+    {"category": "Delivery", "items": "CI/CD, automated testing, monitoring, dashboards, documentation and stakeholder communication"}
+  ],
+  "experience": [
+    {
+      "role": "Data Analyst",
+      "employer": "Northstar Analytics",
+      "location": "London, UK",
+      "dates": "2024 - Present",
+      "bullets": [
+        "Built a repeatable forecasting workflow from operational data, benchmarked candidate methods on held-out periods and documented the assumptions used in monthly planning.",
+        "Automated validation and reporting checks, reducing manual preparation time and giving stakeholders a clearer view of missing, stale and inconsistent inputs.",
+        "Created compact dashboards and written summaries that translated model behaviour into concrete planning decisions for non-technical colleagues.",
+        "Partnered with software engineers to define input contracts, resolve pipeline failures and improve the reliability of recurring analytical outputs."
+      ]
+    },
+    {
+      "role": "Junior Data Engineer",
+      "employer": "Cedar Systems",
+      "location": "Manchester, UK",
+      "dates": "2022 - 2024",
+      "bullets": [
+        "Developed Python and SQL transformations for scheduled data pipelines and added checks for schema drift, duplicate records and failed loads.",
+        "Worked with analysts and software engineers to trace data issues, improve documentation and stabilise recurring production jobs.",
+        "Migrated manual spreadsheet logic into governed transformations with reviewable code and repeatable test data."
+      ]
+    },
+    {
+      "role": "Research Assistant",
+      "employer": "Example University",
+      "location": "Birmingham, UK",
+      "dates": "2021 - 2022",
+      "bullets": [
+        "Prepared and analysed survey and operational data for a service-planning study, comparing statistical baselines and tree-based models.",
+        "Produced concise technical notes and presentation materials for an interdisciplinary audience."
+      ]
+    }
+  ],
+  "education": [
+    {
+      "degree": "MSc Business Analytics",
+      "institution": "Example University",
+      "location": "UK",
+      "dates": "2021 - 2022",
+      "details": "Modules included predictive modelling, data management, optimisation and decision analytics."
+    },
+    {
+      "degree": "BSc Mathematics",
+      "institution": "Example College",
+      "location": "UK",
+      "dates": "2018 - 2021",
+      "details": "Focus areas included statistics, numerical methods and probability."
+    }
+  ],
+  "projects": [
+    {
+      "title": "Demand Forecasting Workbench",
+      "tools": "Python, scikit-learn, Streamlit",
+      "link": "https://github.com/example/demand-workbench",
+      "link_label": "GitHub",
+      "dates": "2025",
+      "bullets": [
+        "Built a reproducible forecasting comparison with baseline, tree-based and statistical models across multiple horizons.",
+        "Added a lightweight interface, tests and clear notes on data leakage, evaluation windows and model limitations."
+      ]
+    },
+    {
+      "title": "Data Quality Monitor",
+      "tools": "Python, SQL, pytest",
+      "link": "https://github.com/example/data-quality-monitor",
+      "link_label": "GitHub",
+      "dates": "2024",
+      "bullets": [
+        "Created reusable checks for freshness, completeness, uniqueness and schema drift across scheduled datasets.",
+        "Added command-line reporting and automated tests to support repeatable local and CI execution."
+      ]
+    }
+  ],
+  "supporting_sections": [
+    {
+      "heading": "Certifications",
+      "items": [
+        {"title": "Cloud Data Fundamentals", "dates": "2025", "meta": "Example Provider", "details": "Core cloud storage, compute, identity and monitoring concepts."},
+        {"title": "Applied Machine Learning", "dates": "2024", "meta": "Example Provider", "details": "Model selection, evaluation and responsible reporting."}
+      ]
+    },
+    {
+      "heading": "Publications",
+      "items": [
+        {"title": "A practical comparison of forecasting baselines", "dates": "2023", "meta": "Example Analytics Review", "details": "Short practitioner article on leakage-safe evaluation and baseline selection."}
+      ]
+    },
+    {
+      "heading": "Volunteering",
+      "items": [
+        {"title": "Data Mentor", "dates": "2023 - Present", "meta": "Community Skills Network", "details": "Monthly portfolio reviews and introductory Python support for career changers."}
+      ]
+    }
+  ]
+}
