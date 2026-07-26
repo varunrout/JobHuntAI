@@ -35,7 +35,7 @@ Every application CV has one dominant identity. A hybrid is permitted only when 
 Before drafting, select:
 
 - the dominant identity;
-- a target professional headline, separate from official employment titles;
+- a target professional headline for internal framing, separate from official employment titles;
 - a one-sentence professional thesis;
 - three to five signature proof points;
 - the evidence and projects to include or exclude;
@@ -45,26 +45,43 @@ The submitted CV must:
 
 - answer the professional-identity question within the first third of page one;
 - use a 45 to 70 word summary carrying one argument;
-- place a role-specific three-to-five-line capability map below the summary;
+- place a role-specific three-to-five-line skills map below the summary;
 - order experience and project evidence by the selected identity;
 - use no more evidence than is needed to prove the hiring case;
 - keep official work titles and dates unchanged;
 - avoid defensive title, transition or gap-explaining language;
-- remain within two readable pages unless an explicit exception is recorded;
-- prefer deleting lower-priority content over reducing typography.
+- include the fixed contact links: LinkedIn, `https://varunrout.com` and GitHub;
+- include a direct GitHub link and two or three evidence bullets for every selected project;
+- default to the approved dense one-page serif layout, with a second page only when explicitly justified;
+- prefer deleting lower-priority content or reducing project count over reducing typography.
+
+## Approved visual system
+
+The default CV and cover-letter design is the approved Simran-reference system:
+
+- single-column A4 layout;
+- Times New Roman or metrically compatible serif type;
+- centred uppercase name and compact contact line;
+- black text, blue underlined links and thin black section rules;
+- title-case section headings;
+- bold role titles, italic employer lines and right-aligned dates;
+- one consistent left edge for section headings, role titles, employer lines and bullets;
+- no decorative colour palette, cards, sidebars, icons or oversized whitespace;
+- cover letter uses the same header, typeface, rules and spacing.
 
 ## Quality gates
 
 A CV fails when:
 
-- headline, summary, capabilities and evidence tell different stories;
+- headline framing, summary, capabilities and evidence tell different stories;
 - more than one identity competes for attention;
 - skills lack supporting evidence in the same document;
 - the selected projects do not support the professional thesis;
+- a selected project has fewer than two bullets or lacks a direct GitHub repository link;
 - page one lacks identity, stack, strongest result, operating context or consequence;
-- the final page is materially underfilled;
+- a required contact link is missing or the contact line wraps awkwardly;
+- job titles, employer lines, bullets or dates do not align to the approved grid;
 - a heading or project title is stranded;
-- contact details wrap awkwardly;
 - any factual or evidence-control gate fails.
 
 Each CV also produces an internal diagnostic with identity, headline, thesis, signature proof points, inclusion and exclusion rationale, bullet-order rationale, word count, page count and gate results.
