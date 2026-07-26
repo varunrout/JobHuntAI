@@ -2,23 +2,32 @@
 
 Renders the approved payload and runs artefact-level checks. It never rewrites claims.
 
+## Authoritative source
+
+- `templates/cv_template.html`, `templates/cover_letter_template.html` and `templates/shared_visual.css` are the only visual source of truth.
+- Render PDFs directly from those HTML templates.
+- DOCX files may be exported only as secondary editable copies. They must never be used as the rendering source or edited manually to repair layout.
+- Run `visual_gate.py` before every CV or cover-letter render. A hash or contract failure blocks release.
+
 ## Approved visual system
 
 - A4, dense single-column serif layout based on the approved Simran reference CVs.
 - Centred uppercase name and one compact contact line: phone, email, LinkedIn, Portfolio, GitHub and location.
 - Black body typography, blue underlined hyperlinks and thin black section rules.
-- Title-case section headings: Professional Summary, Skills, Experience, Selected Projects and Education.
+- Title-case section headings: Professional Summary, Skills, Experience, Projects and Education.
 - Bold role titles, italic employer and location lines, right-aligned dates and one shared left edge for headings, role lines, employer lines and bullet content.
-- The cover letter uses the same typeface, header, rules, hyperlink treatment and spacing.
+- Wrapped bullet lines begin under the first word of the bullet, never farther to the right.
+- The cover letter uses the same typeface, header, rules and spacing. Its role line, company/date row, greeting, paragraphs and sign-off share one content width.
 
 ## Required checks
 
-- Run the construction gate and factual linter before rendering.
+- Run the visual contract, construction gate and factual linter before rendering.
 - Do not render a separate target-headline line; the identity must be clear from the summary and evidence.
 - Default to one readable page. Two pages are permitted only when the intake brief records that the hiring case cannot be proved cleanly on one page.
 - Verify the contact line includes a working Portfolio link and does not wrap.
 - Place Skills below the summary and before evidence sections.
-- Verify every selected project has a visible GitHub link and two or three bullets.
+- Use the exact heading `Projects`. `Selected Projects` is forbidden.
+- Verify every project has a visible GitHub link and two or three bullets.
 - Verify page one contains the target identity, at least two stack markers, the strongest achievement, operating context and a business, operational or user consequence.
 - Fail on misaligned job-title rows, employer lines, bullets or dates; stranded headings; project titles split from their first bullet; or excessive bullet wrapping.
 - Prefer project-count or evidence reduction over typography reduction.
