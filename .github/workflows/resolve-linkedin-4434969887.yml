@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - agent/resolve-linkedin-4434969887
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:
