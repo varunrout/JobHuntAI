@@ -1,0 +1,96 @@
+name: Resolve LinkedIn job 4434969887
+
+on:
+  push:
+    branches:
+      - agent/resolve-linkedin-4434969887
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  resolve:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Fetch and extract public vacancy
+        shell: bash
+        run: |
+          python -m pip install --quiet beautifulsoup4
+          python - <<'PY'
+          import json
+          import urllib.request
+          from bs4 import BeautifulSoup
+
+          job_id = "4434969887"
+          source_url = f"https://www.linkedin.com/jobs/view/{job_id}/"
+          guest_url = f"https://www.linkedin.com/jobs-guest/jobs/api/jobPosting/{job_id}"
+          request = urllib.request.Request(
+              guest_url,
+              headers={
+                  "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/142 Safari/537.36",
+                  "Accept-Language": "en-GB,en;q=0.9",
+              },
+          )
+          with urllib.request.urlopen(request, timeout=30) as response:
+              raw_html = response.read().decode("utf-8", errors="replace")
+              http_status = response.status
+
+          soup = BeautifulSoup(raw_html, "html.parser")
+
+          def first_text(*selectors):
+              for selector in selectors:
+                  node = soup.select_one(selector)
+                  if node:
+                      value = " ".join(node.get_text(" ", strip=True).split())
+                      if value:
+                          return value
+              return None
+
+          title = first_text("h1.top-card-layout__title", ".topcard__title", "h1")
+          company = first_text("a.topcard__org-name-link", ".topcard__flavor-row a", ".top-card-layout__card a")
+          location = first_text("span.topcard__flavor--bullet", ".topcard__flavor-row span.topcard__flavor", ".top-card-layout__first-subline")
+          posted = first_text("span.posted-time-ago__text", "span.posted-time-ago")
+          applicants = first_text("span.num-applicants__caption", "figcaption.num-applicants__caption")
+          description = first_text("div.show-more-less-html__markup", ".description__text .show-more-less-html__markup", "section.description")
+
+          criteria = {}
+          for item in soup.select("li.description__job-criteria-item"):
+              label_node = item.select_one("h3")
+              value_node = item.select_one("span")
+              if label_node and value_node:
+                  label = " ".join(label_node.get_text(" ", strip=True).split())
+                  value = " ".join(value_node.get_text(" ", strip=True).split())
+                  if label and value:
+                      criteria[label] = value
+
+          apply_url = None
+          for selector in ("a.topcard__link", "a[data-tracking-control-name='public_jobs_apply-link-offsite_sign-up-modal-sign-up-later']", "a.apply-button"):
+              node = soup.select_one(selector)
+              if node and node.get("href"):
+                  apply_url = node.get("href")
+                  break
+
+          payload = {
+              "job_id": job_id,
+              "source_url": source_url,
+              "guest_url": guest_url,
+              "http_status": http_status,
+              "html_length": len(raw_html),
+              "title": title,
+              "company": company,
+              "location": location,
+              "posted": posted,
+              "applicants": applicants,
+              "criteria": criteria,
+              "apply_url": apply_url,
+              "description": description,
+          }
+          print("JOBHUNTAI_LINKEDIN_JSON_START")
+          print(json.dumps(payload, ensure_ascii=False, indent=2))
+          print("JOBHUNTAI_LINKEDIN_JSON_END")
+
+          if not title or not company or not description:
+              raise SystemExit("Vacancy extraction incomplete")
+          PY
