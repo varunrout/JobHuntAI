@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<title>{{CANDIDATE_NAME}} - {{TARGET_ROLE}} CV</title>
+<style>
+:root {
+  --ink:#201f1d; --link:#7d5411; --rule:#201f1d; --divider:#d7d3d3;
+  --muted:#605d5d; --accent:#c28d41; --accent-soft:#facb8d; --surface:#fffdf9;
+  --font:"Lora","Georgia","DejaVu Serif","Liberation Serif",serif;
+  --font-heading:"Cormorant Garamond","Georgia","DejaVu Serif","Liberation Serif",serif;
+  --body-size:8.45pt; --body-line-height:1.235; --bullet-text-indent:2.4mm;
+}
+@page { size:A4; margin:10.2mm 13mm 9.5mm 13mm; }
+* { box-sizing:border-box; margin:0; padding:0; }
+html { background:var(--surface); }
+body[data-visual-contract="jobhuntai-classic-gold-v2"] { font-family:var(--font); font-size:var(--body-size); line-height:var(--body-line-height); color:var(--ink); background:var(--surface); -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+a { color:var(--link); text-decoration:none; border-bottom:.45pt solid var(--accent-soft); }
+header { display:flex; flex-direction:column; gap:1.1mm; padding-bottom:1.7mm; border-bottom:1.6pt solid var(--rule); }
+.name { font-family:var(--font-heading); font-size:27pt; font-weight:400; line-height:.92; letter-spacing:.055em; text-transform:uppercase; }
+.headline { font-family:var(--font-heading); font-size:9.55pt; line-height:1.1; letter-spacing:.018em; color:#444141; }
+.contact { font-size:7.45pt; line-height:1.18; letter-spacing:.015em; color:var(--muted); display:flex; flex-wrap:wrap; gap:.3mm 1.9mm; align-items:baseline; }
+.sep { color:var(--accent); }
+.content-column { width:100%; }
+section { margin-top:1.9mm; }
+h2 { font-family:var(--font-heading); font-size:9.05pt; font-weight:600; line-height:1; letter-spacing:.08em; color:var(--link); border-bottom:.65pt solid var(--divider); padding-bottom:.55mm; margin-bottom:1.05mm; break-after:avoid; }
+.summary { text-align:left; }
+.capabilities p { margin-bottom:.25mm; break-inside:avoid; }
+.capabilities .cat { font-family:var(--font-heading); font-size:8.75pt; font-weight:600; letter-spacing:.025em; }
+.block { margin-bottom:1.15mm; break-inside:avoid; }
+.row { display:grid; grid-template-columns:minmax(0,1fr) auto; column-gap:4mm; align-items:baseline; break-after:avoid; }
+.block-title,.project-title,.education-title { font-family:var(--font-heading); font-size:10.15pt; font-weight:600; line-height:1.05; letter-spacing:.012em; }
+.block-dates { font-size:7.25pt; line-height:1; letter-spacing:.055em; text-transform:uppercase; color:var(--muted); white-space:nowrap; font-variant-numeric:tabular-nums; }
+.org { font-style:italic; font-size:7.85pt; color:#444141; margin-top:.15mm; break-after:avoid; }
+.evidence-list { list-style:none; margin:.55mm 0 0 0; padding:0; font-size:var(--body-size); line-height:var(--body-line-height); }
+.evidence-list li { position:relative; margin:0 0 .22mm 0; padding-left:var(--bullet-text-indent); break-inside:avoid; }
+.bullet-marker { display:inline-block; width:2.15mm; margin-left:-2.15mm; color:var(--link); }
+.project { margin-bottom:.75mm; break-inside:avoid; }
+.project-meta { font-style:italic; font-size:7.85pt; color:#444141; margin-top:.15mm; }
+.education .block { margin-bottom:.45mm; }
+</style>
+</head>
+<body data-visual-contract="jobhuntai-classic-gold-v2">
+<header>
+  <div class="name">{{CANDIDATE_NAME}}</div>
+  <div class="headline">{{PROFESSIONAL_HEADLINE}} <span class="sep">·</span> {{LOCATION}}</div>
+  <div class="contact">{{PHONE}}<span class="sep">|</span>{{EMAIL}}<span class="sep">|</span>LinkedIn<span class="sep">|</span>Portfolio<span class="sep">|</span>GitHub</div>
+</header>
+<main class="content-column">
+<section data-section="summary"><h2>{{SUMMARY_HEADING}}</h2><p class="summary">{{PROFESSIONAL_SUMMARY}}</p></section>
+<section class="capabilities" data-section="skills"><h2>Skills</h2>{{CAPABILITY_ROWS}}</section>
+<section data-section="projects"><h2>Projects</h2>{{PROJECT_BLOCKS}}</section>
+<section data-section="experience"><h2>Experience</h2>{{EXPERIENCE_BLOCKS}}</section>
+<section class="education" data-section="education"><h2>Education</h2>{{EDUCATION_BLOCKS}}</section>
+</main>
+</body>
+</html>
