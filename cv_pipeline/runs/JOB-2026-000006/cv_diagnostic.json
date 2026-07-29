@@ -1,0 +1,92 @@
+{
+  "cv_identity_mode": "football_research_engineer",
+  "target_headline": "Football Research Engineer | Sports Quantitative Modelling, Forecasting and Decision Systems",
+  "professional_thesis": "A Football Research Engineer who solves predictive sports and trading questions using statistical learning, reproducible data systems and honest benchmark comparison, proven by audited football models, production market forecasting and sports demand analysis.",
+  "signature_proof_points": [
+    {
+      "label": "Same-sample contextual xG benchmark",
+      "source": "Live evidence bank: Opponent-Adjusted Football Metrics",
+      "location": "Projects: Opponent-Adjusted Football Metrics bullet 1"
+    },
+    {
+      "label": "Sequence-based possession danger modelling",
+      "source": "Live evidence bank: Frame2Threat",
+      "location": "Projects: Frame2Threat bullet 1"
+    },
+    {
+      "label": "Power-market forecasting under changing regimes",
+      "source": "Live evidence bank: E.ON Market Analyst",
+      "location": "Experience: E.ON Market Analyst bullet 1"
+    },
+    {
+      "label": "Sports demand forecasting and stakeholder planning",
+      "source": "Live evidence bank: University of Birmingham Sport & Fitness",
+      "location": "Experience: Business Analytics Consultant bullet 1"
+    },
+    {
+      "label": "Monte Carlo uncertainty analysis",
+      "source": "Live evidence bank: E.ON Costing and Risk Intern",
+      "location": "Experience: E.ON Costing and Risk Intern bullet 1"
+    }
+  ],
+  "evidence_excluded": [
+    {
+      "item": "Football Market Intelligence System backtest results",
+      "reason": "The strongest notebook and outputs are not committed to GitHub, so the evidence is not externally verifiable."
+    },
+    {
+      "item": "Defensive Actions Expected model metrics",
+      "reason": "The project remains in development and has no valid performance metric for a CV."
+    },
+    {
+      "item": "B.Tech degree classification equivalence",
+      "reason": "DTU confirms first division, but no unsupported UK first-class equivalence is claimed."
+    }
+  ],
+  "projects_selected": [
+    {
+      "title": "Opponent-Adjusted Football Metrics",
+      "reason": "Strongest audited repository, direct sports modelling, incumbent benchmark and mature engineering evidence."
+    },
+    {
+      "title": "Frame2Threat",
+      "reason": "Direct sequence modelling and noisy-event-data evidence with committed evaluation outputs."
+    }
+  ],
+  "projects_excluded": [
+    {
+      "title": "Contextual Football Metrics",
+      "reason": "Strong technical evidence, but overlaps heavily with the lead contextual-metrics project and would dilute the hiring case."
+    },
+    {
+      "title": "Football Market Intelligence System",
+      "reason": "Adequate code evidence but key backtesting artefacts are not currently verifiable on GitHub."
+    },
+    {
+      "title": "Defensive Actions Expected",
+      "reason": "In development, with no valid model metric to present."
+    }
+  ],
+  "current_role_bullet_order_rationale": "The E.ON block leads with modelling result and regime selection, then production delivery and stakeholder use. Risk modelling follows because it supports the vacancy's trader-facing quantitative work without competing with the sports identity.",
+  "first_page_evidence_markers": {
+    "target_identity": "Football Research Engineer",
+    "technical_stack": [
+      "Python",
+      "scikit-learn",
+      "PyTorch",
+      "FastAPI",
+      "PostgreSQL"
+    ],
+    "strongest_achievement": "Same-sample contextual xG comparison against StatsBomb's incumbent metric",
+    "operating_context": "Sports event data, quantitative market forecasting and trader or analyst collaboration",
+    "consequence": "Evaluated models and decision-ready systems for noisy, uncertain data"
+  },
+  "results": {
+    "final_word_count": null,
+    "final_page_count": null,
+    "first_page_sufficiency": "pending",
+    "identity_consistency": "pending",
+    "evidence_integrity": "pending",
+    "layout_quality": "pending"
+  }
+}
