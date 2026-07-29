@@ -1,0 +1,90 @@
+{
+  "data_scientist": {
+    "label": "Data Scientist",
+    "professional_headline": "Data Scientist | Machine Learning, Forecasting and Decision Support",
+    "problem_class": "builds and evaluates statistical or machine-learning systems that improve decisions",
+    "executive_summary_style": "Method-led. Establish the modelling problem, evaluation discipline, delivery context and decision consequence.",
+    "section_order": [
+      "summary",
+      "skills",
+      "projects",
+      "experience",
+      "education"
+    ],
+    "section_labels": {
+      "skills": "Technical Skills"
+    },
+    "evidence_priorities": [
+      "model_development",
+      "evaluation_rigour",
+      "production_delivery",
+      "decision_support",
+      "measured_result"
+    ],
+    "technical_depth": 5,
+    "commercial_emphasis": 3,
+    "leadership_emphasis": 2,
+    "stakeholder_language": [
+      "product teams",
+      "analysts",
+      "commercial stakeholders",
+      "engineers"
+    ],
+    "preferred_verbs": [
+      "developed",
+      "modelled",
+      "evaluated",
+      "validated",
+      "deployed",
+      "improved"
+    ],
+    "bullet_style": "Lead with the modelling problem, then method, evaluation evidence and decision consequence.",
+    "project_importance": 5,
+    "skills_taxonomy": [
+      "Modelling",
+      "Experimentation and Evaluation",
+      "Data Engineering",
+      "Production and MLOps",
+      "Decision Support"
+    ],
+    "evidence_weights": {
+      "technical_depth": 1.6,
+      "commercial_influence": 0.9,
+      "transformation": 0.8,
+      "stakeholder_engagement": 0.8,
+      "strategic_thinking": 0.8,
+      "operational_optimisation": 0.8,
+      "leadership": 0.5,
+      "quantified_impact": 1.2,
+      "evidence_strength": 1.5
+    },
+    "classification_signals": {
+      "job_title": [
+        "data scientist",
+        "machine learning scientist"
+      ],
+      "job_description": [
+        "machine learning",
+        "predictive modelling",
+        "statistical modelling",
+        "experimentation"
+      ],
+      "responsibilities": [
+        "build models",
+        "train models",
+        "feature engineering",
+        "model evaluation",
+        "deploy models"
+      ],
+      "success_metrics": [
+        "accuracy",
+        "rmse",
+        "mae",
+        "auc",
+        "calibration",
+        "model performance"
+      ]
+    },
+    "layout_variant": "technical"
+  }
+}

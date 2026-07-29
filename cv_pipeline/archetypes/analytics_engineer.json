@@ -1,0 +1,91 @@
+{
+  "analytics_engineer": {
+    "label": "Analytics Engineer",
+    "professional_headline": "Analytics Engineer | Data Modelling, Metrics and Trusted Analytics",
+    "problem_class": "turns raw operational data into governed, reusable analytical models",
+    "executive_summary_style": "Lead with the trusted analytical product. Balance SQL depth with quality, governance and adoption.",
+    "section_order": [
+      "summary",
+      "skills",
+      "experience",
+      "projects",
+      "education"
+    ],
+    "section_labels": {
+      "skills": "Analytics Engineering Skills"
+    },
+    "evidence_priorities": [
+      "semantic_modelling",
+      "data_quality",
+      "metric_governance",
+      "analytics_delivery",
+      "stakeholder_enablement"
+    ],
+    "technical_depth": 4,
+    "commercial_emphasis": 4,
+    "leadership_emphasis": 2,
+    "stakeholder_language": [
+      "analytics teams",
+      "business users",
+      "data platform teams",
+      "domain owners"
+    ],
+    "preferred_verbs": [
+      "modelled",
+      "standardised",
+      "transformed",
+      "governed",
+      "enabled",
+      "automated"
+    ],
+    "bullet_style": "Lead with the analytical data product, then transformation logic, quality controls, adoption and decision use.",
+    "project_importance": 4,
+    "skills_taxonomy": [
+      "Analytics Modelling",
+      "SQL and Transformation",
+      "Data Quality and Testing",
+      "BI and Semantic Layers",
+      "Delivery and Governance"
+    ],
+    "evidence_weights": {
+      "technical_depth": 1.3,
+      "commercial_influence": 1,
+      "transformation": 1.3,
+      "stakeholder_engagement": 1,
+      "strategic_thinking": 0.8,
+      "operational_optimisation": 1.2,
+      "leadership": 0.6,
+      "quantified_impact": 1,
+      "evidence_strength": 1.4
+    },
+    "classification_signals": {
+      "job_title": [
+        "analytics engineer",
+        "bi engineer",
+        "data modelling engineer"
+      ],
+      "job_description": [
+        "dbt",
+        "semantic layer",
+        "metrics layer",
+        "analytics models",
+        "trusted data"
+      ],
+      "responsibilities": [
+        "build data models",
+        "define metrics",
+        "transform data",
+        "data quality tests",
+        "self service analytics"
+      ],
+      "success_metrics": [
+        "data quality",
+        "adoption",
+        "time to insight",
+        "metric consistency",
+        "pipeline reliability"
+      ]
+    },
+    "layout_variant": "technical"
+  }
+}

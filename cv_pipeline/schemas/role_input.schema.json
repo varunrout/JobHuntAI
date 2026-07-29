@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://jobhuntai.local/schemas/role_input.schema.json",
+  "title": "JobHuntAI role identity input",
+  "type": "object",
+  "required": [
+    "job_description",
+    "seniority",
+    "industry",
+    "hiring_team",
+    "responsibilities",
+    "success_metrics",
+    "candidate_context"
+  ],
+  "properties": {
+    "job_title": {
+      "type": "string"
+    },
+    "job_description": {
+      "type": "string",
+      "minLength": 50
+    },
+    "seniority": {
+      "type": "string"
+    },
+    "industry": {
+      "type": "string"
+    },
+    "hiring_team": {
+      "type": "string"
+    },
+    "responsibilities": {
+      "oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "success_metrics": {
+      "oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "candidate_context": {
+      "type": "object",
+      "properties": {
+        "relevant_years": {
+          "type": "number",
+          "minimum": 0
+        },
+        "breadth_of_responsibilities": {
+          "enum": [
+            "narrow",
+            "moderate",
+            "broad"
+          ]
+        },
+        "strategic_depth": {
+          "enum": [
+            "low",
+            "medium",
+            "high"
+          ]
+        },
+        "leadership_expectations": {
+          "enum": [
+            "none",
+            "influence",
+            "manage",
+            "lead"
+          ]
+        },
+        "evidence_density": {
+          "enum": [
+            "low",
+            "medium",
+            "high"
+          ]
+        }
+      },
+      "additionalProperties": true,
+      "required": [
+        "relevant_years",
+        "breadth_of_responsibilities",
+        "strategic_depth",
+        "leadership_expectations",
+        "evidence_density"
+      ]
+    }
+  },
+  "additionalProperties": true
+}

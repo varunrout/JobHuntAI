@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://jobhuntai.local/schemas/archetype_cv_diagnostic.schema.json",
+  "title": "JobHuntAI archetype CV diagnostic",
+  "type": "object",
+  "required": ["role_identity","professional_thesis","signature_proof_points","evidence_ranking","evidence_excluded","projects_selected","projects_excluded","section_order_rationale","bullet_optimisation","first_page_evidence_markers","results"],
+  "properties": {
+    "role_identity": {"$ref": "#/$defs/role_identity"},
+    "professional_thesis": {"type": "string","minLength": 40},
+    "signature_proof_points": {"type": "array","minItems": 3,"maxItems": 5,"items": {"type": "object","required": ["label","source","location"],"properties": {"label": {"type": "string"},"source": {"type": "string"},"location": {"type": "string"}}}},
+    "evidence_ranking": {"type": "array","minItems": 3,"items": {"type": "object","required": ["id","archetype_score"],"properties": {"id": {"type": "string"},"archetype_score": {"type": "number"}}}},
+    "evidence_excluded": {"type": "array"},
+    "projects_selected": {"type": "array"},
+    "projects_excluded": {"type": "array"},
+    "section_order_rationale": {"type": "string","minLength": 20},
+    "bullet_optimisation": {"type": "object","required": ["dimensions","rationale"],"properties": {"dimensions": {"type": "array","minItems": 2,"uniqueItems": true,"items": {"type": "string"}},"rationale": {"type": "string","minLength": 20}}},
+    "first_page_evidence_markers": {"type": "object","required": ["professional_identity","proof_markers","operating_context","consequence"],"properties": {"professional_identity": {"type": "string"},"proof_markers": {"type": "array","minItems": 2,"maxItems": 5,"items": {"type": "string"}},"operating_context": {"type": "string"},"consequence": {"type": "string"}}},
+    "results": {"type": "object","required": ["final_word_count","final_page_count","first_page_sufficiency","positioning_consistency","evidence_integrity","layout_quality"],"properties": {"final_word_count": {"type": ["integer","null"]},"final_page_count": {"type": ["integer","null"]},"first_page_sufficiency": {"enum": ["pending","pass","fail"]},"positioning_consistency": {"enum": ["pending","pass","fail"]},"evidence_integrity": {"enum": ["pending","pass","fail"]},"layout_quality": {"enum": ["pending","pass","fail"]}},"additionalProperties": true}
+  },
+  "additionalProperties": true,
+  "$defs": {
+    "role_identity": {
+      "type": "object",
+      "required": ["archetype","confidence","secondary_archetypes","positioning_strategy","recommended_page_length"],
+      "properties": {
+        "archetype": {"enum": ["data_scientist","analytics_engineer","data_engineer","strategy_innovation_analyst","commercial_analyst","football_performance_analyst","football_strategy_analyst","business_intelligence_analyst","forecasting_pricing_analyst","product_analytics","marketing_analytics"]},
+        "confidence": {"type": "number","minimum": 0,"maximum": 1},
+        "secondary_archetypes": {"type": "array","maxItems": 3,"uniqueItems": true,"items": {"enum": ["data_scientist","analytics_engineer","data_engineer","strategy_innovation_analyst","commercial_analyst","football_performance_analyst","football_strategy_analyst","business_intelligence_analyst","forecasting_pricing_analyst","product_analytics","marketing_analytics"]}},
+        "positioning_strategy": {"type": "string","minLength": 40},
+        "recommended_page_length": {"enum": [1,2]},
+        "page_length_rationale": {"type": "object"},
+        "classification_scores": {"type": "object","additionalProperties": {"type": "number"}}
+      },
+      "additionalProperties": true
+    }
+  }
+}

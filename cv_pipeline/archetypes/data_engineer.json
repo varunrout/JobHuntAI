@@ -1,0 +1,93 @@
+{
+  "data_engineer": {
+    "label": "Data Engineer",
+    "professional_headline": "Data Engineer | Python, SQL, Cloud and Reliable Data Pipelines",
+    "problem_class": "builds reliable data pipelines, platforms and model-ready data products",
+    "executive_summary_style": "Engineering-first. Establish scale, reliability, quality, ownership and downstream value.",
+    "section_order": [
+      "summary",
+      "skills",
+      "experience",
+      "projects",
+      "education"
+    ],
+    "section_labels": {
+      "skills": "Data Engineering Skills"
+    },
+    "evidence_priorities": [
+      "pipeline_engineering",
+      "scale_and_reliability",
+      "data_quality",
+      "platform_delivery",
+      "consumer_consequence"
+    ],
+    "technical_depth": 5,
+    "commercial_emphasis": 2,
+    "leadership_emphasis": 2,
+    "stakeholder_language": [
+      "data consumers",
+      "analytics teams",
+      "platform engineers",
+      "operational owners"
+    ],
+    "preferred_verbs": [
+      "engineered",
+      "built",
+      "orchestrated",
+      "migrated",
+      "hardened",
+      "automated"
+    ],
+    "bullet_style": "Lead with the pipeline or platform, quantify scale or reliability, then controls and consumer consequence.",
+    "project_importance": 4,
+    "skills_taxonomy": [
+      "Pipeline Engineering",
+      "Data Quality",
+      "Storage and Transformation",
+      "Cloud and Orchestration",
+      "Reliability and Delivery"
+    ],
+    "evidence_weights": {
+      "technical_depth": 1.6,
+      "commercial_influence": 0.6,
+      "transformation": 1.2,
+      "stakeholder_engagement": 0.6,
+      "strategic_thinking": 0.6,
+      "operational_optimisation": 1.4,
+      "leadership": 0.6,
+      "domain_relevance": 0.8,
+      "quantified_impact": 1,
+      "evidence_strength": 1.4
+    },
+    "classification_signals": {
+      "job_title": [
+        "data engineer",
+        "etl engineer",
+        "platform data engineer"
+      ],
+      "job_description": [
+        "data pipelines",
+        "etl",
+        "elt",
+        "data platform",
+        "orchestration"
+      ],
+      "responsibilities": [
+        "build pipelines",
+        "ingest data",
+        "data quality",
+        "schema validation",
+        "cloud migration"
+      ],
+      "success_metrics": [
+        "reliability",
+        "latency",
+        "freshness",
+        "throughput",
+        "uptime",
+        "data quality"
+      ]
+    },
+    "layout_variant": "technical"
+  }
+}

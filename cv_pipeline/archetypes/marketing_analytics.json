@@ -1,0 +1,96 @@
+{
+  "marketing_analytics": {
+    "label": "Marketing Analytics",
+    "professional_headline": "Marketing Analytics | Measurement, Attribution and Growth Insight",
+    "problem_class": "connects campaign and customer data to acquisition, retention and investment decisions",
+    "executive_summary_style": "Growth and measurement-led. Establish the marketing decision, measurement framework, insight and commercial action.",
+    "section_order": [
+      "summary",
+      "impact",
+      "skills",
+      "experience",
+      "projects",
+      "education"
+    ],
+    "section_labels": {
+      "summary": "Marketing Analytics Profile",
+      "skills": "Marketing Measurement Expertise",
+      "projects": "Analytics Projects"
+    },
+    "evidence_priorities": [
+      "marketing_measurement",
+      "attribution",
+      "customer_analysis",
+      "campaign_optimisation",
+      "commercial_influence"
+    ],
+    "technical_depth": 3,
+    "commercial_emphasis": 5,
+    "leadership_emphasis": 3,
+    "stakeholder_language": [
+      "marketing leaders",
+      "channel teams",
+      "commercial stakeholders",
+      "agencies"
+    ],
+    "preferred_verbs": [
+      "measured",
+      "analysed",
+      "attributed",
+      "optimised",
+      "identified",
+      "recommended"
+    ],
+    "bullet_style": "Lead with the marketing investment or customer question, then measurement method, insight and action.",
+    "project_importance": 3,
+    "skills_taxonomy": [
+      "Marketing Measurement",
+      "Attribution and Experimentation",
+      "Customer Analytics",
+      "Reporting and BI",
+      "Commercial Decision Support"
+    ],
+    "evidence_weights": {
+      "technical_depth": 0.9,
+      "commercial_influence": 1.6,
+      "transformation": 0.9,
+      "stakeholder_engagement": 1.3,
+      "strategic_thinking": 1.2,
+      "operational_optimisation": 1,
+      "leadership": 0.7,
+      "domain_relevance": 1.3,
+      "quantified_impact": 1.5,
+      "evidence_strength": 1.4
+    },
+    "classification_signals": {
+      "job_title": [
+        "marketing analyst",
+        "marketing analytics",
+        "crm analyst",
+        "digital analytics analyst"
+      ],
+      "job_description": [
+        "marketing analytics",
+        "attribution",
+        "campaign performance",
+        "customer analytics",
+        "media measurement"
+      ],
+      "responsibilities": [
+        "measure campaigns",
+        "analyse customers",
+        "marketing attribution",
+        "optimise spend",
+        "build dashboards"
+      ],
+      "success_metrics": [
+        "roas",
+        "cac",
+        "conversion",
+        "retention",
+        "incremental revenue"
+      ]
+    },
+    "layout_variant": "commercial"
+  }
+}

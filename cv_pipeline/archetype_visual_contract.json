@@ -1,0 +1,33 @@
+{
+  "version": "jobhuntai-archetype-v1",
+  "shared": {
+    "allowed_pdf_font_fragments": ["Cormorant", "Lora", "Georgia", "DejaVuSerif", "DejaVu-Serif", "LiberationSerif", "Liberation-Serif", "NimbusRoman", "NotoSerif"],
+    "name_size_pt": 27.0,
+    "ink": "#201f1d",
+    "link": "#7d5411",
+    "rule": "#201f1d",
+    "portfolio_uri_contains": "varunrout.com",
+    "geometry_tolerance_pt": 1.5,
+    "font_tolerance_pt": 0.55
+  },
+  "cv": {
+    "page_margin_mm": [10.2, 13.0, 9.5, 13.0],
+    "body_size_pt": 8.45,
+    "body_line_height": 1.235,
+    "heading_size_pt": 9.05,
+    "bullet_text_indent_mm": 2.4,
+    "bullet_marker_offset_mm": 0.25,
+    "bullet_alignment_tolerance_pt": 0.9,
+    "maximum_pages_without_exception": 2,
+    "section_ids": ["summary", "impact", "skills", "experience", "projects", "education"],
+    "forbidden_headings": ["Selected Projects"],
+    "allowed_section_labels": {
+      "summary": ["Professional Summary", "Executive Profile", "Commercial Profile", "Performance Profile", "Product Analytics Profile", "Marketing Analytics Profile"],
+      "impact": ["Selected Impact"],
+      "skills": ["Skills", "Technical Skills", "Analytics Engineering Skills", "Data Engineering Skills", "Commercial Expertise", "Commercial Capabilities", "Football Analytics Expertise", "Sporting Strategy Expertise", "BI and Reporting Skills", "Forecasting and Pricing Expertise", "Product Analytics Toolkit", "Marketing Measurement Expertise"],
+      "experience": ["Experience", "Strategy Experience", "Commercial Experience", "Relevant Experience", "Football Strategy Experience", "Forecasting and Pricing Experience"],
+      "projects": ["Projects", "Football Projects", "Football Research Projects", "Product Analytics Projects", "Analytics Projects"],
+      "education": ["Education"]
+    }
+  }
+}

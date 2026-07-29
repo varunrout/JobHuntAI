@@ -1,0 +1,124 @@
+{
+  "version": "3.0.0",
+  "canonical_contract": "jobhuntai-archetype-v1",
+  "legacy_compatibility": {
+    "preserve_existing_pipeline": true,
+    "legacy_registry": "identity_modes.json",
+    "legacy_modes": [
+      "forecasting_data_scientist",
+      "data_engineer",
+      "energy_market_analyst",
+      "football_research_engineer"
+    ],
+    "rule": "Payloads without role_identity use the unchanged legacy gates."
+  },
+  "classification": {
+    "field_weights": {
+      "job_title": 4,
+      "job_description": 1.2,
+      "seniority": 0.8,
+      "industry": 1,
+      "hiring_team": 1.2,
+      "responsibilities": 2,
+      "success_metrics": 2
+    },
+    "secondary_score_ratio": 0.58,
+    "minimum_secondary_score": 2.5,
+    "no_signal_policy": "block",
+    "review_confidence_threshold": 0.35
+  },
+  "page_length_policy": {
+    "maximum_pages_without_exception": 2,
+    "two_page_threshold": 5,
+    "factors": {
+      "seniority": {
+        "entry": 0,
+        "junior": 0,
+        "mid": 1,
+        "senior": 2,
+        "lead": 3,
+        "head": 3,
+        "director": 3
+      },
+      "breadth_of_responsibilities": {
+        "narrow": 0,
+        "moderate": 1,
+        "broad": 2
+      },
+      "strategic_depth": {
+        "low": 0,
+        "medium": 1,
+        "high": 2
+      },
+      "leadership_expectations": {
+        "none": 0,
+        "influence": 1,
+        "formal": 2,
+        "manage": 2,
+        "lead": 3
+      },
+      "evidence_density": {
+        "low": 0,
+        "medium": 1,
+        "high": 2
+      }
+    }
+  },
+  "bullet_optimisation_dimensions": [
+    "technical_depth",
+    "commercial_influence",
+    "transformation",
+    "stakeholder_engagement",
+    "strategic_thinking",
+    "operational_optimisation",
+    "leadership"
+  ],
+  "archetype_defaults": {
+    "section_labels": {
+      "summary": "Professional Summary",
+      "impact": "Selected Impact",
+      "skills": "Skills",
+      "experience": "Experience",
+      "projects": "Projects",
+      "education": "Education"
+    },
+    "expected_page_length": {
+      "default": 2,
+      "minimum": 1,
+      "maximum": 2
+    },
+    "evidence_weights": {
+      "technical_depth": 1,
+      "commercial_influence": 1,
+      "transformation": 1,
+      "stakeholder_engagement": 1,
+      "strategic_thinking": 1,
+      "operational_optimisation": 1,
+      "leadership": 0.6,
+      "domain_relevance": 1,
+      "quantified_impact": 1.2,
+      "evidence_strength": 1.4
+    },
+    "classification_signals": {
+      "job_title": [],
+      "job_description": [],
+      "responsibilities": [],
+      "success_metrics": []
+    },
+    "layout_variant": "technical"
+  },
+  "archetype_files": [
+    "archetypes/data_scientist.json",
+    "archetypes/analytics_engineer.json",
+    "archetypes/data_engineer.json",
+    "archetypes/strategy_innovation_analyst.json",
+    "archetypes/commercial_analyst.json",
+    "archetypes/football_performance_analyst.json",
+    "archetypes/football_strategy_analyst.json",
+    "archetypes/business_intelligence_analyst.json",
+    "archetypes/forecasting_pricing_analyst.json",
+    "archetypes/product_analytics.json",
+    "archetypes/marketing_analytics.json"
+  ],
+  "archetypes": {}
+}

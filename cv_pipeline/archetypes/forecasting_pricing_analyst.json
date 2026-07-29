@@ -1,0 +1,97 @@
+{
+  "forecasting_pricing_analyst": {
+    "label": "Forecasting & Pricing Analyst",
+    "professional_headline": "Forecasting & Pricing Analyst | Demand, Markets and Commercial Decisions",
+    "problem_class": "forecasts demand, prices and risk drivers to improve pricing and planning",
+    "executive_summary_style": "Forecasting-led but commercially anchored. Lead with horizon and improvement against a baseline, then methodology and operational use.",
+    "section_order": [
+      "summary",
+      "impact",
+      "skills",
+      "experience",
+      "projects",
+      "education"
+    ],
+    "section_labels": {
+      "summary": "Commercial Profile",
+      "skills": "Forecasting and Pricing Expertise",
+      "experience": "Forecasting and Pricing Experience"
+    },
+    "evidence_priorities": [
+      "forecasting_accuracy",
+      "pricing_decision_support",
+      "risk_and_uncertainty",
+      "market_drivers",
+      "operational_use"
+    ],
+    "technical_depth": 4,
+    "commercial_emphasis": 5,
+    "leadership_emphasis": 2,
+    "stakeholder_language": [
+      "pricing teams",
+      "traders",
+      "commercial managers",
+      "planning teams"
+    ],
+    "preferred_verbs": [
+      "forecast",
+      "modelled",
+      "improved",
+      "quantified",
+      "supported",
+      "calibrated"
+    ],
+    "bullet_style": "Lead with the forecast or pricing decision, then horizon, method, baseline comparison and commercial use.",
+    "project_importance": 3,
+    "skills_taxonomy": [
+      "Forecasting",
+      "Pricing and Markets",
+      "Risk and Uncertainty",
+      "Data and Automation",
+      "Commercial Decision Support"
+    ],
+    "evidence_weights": {
+      "technical_depth": 1.2,
+      "commercial_influence": 1.6,
+      "transformation": 0.8,
+      "stakeholder_engagement": 1,
+      "strategic_thinking": 1.1,
+      "operational_optimisation": 1.1,
+      "leadership": 0.5,
+      "domain_relevance": 1.4,
+      "quantified_impact": 1.5,
+      "evidence_strength": 1.5
+    },
+    "classification_signals": {
+      "job_title": [
+        "forecasting analyst",
+        "pricing analyst",
+        "market analyst",
+        "power analyst",
+        "demand forecasting analyst"
+      ],
+      "job_description": [
+        "forecasting",
+        "pricing",
+        "forward curve",
+        "demand forecast",
+        "market risk"
+      ],
+      "responsibilities": [
+        "build forecasts",
+        "support pricing",
+        "analyse market drivers",
+        "scenario analysis",
+        "portfolio decisions"
+      ],
+      "success_metrics": [
+        "forecast accuracy",
+        "pricing performance",
+        "margin",
+        "risk",
+        "curve performance"
+      ]
+    },
+    "layout_variant": "commercial"
+  }
+}

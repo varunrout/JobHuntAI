@@ -1,0 +1,95 @@
+{
+  "football_strategy_analyst": {
+    "label": "Football Strategy Analyst",
+    "professional_headline": "Football Strategy Analyst | Sporting Insight, Recruitment and Innovation",
+    "problem_class": "uses football, market and organisational evidence to shape sporting strategy",
+    "executive_summary_style": "Sporting-strategy first. Frame the decision, football context, evidence, trade-off and recommendation.",
+    "section_order": [
+      "summary",
+      "impact",
+      "skills",
+      "experience",
+      "projects",
+      "education"
+    ],
+    "section_labels": {
+      "summary": "Executive Profile",
+      "skills": "Sporting Strategy Expertise",
+      "experience": "Football Strategy Experience",
+      "projects": "Football Research Projects"
+    },
+    "evidence_priorities": [
+      "sporting_strategy",
+      "recruitment_insight",
+      "football_innovation",
+      "decision_frameworks",
+      "executive_influence"
+    ],
+    "technical_depth": 3,
+    "commercial_emphasis": 4,
+    "leadership_emphasis": 4,
+    "stakeholder_language": [
+      "sporting directors",
+      "recruitment leaders",
+      "football executives",
+      "performance teams"
+    ],
+    "preferred_verbs": [
+      "shaped",
+      "evaluated",
+      "advised",
+      "prioritised",
+      "recommended",
+      "translated"
+    ],
+    "bullet_style": "Lead with the sporting decision, then football context, evidence, trade-offs and recommendation.",
+    "project_importance": 4,
+    "skills_taxonomy": [
+      "Sporting Strategy",
+      "Recruitment and Squad Planning",
+      "Football Analytics",
+      "Innovation",
+      "Executive Communication"
+    ],
+    "evidence_weights": {
+      "technical_depth": 1,
+      "commercial_influence": 1.2,
+      "transformation": 1.2,
+      "stakeholder_engagement": 1.4,
+      "strategic_thinking": 1.7,
+      "operational_optimisation": 0.8,
+      "leadership": 1,
+      "domain_relevance": 1.8,
+      "quantified_impact": 0.9,
+      "evidence_strength": 1.5
+    },
+    "classification_signals": {
+      "job_title": [
+        "football strategy analyst",
+        "sporting strategy analyst",
+        "recruitment strategy analyst"
+      ],
+      "job_description": [
+        "sporting strategy",
+        "football strategy",
+        "recruitment strategy",
+        "squad planning",
+        "football innovation"
+      ],
+      "responsibilities": [
+        "support sporting strategy",
+        "evaluate football opportunities",
+        "recruitment decisions",
+        "develop decision frameworks",
+        "football innovation"
+      ],
+      "success_metrics": [
+        "recruitment decisions",
+        "strategic priorities",
+        "squad value",
+        "sporting performance"
+      ]
+    },
+    "layout_variant": "football"
+  }
+}
