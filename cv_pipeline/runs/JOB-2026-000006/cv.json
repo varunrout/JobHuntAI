@@ -4,27 +4,27 @@
   "hybrid_secondary_identity": null,
   "identity": {
     "name": "Varun Rout",
-    "headline": "Football Research Engineer | Sports Quantitative Modelling, Forecasting and Decision Systems",
+    "headline": "Football Research Engineer | Sports Quantitative Modelling and Forecasting",
     "email": "varun_rout@outlook.com",
     "phone": "+44 7830 212139",
-    "location": "Birmingham, UK | Open to London relocation",
+    "location": "Birmingham, UK | London relocation",
     "linkedin": "https://www.linkedin.com/in/varunrout",
     "portfolio": "https://varunrout.com",
     "github": "https://github.com/varunrout"
   },
-  "summary": "Football Research Engineer with four years across predictive modelling, forecasting and production data systems, applying statistical learning to sports and trading questions. Builds reproducible pipelines from noisy event data through held-out evaluation, benchmark comparison and deployment, proven by audited football models, improved power-market forecasts, sports demand forecasting and close collaboration with analysts, commercial stakeholders and traders.",
+  "summary": "Football Research Engineer with four years across predictive modelling, forecasting and production data systems, applying statistical learning to sports and trading questions. Builds reproducible pipelines from noisy event data through held-out evaluation, benchmark comparison and deployment, proven by audited football models, power-market forecasts, sports demand analysis and close collaboration with analysts, commercial stakeholders and traders.",
   "skills": [
     {
       "category": "Football Modelling",
-      "items": "Opponent-adjusted metrics, possession-danger modelling, contextual xG/xA/xT, StatsBomb event and 360 data"
+      "items": "Opponent-adjusted metrics, possession danger, contextual xG/xA/xT, StatsBomb event and 360 data"
     },
     {
       "category": "Machine Learning",
-      "items": "Logistic regression, ridge, gradient boosting, XGBoost, GRU, graph neural networks, time-series forecasting"
+      "items": "Logistic regression, ridge, gradient boosting, XGBoost, GRU, graph neural networks, forecasting"
     },
     {
       "category": "Evaluation",
-      "items": "Held-out and cross-validation, Brier score, log loss, ROC AUC, incumbent benchmarking, calibration, temporal leakage controls"
+      "items": "Held-out and cross-validation, Brier score, log loss, ROC AUC, benchmarking, calibration, leakage controls"
     },
     {
       "category": "Product Engineering",
@@ -32,7 +32,7 @@
     },
     {
       "category": "Research Delivery",
-      "items": "Hypothesis design, reproducible experiments, trader and analyst collaboration, model limitations, decision-ready communication"
+      "items": "Hypothesis design, reproducible experiments, trader collaboration, model limitations, decision-ready communication"
     }
   ],
   "experience": [
@@ -46,16 +46,15 @@
           "dates": "Jan 2025 - Dec 2025",
           "bullets": [
             "Built residual-load models linking demand net of wind and solar to power prices, reducing hourly forecast RMSE by 0.3-0.5 GWh/h across near and far seasons.",
-            "Selected a three-year training window after testing multiple regimes, excluding the exceptional 2022 period, and implemented monitoring for relationship and feature-distribution drift.",
-            "Used Azure ML Studio and Azure DevOps to deliver models and communicate assumptions, errors and market drivers to analysts, commercial teams and shape meetings."
+            "Selected a three-year training window after testing multiple regimes, excluded exceptional 2022 data and monitored relationship and feature-distribution drift.",
+            "Delivered models through Azure ML Studio and Azure DevOps, explaining assumptions, errors and market drivers to analysts and commercial teams."
           ]
         },
         {
           "title": "Costing and Risk Intern",
           "dates": "Jul 2024 - Dec 2024",
           "bullets": [
-            "Built a half-hourly DUoS/TNUoS forecasting engine and 10,000-run Monte Carlo scenarios producing P5/P50/P95 cost outcomes under changing consumption and tariff assumptions.",
-            "Migrated spreadsheet and Access processes into Python, SQL and Snowflake workflows, saving 6-7 hours per reporting cycle."
+            "Built half-hourly DUoS/TNUoS forecasts and 10,000-run Monte Carlo P5/P50/P95 scenarios, then moved spreadsheet processes into Python, SQL and Snowflake, saving 6-7 hours per cycle."
           ]
         }
       ]
@@ -67,15 +66,7 @@
       "sub": "MSc Capstone Project",
       "bullets": [
         "Benchmarked SARIMA, Prophet, Holt-Winters and Random Forest models for six sports activity categories using out-of-sample MAE and GridSearchCV.",
-        "Used booking, attendance and membership data to translate seasonal demand forecasts into staffing, scheduling and capacity recommendations for non-technical stakeholders."
-      ]
-    },
-    {
-      "title": "Data Scientist",
-      "org": "Manor Park Trading Company",
-      "dates": "Jan 2024 - Jun 2024",
-      "bullets": [
-        "Built multi-horizon demand forecasts and product segmentation across approximately 7,000 SKUs, improving planning visibility through automated reporting."
+        "Translated booking, attendance and membership forecasts into staffing, scheduling and capacity recommendations for non-technical stakeholders."
       ]
     },
     {
@@ -84,7 +75,7 @@
       "dates": "Jul 2021 - Aug 2023",
       "sub": "John Deere Account",
       "bullets": [
-        "Built and maintained production data pipelines and SQL transformations using Azure Data Factory and Databricks, with documentation and controls for reliable downstream reporting."
+        "Built production data pipelines and SQL transformations using Azure Data Factory and Databricks, with controls for reliable downstream reporting."
       ]
     }
   ],
@@ -97,7 +88,7 @@
       "link_label": "GitHub",
       "bullets": [
         "Modelled contextual expected goals and assists from 2.14 million StatsBomb events; CxG reached 0.809 ROC AUC on 15,623 shots against 0.820 for StatsBomb xG on the same sample.",
-        "Built a FastAPI and PostgreSQL research service with SQLAlchemy, Alembic, 332 tests and CI covering linting, typing, database smoke tests and security checks."
+        "Built a FastAPI and PostgreSQL service with SQLAlchemy, Alembic, 332 tests and CI for linting, typing, database smoke tests and security checks."
       ]
     },
     {
@@ -107,8 +98,8 @@
       "link": "https://github.com/varunrout/Frame2Threat",
       "link_label": "GitHub",
       "bullets": [
-        "Developed possession-danger models from partial football sequences using XGBoost and GRU architectures; the ensemble reached 0.965 test ROC AUC on 2,475 possessions.",
-        "Evaluated event and 360 context, committed reproducible model outputs and 49 figures, and documented that added 360 context produced only marginal pass-level improvement."
+        "Developed possession-danger models from partial sequences using XGBoost and GRU; the ensemble reached 0.965 test ROC AUC on 2,475 possessions.",
+        "Committed model outputs and 49 figures, documenting that added 360 context produced only marginal pass-level improvement."
       ]
     }
   ],
