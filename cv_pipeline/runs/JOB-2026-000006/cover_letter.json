@@ -1,0 +1,26 @@
+{
+  "identity": {
+    "name": "Varun Rout",
+    "headline": "Football Research Engineer | Sports Quantitative Modelling, Forecasting and Decision Systems",
+    "email": "varun_rout@outlook.com",
+    "phone": "+44 7830 212139",
+    "location": "Birmingham, UK | Open to London relocation",
+    "linkedin": "https://www.linkedin.com/in/varunrout",
+    "portfolio": "https://varunrout.com",
+    "github": "https://github.com/varunrout"
+  },
+  "role_title": "Sports Quantitative Analyst - Graduate Level",
+  "company": "Mustard Systems Ltd.",
+  "date": "29 July 2026",
+  "recipient_department": "Quant Team",
+  "recipient_location": "Hammersmith, London",
+  "greeting": "Dear Mustard Systems Quant Team,",
+  "paragraphs": [
+    "I am applying for the Sports Quantitative Analyst role because the work sits directly at the intersection I have been building towards: extracting reliable signal from noisy sports data, testing ideas against strong benchmarks and turning models into tools that traders and analysts can use. Mustard Systems' emphasis on original modelling, intellectual curiosity and close collaboration with expert traders is a particularly strong match for how I work.",
+    "My independent football research provides the most direct evidence. In Opponent-Adjusted Football Metrics, I modelled contextual expected goals and assists across 2.14 million StatsBomb events and compared the CxG model against StatsBomb's own xG on the same 15,623-shot sample. I also built the supporting FastAPI and PostgreSQL service, database migrations, 332-test suite and CI checks. Frame2Threat extends that work into partial-sequence modelling, combining XGBoost and GRU approaches to predict possession danger while documenting where added 360 context produced only marginal improvement rather than overstating the result.",
+    "I bring professional forecasting and decision-support experience alongside the sports portfolio. At E.ON Energy Markets, I built residual-load models linking demand net of wind and solar to power prices, tested alternative training regimes and delivered the work through Azure ML Studio and Azure DevOps. I worked with analysts and commercial stakeholders to explain assumptions, errors and market drivers, and also built 10,000-run Monte Carlo scenarios for portfolio-cost uncertainty. My MSc capstone with University of Birmingham Sport & Fitness benchmarked multiple forecasting methods across six activity categories and translated the results into staffing, scheduling and capacity recommendations.",
+    "That combination has made me rigorous about evaluation and practical about delivery. I am comfortable moving from a research question to data preparation, model design, held-out testing, benchmark comparison and a usable service, while being explicit about limitations and negative findings. I would bring that discipline to Mustard Systems' cricket and trading models, and I am comfortable learning the sport-specific detail from the team's experienced quants and traders.",
+    "I am based in Birmingham and am open to relocating to London for the Hammersmith hybrid working pattern. I would welcome the opportunity to discuss how my sports-modelling portfolio, market forecasting experience and engineering discipline could contribute to the Quant team."
+  ],
+  "sign_off": "Kind regards,"
+}
