@@ -1,0 +1,92 @@
+{
+  "business_intelligence_analyst": {
+    "label": "Business Intelligence Analyst",
+    "professional_headline": "Business Intelligence Analyst | Reporting, Data Modelling and Decision Support",
+    "problem_class": "builds governed reporting and metrics that make operational performance visible",
+    "executive_summary_style": "Decision and adoption-led. Establish the reporting problem, data model, metric governance and user outcome.",
+    "section_order": [
+      "summary",
+      "skills",
+      "experience",
+      "projects",
+      "education"
+    ],
+    "section_labels": {
+      "skills": "BI and Reporting Skills"
+    },
+    "evidence_priorities": [
+      "dashboard_delivery",
+      "metric_definition",
+      "reporting_automation",
+      "data_modelling",
+      "stakeholder_adoption"
+    ],
+    "technical_depth": 3,
+    "commercial_emphasis": 4,
+    "leadership_emphasis": 3,
+    "stakeholder_language": [
+      "business leaders",
+      "operational teams",
+      "finance partners",
+      "data owners"
+    ],
+    "preferred_verbs": [
+      "built",
+      "automated",
+      "defined",
+      "visualised",
+      "standardised",
+      "enabled"
+    ],
+    "bullet_style": "Lead with the decision need, then reporting model, governance, adoption and operational consequence.",
+    "project_importance": 3,
+    "skills_taxonomy": [
+      "Business Intelligence",
+      "Data Modelling and SQL",
+      "Dashboarding",
+      "Metric Governance",
+      "Stakeholder Enablement"
+    ],
+    "evidence_weights": {
+      "technical_depth": 1,
+      "commercial_influence": 1.2,
+      "transformation": 1.1,
+      "stakeholder_engagement": 1.3,
+      "strategic_thinking": 0.9,
+      "operational_optimisation": 1.2,
+      "leadership": 0.6,
+      "quantified_impact": 1.1,
+      "evidence_strength": 1.4
+    },
+    "classification_signals": {
+      "job_title": [
+        "business intelligence analyst",
+        "bi analyst",
+        "reporting analyst",
+        "insight analyst"
+      ],
+      "job_description": [
+        "power bi",
+        "tableau",
+        "dashboards",
+        "reporting",
+        "business intelligence"
+      ],
+      "responsibilities": [
+        "build dashboards",
+        "define kpis",
+        "automate reporting",
+        "self service",
+        "stakeholder requirements"
+      ],
+      "success_metrics": [
+        "adoption",
+        "reporting time",
+        "data accuracy",
+        "decision support",
+        "kpi visibility"
+      ]
+    },
+    "layout_variant": "commercial"
+  }
+}

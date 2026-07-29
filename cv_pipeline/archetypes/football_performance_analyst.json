@@ -1,0 +1,95 @@
+{
+  "football_performance_analyst": {
+    "label": "Football Performance Analyst",
+    "professional_headline": "Football Performance Analyst | Tactical, Opposition and Match Insight",
+    "problem_class": "converts match and player evidence into coach-ready performance insight",
+    "executive_summary_style": "Football-first and coach-facing. Lead with the football question, observation, evidence and practical coaching use.",
+    "section_order": [
+      "summary",
+      "skills",
+      "experience",
+      "projects",
+      "education"
+    ],
+    "section_labels": {
+      "summary": "Performance Profile",
+      "skills": "Football Analytics Expertise",
+      "experience": "Relevant Experience",
+      "projects": "Football Projects"
+    },
+    "evidence_priorities": [
+      "match_analysis",
+      "opposition_analysis",
+      "tactical_insight",
+      "coach_delivery",
+      "video_and_data"
+    ],
+    "technical_depth": 4,
+    "commercial_emphasis": 2,
+    "leadership_emphasis": 3,
+    "stakeholder_language": [
+      "coaches",
+      "performance staff",
+      "players",
+      "recruitment teams"
+    ],
+    "preferred_verbs": [
+      "analysed",
+      "identified",
+      "presented",
+      "coded",
+      "supported",
+      "translated"
+    ],
+    "bullet_style": "Lead with the football question, then observation, evidence and coaching consequence.",
+    "project_importance": 5,
+    "skills_taxonomy": [
+      "Tactical Analysis",
+      "Opposition Analysis",
+      "Video and Data",
+      "Coach Communication",
+      "Football Research"
+    ],
+    "evidence_weights": {
+      "technical_depth": 1.1,
+      "commercial_influence": 0.4,
+      "transformation": 0.7,
+      "stakeholder_engagement": 1.5,
+      "strategic_thinking": 1.1,
+      "operational_optimisation": 0.9,
+      "leadership": 0.6,
+      "domain_relevance": 1.8,
+      "quantified_impact": 0.8,
+      "evidence_strength": 1.4
+    },
+    "classification_signals": {
+      "job_title": [
+        "performance analyst",
+        "first team analyst",
+        "opposition analyst",
+        "match analyst"
+      ],
+      "job_description": [
+        "performance analysis",
+        "opposition analysis",
+        "match analysis",
+        "tactical analysis",
+        "video analysis"
+      ],
+      "responsibilities": [
+        "analyse matches",
+        "prepare opposition reports",
+        "support coaches",
+        "code video",
+        "present insights"
+      ],
+      "success_metrics": [
+        "coach adoption",
+        "match preparation",
+        "tactical insight",
+        "player development"
+      ]
+    },
+    "layout_variant": "football"
+  }
+}

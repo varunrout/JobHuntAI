@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://jobhuntai.local/schemas/role_identity.schema.json",
+  "title": "JobHuntAI role identity classification",
+  "type": "object",
+  "required": [
+    "archetype",
+    "confidence",
+    "secondary_archetypes",
+    "positioning_strategy",
+    "recommended_page_length"
+  ],
+  "properties": {
+    "archetype": {
+      "enum": [
+        "data_scientist",
+        "analytics_engineer",
+        "data_engineer",
+        "strategy_innovation_analyst",
+        "commercial_analyst",
+        "football_performance_analyst",
+        "football_strategy_analyst",
+        "business_intelligence_analyst",
+        "forecasting_pricing_analyst",
+        "product_analytics",
+        "marketing_analytics"
+      ]
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "secondary_archetypes": {
+      "type": "array",
+      "maxItems": 3,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "data_scientist",
+          "analytics_engineer",
+          "data_engineer",
+          "strategy_innovation_analyst",
+          "commercial_analyst",
+          "football_performance_analyst",
+          "football_strategy_analyst",
+          "business_intelligence_analyst",
+          "forecasting_pricing_analyst",
+          "product_analytics",
+          "marketing_analytics"
+        ]
+      }
+    },
+    "positioning_strategy": {
+      "type": "string",
+      "minLength": 40
+    },
+    "recommended_page_length": {
+      "enum": [
+        1,
+        2
+      ]
+    },
+    "page_length_rationale": {
+      "type": "object"
+    },
+    "classification_scores": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "number"
+      }
+    },
+    "requires_review": {
+      "type": "boolean"
+    }
+  },
+  "additionalProperties": true
+}

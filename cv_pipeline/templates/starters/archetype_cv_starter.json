@@ -1,0 +1,65 @@
+{
+  "layout_contract": "jobhuntai-archetype-v1",
+  "archetype": "data_scientist",
+  "role_identity": {
+    "archetype": "data_scientist",
+    "confidence": 0.0,
+    "secondary_archetypes": [],
+    "positioning_strategy": "Pending Role Identity Classification. Replace this starter framing with the selected archetype strategy before evidence selection.",
+    "recommended_page_length": 1
+  },
+  "identity": {
+    "name": "Varun Rout",
+    "headline": "Data Scientist | Machine Learning, Forecasting and Decision Support",
+    "email": "varun_rout@outlook.com",
+    "phone": "+44 7830 212139",
+    "location": "Birmingham, UK",
+    "linkedin": "https://www.linkedin.com/in/varunrout",
+    "portfolio": "https://varunrout.com",
+    "github": "https://github.com/varunrout"
+  },
+  "section_order": [
+    "summary",
+    "skills",
+    "projects",
+    "experience",
+    "education"
+  ],
+  "section_labels": {
+    "summary": "Professional Summary",
+    "skills": "Technical Skills",
+    "experience": "Experience",
+    "projects": "Projects",
+    "education": "Education",
+    "impact": "Selected Impact"
+  },
+  "page_strategy": {
+    "recommended_page_length": 1,
+    "rationale": "Pending role identity classification and evidence-density assessment.",
+    "maximum_pages": 1,
+    "factors": {}
+  },
+  "bullet_strategy": {
+    "optimise_for": [
+      "technical_depth",
+      "commercial_influence",
+      "transformation",
+      "stakeholder_engagement",
+      "strategic_thinking",
+      "operational_optimisation",
+      "leadership"
+    ],
+    "preferred_verbs": [
+      "built",
+      "evaluated",
+      "delivered"
+    ],
+    "style": "Lead with the problem and method, then state the evaluated result or decision consequence."
+  },
+  "summary": "",
+  "skills": [],
+  "selected_impact": [],
+  "experience": [],
+  "projects": [],
+  "education": []
+}

@@ -1,0 +1,95 @@
+{
+  "strategy_innovation_analyst": {
+    "label": "Strategy & Innovation Analyst",
+    "professional_headline": "Strategy & Innovation Analyst | Commercial Insight, Transformation and Decision Support",
+    "problem_class": "structures ambiguous questions and turns evidence into strategic priorities",
+    "executive_summary_style": "Executive and decision-led. Establish the strategic question, evidence, trade-offs, recommendation and implementation consequence.",
+    "section_order": [
+      "summary",
+      "impact",
+      "skills",
+      "experience",
+      "education",
+      "projects"
+    ],
+    "section_labels": {
+      "summary": "Executive Profile",
+      "skills": "Commercial Expertise",
+      "experience": "Strategy Experience"
+    },
+    "evidence_priorities": [
+      "strategic_decision_support",
+      "commercial_insight",
+      "transformation",
+      "executive_influence",
+      "implementation"
+    ],
+    "technical_depth": 3,
+    "commercial_emphasis": 5,
+    "leadership_emphasis": 4,
+    "stakeholder_language": [
+      "executive leaders",
+      "commercial teams",
+      "functional heads",
+      "delivery owners"
+    ],
+    "preferred_verbs": [
+      "shaped",
+      "advised",
+      "produced",
+      "prioritised",
+      "recommended",
+      "translated"
+    ],
+    "bullet_style": "Lead with the decision or strategic question, then insight, influence and consequence.",
+    "project_importance": 2,
+    "skills_taxonomy": [
+      "Strategy and Insight",
+      "Commercial Analysis",
+      "Transformation",
+      "Executive Communication",
+      "Delivery and Governance"
+    ],
+    "evidence_weights": {
+      "technical_depth": 0.8,
+      "commercial_influence": 1.6,
+      "transformation": 1.4,
+      "stakeholder_engagement": 1.5,
+      "strategic_thinking": 1.7,
+      "operational_optimisation": 1,
+      "leadership": 1.1,
+      "domain_relevance": 1.2,
+      "quantified_impact": 1.3,
+      "evidence_strength": 1.5
+    },
+    "classification_signals": {
+      "job_title": [
+        "strategy analyst",
+        "strategy & innovation analyst",
+        "innovation analyst",
+        "strategic analyst"
+      ],
+      "job_description": [
+        "strategy",
+        "innovation",
+        "transformation",
+        "business case",
+        "strategic planning"
+      ],
+      "responsibilities": [
+        "develop strategy",
+        "identify opportunities",
+        "support executive decisions",
+        "prioritise initiatives",
+        "develop business cases"
+      ],
+      "success_metrics": [
+        "strategic priorities",
+        "commercial impact",
+        "transformation value",
+        "executive decisions"
+      ]
+    },
+    "layout_variant": "strategy"
+  }
+}

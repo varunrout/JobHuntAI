@@ -1,0 +1,95 @@
+{
+  "product_analytics": {
+    "label": "Product Analytics",
+    "professional_headline": "Product Analytics | Experimentation, Behaviour and Growth Decisions",
+    "problem_class": "uses behavioural data and experimentation to improve journeys and product choices",
+    "executive_summary_style": "Product-question first. Frame user behaviour, analysis or experiment design, insight and product action.",
+    "section_order": [
+      "summary",
+      "impact",
+      "skills",
+      "experience",
+      "projects",
+      "education"
+    ],
+    "section_labels": {
+      "summary": "Product Analytics Profile",
+      "skills": "Product Analytics Toolkit",
+      "projects": "Product Analytics Projects"
+    },
+    "evidence_priorities": [
+      "product_decision_support",
+      "experimentation",
+      "behavioural_analysis",
+      "metric_design",
+      "cross_functional_influence"
+    ],
+    "technical_depth": 4,
+    "commercial_emphasis": 4,
+    "leadership_emphasis": 3,
+    "stakeholder_language": [
+      "product managers",
+      "designers",
+      "engineers",
+      "growth teams"
+    ],
+    "preferred_verbs": [
+      "analysed",
+      "experimented",
+      "identified",
+      "measured",
+      "influenced",
+      "improved"
+    ],
+    "bullet_style": "Lead with the product question, then metric or experiment design, insight and product decision.",
+    "project_importance": 4,
+    "skills_taxonomy": [
+      "Product Metrics",
+      "Experimentation",
+      "Behavioural Analytics",
+      "Data and SQL",
+      "Product Decision Support"
+    ],
+    "evidence_weights": {
+      "technical_depth": 1.1,
+      "commercial_influence": 1.3,
+      "transformation": 1,
+      "stakeholder_engagement": 1.4,
+      "strategic_thinking": 1.2,
+      "operational_optimisation": 0.8,
+      "leadership": 0.7,
+      "domain_relevance": 1.2,
+      "quantified_impact": 1.4,
+      "evidence_strength": 1.5
+    },
+    "classification_signals": {
+      "job_title": [
+        "product analyst",
+        "product analytics",
+        "growth analyst"
+      ],
+      "job_description": [
+        "product analytics",
+        "user behaviour",
+        "experimentation",
+        "a/b testing",
+        "product metrics"
+      ],
+      "responsibilities": [
+        "analyse user behaviour",
+        "design experiments",
+        "define product metrics",
+        "support product decisions",
+        "funnel analysis"
+      ],
+      "success_metrics": [
+        "activation",
+        "retention",
+        "conversion",
+        "engagement",
+        "experiment lift"
+      ]
+    },
+    "layout_variant": "product"
+  }
+}

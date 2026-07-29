@@ -1,21 +1,24 @@
 # Agent 2: Tailor
 
-Writes `cv.json`, `cv_diagnostic.json` and the cover-letter payload from the intake brief and live evidence bank.
+Writes `cv.json`, `cv_diagnostic.json` and the cover-letter payload from the accepted role identity, ranked evidence and live evidence bank.
 
 ## CV sequence
 
-1. Load the starter for the selected identity.
-2. Generate a target professional headline for diagnostics and summary framing. Keep all official role titles unchanged inside work experience. The approved visual template does not display a separate headline line.
-3. Populate the fixed contact block with phone, email, LinkedIn, `https://varunrout.com`, GitHub and location.
-4. Write a 45 to 70 word summary carrying one argument: identity, problem class, one or two proof points, relevant approach and distinctive delivery strength.
-5. Add three to five role-specific capability categories directly below the summary. Every capability must be backed by evidence elsewhere in the CV.
-6. Draft the most relevant role with no more than five or six bullets. Draft secondary roles with no more than two or three bullets each.
-7. Order bullets by the identity-mode priority rather than chronology.
-8. Use one principal action, one method or system and one scale marker, outcome or consequence per bullet.
-9. Select no more than three projects. Every selected project must include a direct GitHub repository link and two or three evidence bullets. The bullets must jointly show what was built, the important technical choice, how it was evaluated and the honest result or delivery consequence.
-10. Preserve negative or inconclusive findings where they show judgement.
-11. Remove defensive title, transition and gap-explaining language.
-12. Produce the diagnostic sidecar before render.
-13. Run the construction gate, then the existing factual linter.
+1. Load the selected archetype from `archetypes.json`.
+2. Preserve the accepted role identity. Do not reclassify the role during drafting.
+3. Generate the professional headline from the archetype and target role. Keep every official employment title unchanged.
+4. Write the summary in the archetype's executive-summary style. It must establish identity, problem class, proof, approach and distinctive delivery strength.
+5. Use the archetype's section order and approved section labels unless the diagnostic records a role-specific layout override.
+6. Build the skills section only from the archetype's skills taxonomy and evidence visible elsewhere in the CV.
+7. Select evidence from the archetype-ranked list. Lower-ranked evidence may be used only with a recorded reason.
+8. Draft bullets against the selected optimisation dimensions: technical depth, commercial influence, transformation, stakeholder engagement, strategic thinking, operational optimisation and leadership.
+9. Apply the archetype's preferred verbs and bullet style. The same evidence must be framed differently when the target archetype changes.
+10. Keep one principal action, one method or analytical basis and one outcome, influence or consequence per bullet.
+11. Use Selected Impact only when the archetype layout calls for it. It is not a substitute for unsupported executive claims.
+12. Select projects according to archetype project importance. Every project still requires a direct GitHub link and two or three evidence bullets.
+13. Apply the page strategy from Role Identity Classification. Two pages are encouraged when they carry materially relevant proof. One page is never pursued by default.
+14. Never solve page pressure by shrinking the approved typography. Delete globally weaker evidence or reduce project count first.
+15. Produce the archetype diagnostic before rendering.
+16. Run `pipeline_gate.py`, then the factual linter.
 
-Never solve page pressure by shrinking the established typography. Reduce project count or delete the globally weakest evidence first; never collapse a selected project to one bullet.
+The identity layer controls positioning. The evidence bank controls factual truth. Neither may override the other.

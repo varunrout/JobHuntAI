@@ -1,0 +1,96 @@
+{
+  "commercial_analyst": {
+    "label": "Commercial Analyst",
+    "professional_headline": "Commercial Analyst | Revenue, Pricing, Performance and Decision Support",
+    "problem_class": "connects performance, pricing and market evidence to commercial choices",
+    "executive_summary_style": "Commercially led. Establish the business question, drivers, quantified impact and action.",
+    "section_order": [
+      "summary",
+      "impact",
+      "skills",
+      "experience",
+      "projects",
+      "education"
+    ],
+    "section_labels": {
+      "summary": "Commercial Profile",
+      "skills": "Commercial Capabilities",
+      "experience": "Commercial Experience"
+    },
+    "evidence_priorities": [
+      "commercial_performance",
+      "pricing_and_margin",
+      "forecasting",
+      "business_cases",
+      "stakeholder_action"
+    ],
+    "technical_depth": 3,
+    "commercial_emphasis": 5,
+    "leadership_emphasis": 3,
+    "stakeholder_language": [
+      "commercial leaders",
+      "finance partners",
+      "sales teams",
+      "operational owners"
+    ],
+    "preferred_verbs": [
+      "analysed",
+      "forecast",
+      "quantified",
+      "identified",
+      "recommended",
+      "improved"
+    ],
+    "bullet_style": "Lead with the commercial question, then drivers, quantified implication and action.",
+    "project_importance": 2,
+    "skills_taxonomy": [
+      "Commercial Analysis",
+      "Pricing and Forecasting",
+      "Performance Reporting",
+      "Business Cases",
+      "Stakeholder Decision Support"
+    ],
+    "evidence_weights": {
+      "technical_depth": 0.9,
+      "commercial_influence": 1.7,
+      "transformation": 0.9,
+      "stakeholder_engagement": 1.3,
+      "strategic_thinking": 1.3,
+      "operational_optimisation": 1,
+      "leadership": 0.7,
+      "domain_relevance": 1.2,
+      "quantified_impact": 1.5,
+      "evidence_strength": 1.4
+    },
+    "classification_signals": {
+      "job_title": [
+        "commercial analyst",
+        "revenue analyst",
+        "pricing analyst",
+        "business performance analyst"
+      ],
+      "job_description": [
+        "commercial performance",
+        "revenue",
+        "margin",
+        "pricing",
+        "business case"
+      ],
+      "responsibilities": [
+        "analyse revenue",
+        "forecast performance",
+        "support pricing",
+        "build business cases",
+        "identify opportunities"
+      ],
+      "success_metrics": [
+        "revenue",
+        "margin",
+        "profitability",
+        "commercial impact",
+        "forecast accuracy"
+      ]
+    },
+    "layout_variant": "commercial"
+  }
+}

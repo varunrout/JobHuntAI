@@ -1,125 +1,173 @@
 # JobHuntAI Rules
 
 ## Mission
+
 Help Varun secure a sponsored role before 13 December 2026 through a focused, evidence-led and tracked search.
 
-## Primary positioning
-Energy data, forecasting, pricing, market risk, portfolio analysis and trading analytics are the main lane. Data engineering and football research engineering are controlled secondary identities when the evidence and target role support them.
+## Positioning rule
+
+The pipeline must determine the professional identity that best matches the target role before selecting CV evidence. It must not assume that every role is a variation of Data Scientist or Data Analyst.
+
+The canonical archetypes are:
+
+1. Data Scientist
+2. Analytics Engineer
+3. Data Engineer
+4. Strategy & Innovation Analyst
+5. Commercial Analyst
+6. Football Performance Analyst
+7. Football Strategy Analyst
+8. Business Intelligence Analyst
+9. Forecasting & Pricing Analyst
+10. Product Analytics
+11. Marketing Analytics
+
+Every application has one dominant archetype. Secondary archetypes are permitted only when the job genuinely combines identities, and they must remain subordinate.
 
 ## Visa rule
+
 Treat work-authorisation feasibility as a first-class filter. Do not spend serious tailoring time where sponsorship or permit support is clearly unrealistic.
 
 ## Truth rule
+
 Never invent job titles, responsibilities, tools, metrics or formal risk ownership. `MASTER_PROFILE.md` remains the sole factual source. Existing claim-status, attribution, title, tenure and source-traceability gates remain binding.
 
 ## Stop-before-tailor
+
 Stop for fatal sponsorship, salary, seniority or technical-fit issues.
 
 ## Role scoring
+
 Score domain fit, skills fit, seniority fit, sponsorship likelihood, salary viability, location fit and evidence strength.
 
 - 28 to 35: apply properly and tailor.
 - 22 to 27: apply lightly or use outreach first.
 - Under 22: skip unless strategically justified.
 
-## Controlled CV identities
-1. Forecasting Data Scientist
-2. Data Engineer
-3. Energy Market Analyst
-4. Football Research Engineer
+## Role Identity Classification
 
-Every application CV has one dominant identity. A hybrid is permitted only when the job genuinely requires it, and the dominant identity must remain clear.
+Before evidence selection, classify the role using:
+
+- complete job description;
+- seniority;
+- industry;
+- hiring team;
+- responsibilities;
+- success metrics.
+
+The required output is:
+
+```json
+{
+  "archetype": "...",
+  "confidence": 0.0,
+  "secondary_archetypes": [],
+  "positioning_strategy": "...",
+  "recommended_page_length": 1
+}
+```
+
+Evidence selection must happen after this stage.
+
+## Evidence reweighting
+
+The same verified evidence may carry different value and language under different archetypes. Reweight evidence for technical depth, commercial influence, transformation, stakeholder engagement, strategic thinking, operational optimisation, leadership, domain relevance, quantified impact and evidence strength.
+
+The factual source does not change. Only the positioning, priority and language change.
 
 ## CV construction contract
 
-Before drafting, select:
+Before drafting, record:
 
-- the dominant identity;
-- a target professional headline for the document header, separate from official employment titles;
+- the role identity output;
+- the dominant archetype and any secondary archetypes;
+- the target professional headline, separate from official employment titles;
 - a one-sentence professional thesis;
 - three to five signature proof points;
-- the evidence and projects to include or exclude;
+- the ranked evidence and exclusion rationale;
+- the section architecture;
+- the bullet optimisation dimensions;
+- the page strategy;
 - the first-page evidence markers.
 
 The submitted CV must:
 
-- answer the professional-identity question within the first third of page one;
-- use a 45 to 70 word summary carrying one argument;
-- place a role-specific three-to-five-line skills map below the summary;
-- order experience and project evidence by the selected identity;
-- use no more evidence than is needed to prove the hiring case;
+- answer "What professional is this candidate?" within the first 10 seconds;
 - keep official work titles and dates unchanged;
+- use the selected archetype's summary style, skills taxonomy, evidence priorities, stakeholder language, verbs and bullet style;
+- order sections and evidence by the positioning strategy rather than chronology alone;
+- include no more evidence than is needed to prove the hiring case;
 - avoid defensive title, transition or gap-explaining language;
-- include the fixed contact links: LinkedIn, `https://varunrout.com` and GitHub;
+- include LinkedIn, `https://varunrout.com` and GitHub;
 - include a direct GitHub link and two or three evidence bullets for every project;
-- use the exact section heading `Projects`; `Selected Projects` is never permitted;
-- default to the approved dense one-page classical serif layout, with a second page only when explicitly justified;
-- prefer deleting lower-priority content or reducing project count over reducing typography.
+- never use the heading `Selected Projects`;
+- preserve the approved typography and bullet geometry.
 
-## Canonical visual source
+## Page-length logic
 
-The only authoritative visual sources are:
+One page is not the default for archetype CVs. Determine length from:
 
-- `cv_pipeline/templates/cv_template.html`;
-- `cv_pipeline/templates/cover_letter_template.html`;
-- `cv_pipeline/visual_contract.json`.
+- years of relevant evidence;
+- seniority;
+- breadth of responsibilities;
+- strategic depth;
+- leadership expectations;
+- evidence density.
 
-All application PDFs must be generated through `cv_pipeline/render.py`. A DOCX, Google Doc or manually adjusted PDF is a convenience derivative only. It must never redefine headings, font sizes, margins, bullet behaviour or alignment.
+Two pages are encouraged when they communicate materially more relevant evidence without filler. A second page must be materially used. Never shrink typography to force one page.
 
-## Approved visual system
+## Visual architecture
 
-The default CV and cover-letter design is the approved standalone-template system:
+The approved one-column serif design remains stable. Archetypes may vary:
 
-- single-column A4 layout;
-- Cormorant Garamond and Lora visual hierarchy, with approved serif fallbacks when those fonts are unavailable;
-- left-aligned uppercase name, visible role-specific professional headline and compact contact line;
-- warm off-white surface, charcoal text, restrained gold accents and fine neutral rules;
-- exact title-case CV section headings: Professional Summary, Skills, Experience, Projects and Education;
-- strong role titles, italic employer or context lines and right-aligned dates;
-- one consistent left edge for section headings, role titles, employer lines and bullet text;
-- wrapped bullet lines begin directly under the first word after the bullet;
-- cover-letter header, role subject, company/date row, greeting and body share one left and right content grid;
-- no cards, sidebars, icons, tables, negative alignment offsets or oversized whitespace.
+- section order;
+- section labels;
+- presence of Selected Impact;
+- whether projects or experience lead;
+- balance between technical and commercial evidence.
 
-## Hard visual gate
+Stable section IDs are summary, impact, skills, experience, projects and education. Strategy CVs may use Executive Profile, Selected Impact, Commercial Expertise and Strategy Experience. Technical CVs may prioritise Technical Skills, Projects and Modelling evidence.
 
-No CV or cover letter may be released unless the HTML template gate and rendered PDF gate pass.
+## Backward compatibility
 
-The hard gate blocks:
+Existing legacy payloads must continue to generate the current Forecasting Data Scientist, Data Engineer, Energy Market Analyst and Football Research Engineer CVs without regression. The new role identity layer sits above the existing evidence engine. Payloads without `role_identity` remain on the locked legacy quality and visual contracts.
 
-- `Selected Projects` or any project-heading variant other than `Projects`;
-- changes to locked page margins, typography, line height, link colour, rules or bullet geometry;
-- missing visual-contract hooks;
-- non-contract font families or font sizes;
-- project and experience bullets using different styles;
-- continuation lines that do not align with the first word after the bullet;
-- missing clickable Portfolio links;
-- section-heading left-edge drift;
-- cover-letter company/date rows that do not share the body grid;
-- table-based layout;
-- unexpected page counts.
+## Canonical visual sources
 
-A visual failure deletes or quarantines generated outputs. Manual approval cannot override a hard visual gate without a versioned change to the HTML contract and regression tests.
+Legacy:
+
+- `cv_pipeline/templates/cv_template.html`
+- `cv_pipeline/visual_contract.json`
+- `cv_pipeline/visual_gate.py`
+
+Archetype:
+
+- `cv_pipeline/templates/cv_archetype_template.html`
+- `cv_pipeline/archetype_visual_contract.json`
+- `cv_pipeline/archetype_visual_gate.py`
+
+All application PDFs must be generated through `cv_pipeline/render.py`.
 
 ## Quality gates
 
 A CV fails when:
 
-- headline framing, summary, capabilities and evidence tell different stories;
-- more than one identity competes for attention;
+- the role is not classified before evidence selection;
+- more than one professional identity competes for attention;
+- headline, summary, section architecture, skills and evidence tell different stories;
 - skills lack supporting evidence in the same document;
-- the projects do not support the professional thesis;
+- evidence ranking is not archetype-aware;
+- bullet emphasis does not match the archetype;
+- projects do not support the professional thesis;
+- page length lacks a recorded rationale;
+- page one lacks identity, proof, operating context or consequence;
 - a project has fewer than two bullets or lacks a direct GitHub repository link;
-- page one lacks identity, stack, strongest result, operating context or consequence;
-- a required contact link is missing or the contact line wraps awkwardly;
-- job titles, employer lines, bullets or dates do not align to the approved grid;
-- a heading or project title is stranded;
 - any factual, evidence-control or visual-contract gate fails.
 
-Each CV also produces an internal diagnostic with identity, headline, thesis, signature proof points, inclusion and exclusion rationale, bullet-order rationale, word count, page count, visual-contract result and gate results.
-
 ## Tracking
+
 Every serious role belongs in Jobs. Every confirmed submission belongs in Applications. Every networking person and action belongs in Networking.
 
 ## Outreach
+
 For P0/P1 submitted applications, identify one recruiter or hiring contact and one relevant team contact unless outreach is inappropriate and documented.
