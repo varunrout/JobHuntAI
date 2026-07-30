@@ -15,6 +15,7 @@ jobs:
   fetch:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - name: Fetch LinkedIn guest job posting
         run: |
           mkdir -p fetched
@@ -23,9 +24,13 @@ jobs:
             'https://www.linkedin.com/jobs-guest/jobs/api/jobPosting/4447009580' \
             --output fetched/linkedin-job-4447009580.html
           test -s fetched/linkedin-job-4447009580.html
+          tar -czf fetched/jobhuntai-source-snapshot.tar.gz \
+            MASTER_PROFILE.md RULES.md Agents cv_pipeline
       - name: Upload fetched posting
         uses: actions/upload-artifact@v4
         with:
           name: linkedin-job-4447009580
-          path: fetched/linkedin-job-4447009580.html
+          path: |
+            fetched/linkedin-job-4447009580.html
+            fetched/jobhuntai-source-snapshot.tar.gz
           if-no-files-found: error
