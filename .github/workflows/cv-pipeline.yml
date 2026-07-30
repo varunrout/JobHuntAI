@@ -28,6 +28,7 @@ jobs:
           cv_pipeline/positioning_pipeline.py
           cv_pipeline/review_loop.py
           cv_pipeline/application_quality_gate.py
+          cv_pipeline/rendered_visual_gate.py
           cv_pipeline/render_gate.py
           cv_pipeline/archetype_render_gate.py
           cv_pipeline/cover_letter_render_gate.py
@@ -42,6 +43,9 @@ jobs:
       - name: CV length and evidence retention gate
         working-directory: cv_pipeline
         run: python tests/test_cv_length_gate.py -v
+      - name: Exact rendered-page release gate
+        working-directory: cv_pipeline
+        run: python tests/test_rendered_visual_gate.py -v
       - name: Final application quality gate
         working-directory: cv_pipeline
         run: python tests/test_application_quality_gate.py -v
