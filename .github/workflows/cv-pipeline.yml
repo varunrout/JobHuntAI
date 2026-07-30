@@ -25,6 +25,8 @@ jobs:
           cv_pipeline/role_identity.py
           cv_pipeline/evidence_scoring.py
           cv_pipeline/positioning_pipeline.py
+          cv_pipeline/review_loop.py
+          cv_pipeline/application_quality_gate.py
           cv_pipeline/render_gate.py
           cv_pipeline/archetype_render_gate.py
           cv_pipeline/cover_letter_render_gate.py
@@ -33,6 +35,12 @@ jobs:
           cv_pipeline/archetype_visual_gate.py
           cv_pipeline/render.py
           cv_pipeline/lint.py
+      - name: Mandatory Tailor and Review loop
+        working-directory: cv_pipeline
+        run: python tests/test_review_loop.py -v
+      - name: Final application quality gate
+        working-directory: cv_pipeline
+        run: python tests/test_application_quality_gate.py -v
       - name: Locked legacy HTML visual contract
         run: python cv_pipeline/visual_gate.py
       - name: Legacy visual compatibility entrypoint
@@ -79,6 +87,6 @@ jobs:
           python tests/test_visual_contract.py VisualContractTests.test_bullet_css_drift_is_blocked -v
           python tests/test_visual_contract.py VisualContractTests.test_cover_letter_table_is_blocked -v
           python tests/test_archetype_visual_contract.py ArchetypeVisualContractTests.test_selected_projects_remains_forbidden -v
-      - name: Structural, archetype and factual regression suite
+      - name: Structural, archetype, review-loop and factual regression suite
         working-directory: cv_pipeline
         run: python -m unittest discover -s tests -v
