@@ -1,0 +1,14 @@
+{
+  "verdict": "revise",
+  "cv_sha256": "<<SHA256_OF_EXACT_CV_JSON>>",
+  "summary": "<<INDEPENDENT_REVIEW_SUMMARY>>",
+  "issues": [
+    {
+      "id": "<<CATEGORY-NUMBER>>",
+      "severity": "major",
+      "status": "open",
+      "message": "<<SPECIFIC_REVIEW_FAILURE>>",
+      "required_action": "<<SPECIFIC_CORRECTION_FOR_TAILOR>>"
+    }
+  ]
+}
