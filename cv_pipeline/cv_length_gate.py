@@ -9,6 +9,9 @@ import sys
 from pathlib import Path
 from typing import Any
 
+ROOT = Path(__file__).resolve().parent
+SCHEMA_PATH = ROOT / "schemas" / "cv_length_audit.schema.json"
+
 CONTRACT = "jobhuntai-cv-length-audit-v1"
 ONE_PAGE_ALLOWED = "ONE_PAGE_ALLOWED"
 TWO_PAGE_PREFERRED = "TWO_PAGE_PREFERRED"
@@ -30,6 +33,20 @@ def load_json(path: Path) -> dict[str, Any]:
     if not isinstance(data, dict):
         raise ValueError(f"{path} must contain a JSON object")
     return data
+
+
+def schema_errors(instance: dict[str, Any]) -> list[str]:
+    try:
+        from jsonschema import Draft202012Validator
+    except ImportError:
+        return ["jsonschema is required to validate CV length audits"]
+    schema = load_json(SCHEMA_PATH)
+    validator = Draft202012Validator(schema)
+    out: list[str] = []
+    for error in sorted(validator.iter_errors(instance), key=lambda item: list(item.path)):
+        location = ".".join(str(part) for part in error.path) or "root"
+        out.append(f"{location}: {error.message}")
+    return out
 
 
 def _normalise(value: Any) -> str:
@@ -90,6 +107,8 @@ def validate(
     review_state: dict[str, Any] | None = None,
 ) -> list[dict[str, str]]:
     failures: list[dict[str, str]] = []
+    for error in schema_errors(audit):
+        add_failure(failures, "CV_LENGTH_SCHEMA", error)
     if audit.get("contract") != CONTRACT:
         add_failure(failures, "CV_LENGTH_CONTRACT_INVALID", f"audit contract must be {CONTRACT}")
 
@@ -193,7 +212,15 @@ def validate(
     if not isinstance(transition, dict):
         transition = {}
     previous_pages = transition.get("previous_page_count")
-    if previous_pages in {1, 2} and final_pages in {1, 2} and previous_pages > final_pages:
+    page_reduced = previous_pages in {1, 2} and final_pages in {1, 2} and previous_pages > final_pages
+    preferred_exception = decision == TWO_PAGE_PREFERRED and final_pages == 1
+    if preferred_exception and previous_pages != 2:
+        add_failure(
+            failures,
+            "ONE_PAGE_EXCEPTION_REMEDIATION_MISSING",
+            "a two-page-preferred CV may use one page only after a recorded two-page remediation attempt",
+        )
+    if page_reduced or preferred_exception:
         steps = transition.get("remediation_steps", [])
         if not isinstance(steps, list) or not _ordered_subsequence([str(item) for item in steps], REMEDIATION_ORDER):
             add_failure(
