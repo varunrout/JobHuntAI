@@ -29,13 +29,17 @@ The rendered label is supplied by the archetype registry. `Selected Projects` re
 2. Render through `render.py`.
 3. Run the matching visual contract.
 4. Run `archetype_render_gate.py` for archetype CVs or `render_gate.py` for legacy CVs.
-5. Delete generated outputs when any gate fails.
+5. Measure page count and meaningful page fill, then update `cv_length_audit.json`.
+6. Run `cv_length_gate.py cv.json cv_length_audit.json`.
+7. Delete generated outputs when any gate fails.
 
 ## Required checks
 
 - Page one establishes professional identity, at least two proof points, operating context and consequence.
 - Page count respects the evidence-based page strategy, with a normal maximum of two pages.
-- A two-page CV must use its final page materially and may not contain filler.
+- A two-page CV must use at least 70% of its second page with materially relevant evidence and may not contain filler.
+- An underfilled second page returns to Tailor for ordered remediation. Render must not convert that visual finding into permission to delete evidence or force one page.
+- If page count changes after rendering, the previous approval is invalid. The exact revised payload must return through Tailor and Independent Review.
 - Section labels and order match the selected archetype or a documented role-specific override.
 - Every project has a visible GitHub link and two or three bullets.
 - The Portfolio link is clickable.

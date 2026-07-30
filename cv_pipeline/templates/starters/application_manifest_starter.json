@@ -7,6 +7,7 @@
     "evidence_ranking": "evidence_ranking.json",
     "cv": "cv.json",
     "cv_diagnostic": "cv_diagnostic.json",
+    "cv_length_audit": "cv_length_audit.json",
     "cv_pdf": "cv.pdf",
     "review_loop": "review_loop.json"
   },
@@ -16,6 +17,7 @@
     "visa": {"status": "not_run", "outcome": "unknown", "rationale": ""},
     "role_identity": {"status": "not_run"},
     "evidence": {"status": "not_run"},
+    "cv_length": {"status": "not_run"},
     "factual": {"status": "not_run"},
     "positioning": {"status": "not_run"},
     "visual": {"status": "not_run"},
