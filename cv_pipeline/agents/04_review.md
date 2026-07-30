@@ -1,8 +1,8 @@
 # Agent 4: Independent Review
 
-Reads the job description, role identity output, evidence ranking, rendered PDF, stripped payload, live evidence extract, rules, diagnostic sidecar and `cv_length_audit.json`. It does not receive the writer's drafting rationale beyond the recorded positioning strategy.
+Reads the job description, role identity output, evidence ranking, rendered PDF, stripped payload, live evidence extract, rules, diagnostic sidecar, `cv_length_audit.json`, every rendered-page PNG and `rendered_visual_review.json`. It does not receive the writer's drafting rationale beyond the recorded positioning strategy.
 
-The reviewer must use an actor identity different from Tailor and must review the exact CV hash recorded in `review_loop.json`.
+The reviewer must use an actor identity different from Tailor and must review the exact CV hash recorded in `review_loop.json`. The same actor must inspect the rendered page images tied to the exact final PDF hash.
 
 ## Review questions
 
@@ -21,10 +21,17 @@ The reviewer must use an actor identity different from Tailor and must review th
 13. If a sparse second page triggered a rebuild, did Tailor try section ordering, evidence restoration, bullet depth, section placement, approved spacing and page-break repair before considering page-count reduction?
 14. If page count changed, has this exact revision received a fresh strategic review rather than only a visual check?
 15. Are official titles, dates, locations, metrics, attribution and project status factually clean?
-16. Are page count, final-page fill and visual layout acceptable at the preserved typography?
+16. Are page count, first-page fill, final-page fill and visual layout acceptable at readable typography?
 17. Does the CV contain any unsupported skill, tool, responsibility, leadership claim or outcome?
 18. Does the PDF exist, open correctly and match the reviewed payload?
 19. Would a recruiter understand why this candidate belongs in this role without reconstructing the argument?
+20. Have all page PNGs generated from the exact final PDF hash been inspected at readable zoom?
+21. Does page one visibly use the page rather than merely pass a text-character-share calculation?
+22. Are there any large lower-page or internal blank areas, hidden pagination breaks or stranded sections?
+23. Does each semantic section have exactly one heading across the whole CV, with no `Experience Continued`, `Projects Continued`, `Education Continued`, `Additional Project Evidence` or equivalent label?
+24. Is rendered body text at least 9.5 pt and comfortable to read?
+25. Does content flow naturally across pages without an explicit DOCX or HTML page break?
+26. Is the canonical editable file the exact verified DOCX or HTML source rather than a native Google Docs conversion with pagination drift?
 
 ## Review output
 
@@ -61,6 +68,22 @@ The same independent review must complete `cv_length_audit.json.review_judgement
 }
 ```
 
+The reviewer must also complete `rendered_visual_review.json.manual_review` after opening every exact page screenshot:
+
+```json
+{
+  "reviewer_actor": "same independent reviewer actor",
+  "outcome": "pass | fail",
+  "inspected_all_pages": true,
+  "no_large_blank_areas": true,
+  "no_duplicate_or_continued_headings": true,
+  "readable_typography": true,
+  "natural_pagination": true,
+  "section_flow_coherent": true,
+  "notes": "page-specific observations from the actual rendered images"
+}
+```
+
 ## Verdict rules
 
 - Use `approve` only when there are no open issues.
@@ -72,8 +95,14 @@ The same independent review must complete `cv_length_audit.json.review_judgement
 - Do not weaken a finding to avoid another iteration.
 - Do not approve when `material_evidence_removed` is true or unclear.
 - Do not approve a one-page exception unless every essential evidence marker remains, every omission is harmless and the exact compressed revision has received a fresh strategic review.
-- A sparse second page is a repair trigger, not permission to delete evidence.
+- A sparse page is a repair trigger, not permission to delete evidence.
+- Do not approve from PDF text extraction, page-fill percentages or JSON diagnostics alone. The exact page images are the visual source of truth.
+- Do not approve if page one reaches less than 82% of its usable height in a two-page CV, the final page reaches less than 70%, or a large blank gap remains.
+- Do not approve body typography below 9.5 pt.
+- Do not approve duplicate semantic headings, any continuation heading or any explicit source page break.
+- Do not approve a native Google Docs conversion as the canonical editable CV.
+- If the PDF, screenshot or editable-source hash changes, the rendered visual review is stale and must be repeated.
 
-Fail or require revision when positioning is unclear, a secondary archetype competes for attention, evidence selection precedes classification, the page strategy is unsupported, essential evidence is dropped, an omission is a strategic loss, factual integrity fails, the layout contract fails or a required artefact is missing.
+Fail or require revision when positioning is unclear, a secondary archetype competes for attention, evidence selection precedes classification, the page strategy is unsupported, essential evidence is dropped, an omission is a strategic loss, factual integrity fails, the layout contract fails, rendered-page review fails or a required artefact is missing.
 
-After recording `revise`, the workflow returns to Tailor. After recording `approve`, the final application quality gate must still verify the approved hash, the linked CV-length review judgement and all package-level checks before release.
+After recording `revise`, the workflow returns to Tailor. After recording `approve`, the final application quality gate must still verify the approved CV hash, exact PDF hash, page screenshot hashes, linked CV-length review judgement and all package-level checks before release.

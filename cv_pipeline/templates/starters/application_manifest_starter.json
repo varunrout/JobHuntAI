@@ -9,6 +9,7 @@
     "cv_diagnostic": "cv_diagnostic.json",
     "cv_length_audit": "cv_length_audit.json",
     "cv_pdf": "cv.pdf",
+    "rendered_visual_review": "rendered_visual_review.json",
     "review_loop": "review_loop.json"
   },
   "checks": {
@@ -21,7 +22,8 @@
     "factual": {"status": "not_run"},
     "positioning": {"status": "not_run"},
     "visual": {"status": "not_run"},
-    "render": {"status": "not_run"}
+    "render": {"status": "not_run"},
+    "rendered_visual_review": {"status": "not_run"}
   },
   "tracker": {
     "status": "not_checked",

@@ -14,8 +14,8 @@
   --surface:#fffdf9;
   --font:"Lora","Georgia","DejaVu Serif","Liberation Serif",serif;
   --font-heading:"Cormorant Garamond","Georgia","DejaVu Serif","Liberation Serif",serif;
-  --body-size:8.45pt;
-  --body-line-height:1.235;
+  --body-size:9.5pt;
+  --body-line-height:1.2;
   --bullet-text-indent:2.4mm;
   --bullet-marker-offset:0.25mm;
 }
@@ -43,13 +43,13 @@ header { text-align:left; display:flex; flex-direction:column; gap:1.1mm; paddin
 }
 .headline {
   font-family:var(--font-heading);
-  font-size:9.55pt;
+  font-size:10pt;
   line-height:1.1;
   letter-spacing:.018em;
   color:#444141;
 }
 .contact {
-  font-size:7.45pt;
+  font-size:7.6pt;
   line-height:1.18;
   letter-spacing:.015em;
   color:var(--muted);
@@ -63,7 +63,7 @@ header { text-align:left; display:flex; flex-direction:column; gap:1.1mm; paddin
 section { margin-top:1.9mm; }
 h2 {
   font-family:var(--font-heading);
-  font-size:9.05pt;
+  font-size:10pt;
   font-weight:600;
   line-height:1;
   letter-spacing:.08em;
@@ -78,7 +78,7 @@ h2 {
 .capabilities p { margin-bottom:.25mm; break-inside:avoid; }
 .capabilities .cat {
   font-family:var(--font-heading);
-  font-size:8.75pt;
+  font-size:9.5pt;
   font-weight:600;
   letter-spacing:.025em;
 }
@@ -93,13 +93,13 @@ h2 {
 }
 .block-title,.project-title,.education-title {
   font-family:var(--font-heading);
-  font-size:10.15pt;
+  font-size:10.5pt;
   font-weight:600;
   line-height:1.05;
   letter-spacing:.012em;
 }
 .block-dates {
-  font-size:7.25pt;
+  font-size:7.6pt;
   line-height:1;
   letter-spacing:.055em;
   text-transform:uppercase;
@@ -109,7 +109,7 @@ h2 {
 }
 .org {
   font-style:italic;
-  font-size:7.85pt;
+  font-size:8.5pt;
   color:#444141;
   margin-top:.15mm;
   break-after:avoid;
@@ -122,7 +122,7 @@ h2 {
 }
 .subrole { margin-bottom:1mm; break-inside:avoid; }
 .subrole:last-child { margin-bottom:0; }
-.subrole .block-title { font-size:9.35pt; }
+.subrole .block-title { font-size:10pt; }
 .evidence-list {
   list-style:none;
   margin:.55mm 0 0 0;
@@ -162,9 +162,8 @@ h2 {
 .project { margin-bottom:.75mm; break-inside:avoid; }
 .project:last-child { margin-bottom:0; }
 .project-head { break-after:avoid; }
-.project-meta { font-style:italic; font-size:7.85pt; color:#444141; margin-top:.15mm; }
+.project-meta { font-style:italic; font-size:8.5pt; color:#444141; margin-top:.15mm; }
 .education .block { margin-bottom:.45mm; }
-.page-break-before { break-before:page; }
 </style>
 </head>
 <body data-visual-contract="jobhuntai-classic-gold-v2">
@@ -183,7 +182,7 @@ h2 {
 {% if lead_projects and project_items %}
 <section data-section="projects"><h2>Projects</h2>{% for p in project_items %}<div class="project"><div class="row project-head"><div><span class="project-title">{{ p.title }}</span>{% if p.link|default('') %} <span class="sep">·</span> <a href="{{ p.link }}">{{ p.link_label|default('GitHub', true) }}</a>{% endif %}</div><div class="block-dates">{{ p.dates|default('') }}</div></div>{% if p.tools|default('') %}<div class="project-meta">{{ p.tools }}</div>{% endif %}<ul class="evidence-list">{% for b in p.bullets %}<li><span class="bullet-marker">•</span><span class="bullet-text">{{ b }}</span></li>{% endfor %}</ul></div>{% endfor %}</section>
 {% endif %}
-<section data-section="experience"><h2>Experience</h2>{% for role in experience %}{% set subroles = role.roles|default([]) %}<div class="block{% if role.page_break_before|default(false) %} page-break-before{% endif %}">{% if subroles %}<div class="row"><div class="block-title">{{ role.org }}</div><div class="block-dates">{{ role.dates|default('') }}</div></div>{% if role.sub|default('') %}<div class="org">{{ role.sub }}</div>{% endif %}<div class="subroles">{% for sr in subroles %}<div class="subrole"><div class="row"><div class="block-title">{{ sr.title }}</div><div class="block-dates">{{ sr.dates|default('') }}</div></div><ul class="evidence-list">{% for b in sr.bullets %}<li><span class="bullet-marker">•</span><span class="bullet-text">{{ b }}</span></li>{% endfor %}</ul></div>{% endfor %}</div>{% else %}<div class="row"><div class="block-title">{{ role.title }}</div><div class="block-dates">{{ role.dates|default('') }}</div></div><div class="org">{{ role.org }}{% if role.sub|default('') %} · {{ role.sub }}{% endif %}</div><ul class="evidence-list">{% for b in role.bullets %}<li><span class="bullet-marker">•</span><span class="bullet-text">{{ b }}</span></li>{% endfor %}</ul>{% endif %}</div>{% endfor %}</section>
+<section data-section="experience"><h2>Experience</h2>{% for role in experience %}{% set subroles = role.roles|default([]) %}<div class="block">{% if subroles %}<div class="row"><div class="block-title">{{ role.org }}</div><div class="block-dates">{{ role.dates|default('') }}</div></div>{% if role.sub|default('') %}<div class="org">{{ role.sub }}</div>{% endif %}<div class="subroles">{% for sr in subroles %}<div class="subrole"><div class="row"><div class="block-title">{{ sr.title }}</div><div class="block-dates">{{ sr.dates|default('') }}</div></div><ul class="evidence-list">{% for b in sr.bullets %}<li><span class="bullet-marker">•</span><span class="bullet-text">{{ b }}</span></li>{% endfor %}</ul></div>{% endfor %}</div>{% else %}<div class="row"><div class="block-title">{{ role.title }}</div><div class="block-dates">{{ role.dates|default('') }}</div></div><div class="org">{{ role.org }}{% if role.sub|default('') %} · {{ role.sub }}{% endif %}</div><ul class="evidence-list">{% for b in role.bullets %}<li><span class="bullet-marker">•</span><span class="bullet-text">{{ b }}</span></li>{% endfor %}</ul>{% endif %}</div>{% endfor %}</section>
 {% if not lead_projects and project_items %}
 <section data-section="projects"><h2>Projects</h2>{% for p in project_items %}<div class="project"><div class="row project-head"><div><span class="project-title">{{ p.title }}</span>{% if p.link|default('') %} <span class="sep">·</span> <a href="{{ p.link }}">{{ p.link_label|default('GitHub', true) }}</a>{% endif %}</div><div class="block-dates">{{ p.dates|default('') }}</div></div>{% if p.tools|default('') %}<div class="project-meta">{{ p.tools }}</div>{% endif %}<ul class="evidence-list">{% for b in p.bullets %}<li><span class="bullet-marker">•</span><span class="bullet-text">{{ b }}</span></li>{% endfor %}</ul></div>{% endfor %}</section>
 {% endif %}

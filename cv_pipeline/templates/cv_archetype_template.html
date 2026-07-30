@@ -14,8 +14,8 @@
   --surface:#fffdf9;
   --font:"Lora","Georgia","DejaVu Serif","Liberation Serif",serif;
   --font-heading:"Cormorant Garamond","Georgia","DejaVu Serif","Liberation Serif",serif;
-  --body-size:8.45pt;
-  --body-line-height:1.235;
+  --body-size:9.5pt;
+  --body-line-height:1.2;
   --bullet-text-indent:2.4mm;
   --bullet-marker-offset:0.25mm;
 }
@@ -34,25 +34,25 @@ body[data-visual-contract="jobhuntai-archetype-v1"] {
 a { color:var(--link); text-decoration:none; border-bottom:.45pt solid var(--accent-soft); }
 header { text-align:left; display:flex; flex-direction:column; gap:1.1mm; padding-bottom:1.7mm; border-bottom:1.6pt solid var(--rule); }
 .name { font-family:var(--font-heading); font-size:27pt; font-weight:400; line-height:.92; letter-spacing:.055em; text-transform:uppercase; }
-.headline { font-family:var(--font-heading); font-size:9.55pt; line-height:1.1; letter-spacing:.018em; color:#444141; }
-.contact { font-size:7.45pt; line-height:1.18; letter-spacing:.015em; color:var(--muted); display:flex; flex-wrap:wrap; gap:.3mm 1.9mm; align-items:baseline; }
+.headline { font-family:var(--font-heading); font-size:10pt; line-height:1.1; letter-spacing:.018em; color:#444141; }
+.contact { font-size:7.6pt; line-height:1.18; letter-spacing:.015em; color:var(--muted); display:flex; flex-wrap:wrap; gap:.3mm 1.9mm; align-items:baseline; }
 .sep { color:var(--accent); }
 .content-column { width:100%; margin:0; padding:0; }
 section { margin-top:1.9mm; }
-h2 { font-family:var(--font-heading); font-size:9.05pt; font-weight:600; line-height:1; letter-spacing:.08em; color:var(--link); border-bottom:.65pt solid var(--divider); padding-bottom:.55mm; margin-bottom:1.05mm; break-after:avoid; }
+h2 { font-family:var(--font-heading); font-size:10pt; font-weight:600; line-height:1; letter-spacing:.08em; color:var(--link); border-bottom:.65pt solid var(--divider); padding-bottom:.55mm; margin-bottom:1.05mm; break-after:avoid; }
 .summary { text-align:left; }
 .capabilities p { margin-bottom:.25mm; break-inside:avoid; }
-.capabilities .cat { font-family:var(--font-heading); font-size:8.75pt; font-weight:600; letter-spacing:.025em; }
+.capabilities .cat { font-family:var(--font-heading); font-size:9.5pt; font-weight:600; letter-spacing:.025em; }
 .block { margin-bottom:1.15mm; break-inside:avoid; }
 .block:last-child { margin-bottom:0; }
 .row { display:grid; grid-template-columns:minmax(0,1fr) auto; column-gap:4mm; align-items:baseline; break-after:avoid; }
-.block-title,.project-title,.education-title,.impact-title { font-family:var(--font-heading); font-size:10.15pt; font-weight:600; line-height:1.05; letter-spacing:.012em; }
-.block-dates { font-size:7.25pt; line-height:1; letter-spacing:.055em; text-transform:uppercase; color:var(--muted); white-space:nowrap; font-variant-numeric:tabular-nums; }
-.org { font-style:italic; font-size:7.85pt; color:#444141; margin-top:.15mm; break-after:avoid; }
+.block-title,.project-title,.education-title,.impact-title { font-family:var(--font-heading); font-size:10.5pt; font-weight:600; line-height:1.05; letter-spacing:.012em; }
+.block-dates { font-size:7.6pt; line-height:1; letter-spacing:.055em; text-transform:uppercase; color:var(--muted); white-space:nowrap; font-variant-numeric:tabular-nums; }
+.org { font-style:italic; font-size:8.5pt; color:#444141; margin-top:.15mm; break-after:avoid; }
 .subroles { margin-top:.65mm; padding-left:2.1mm; border-left:.6pt solid var(--divider); }
 .subrole { margin-bottom:1mm; break-inside:avoid; }
 .subrole:last-child { margin-bottom:0; }
-.subrole .block-title { font-size:9.35pt; }
+.subrole .block-title { font-size:10pt; }
 .evidence-list { list-style:none; margin:.55mm 0 0 0; padding:0; font-family:var(--font); font-size:var(--body-size); line-height:var(--body-line-height); }
 .evidence-list li { position:relative; margin:0 0 .22mm 0; padding-left:var(--bullet-text-indent); text-indent:0; font-family:var(--font); font-size:var(--body-size); line-height:var(--body-line-height); break-inside:avoid; }
 .evidence-list li::before { content:"•"; position:absolute; left:var(--bullet-marker-offset); top:0; color:var(--link); font-family:var(--font); font-size:var(--body-size); line-height:var(--body-line-height); display:none; }
@@ -60,12 +60,11 @@ h2 { font-family:var(--font-heading); font-size:9.05pt; font-weight:600; line-he
 .bullet-text { display:inline; }
 .project,.impact-item { margin-bottom:.75mm; break-inside:avoid; }
 .project:last-child,.impact-item:last-child { margin-bottom:0; }
-.project-meta,.impact-context { font-style:italic; font-size:7.85pt; color:#444141; margin-top:.15mm; }
+.project-meta,.impact-context { font-style:italic; font-size:8.5pt; color:#444141; margin-top:.15mm; }
 .impact-item { padding-left:2.2mm; border-left:.75pt solid var(--accent-soft); }
 body[data-layout-variant="strategy"] .impact-title,
 body[data-layout-variant="commercial"] .impact-title { font-size:10.5pt; }
 .education .block { margin-bottom:.45mm; }
-.page-break-before { break-before:page; }
 </style>
 </head>
 <body data-visual-contract="jobhuntai-archetype-v1" data-archetype="{{ archetype }}" data-layout-variant="{{ layout_variant|default('technical', true) }}">
@@ -79,7 +78,7 @@ body[data-layout-variant="commercial"] .impact-title { font-size:10.5pt; }
 {% macro render_summary() -%}<section data-section="summary"><h2>{{ section_labels.summary }}</h2><p class="summary">{{ summary }}</p></section>{%- endmacro %}
 {% macro render_impact() -%}{% if selected_impact|default([]) %}<section data-section="impact"><h2>{{ section_labels.impact }}</h2>{% for item in selected_impact %}<div class="impact-item"><div class="impact-title">{{ item.headline }}</div>{% if item.context|default('') %}<div class="impact-context">{{ item.context }}</div>{% endif %}{{ evidence_list(item.bullets) }}</div>{% endfor %}</section>{% endif %}{%- endmacro %}
 {% macro render_skills() -%}<section class="capabilities" data-section="skills"><h2>{{ section_labels.skills }}</h2>{% for s in skills %}<p><span class="cat">{{ s.category }} ·</span> {{ s["items"] }}</p>{% endfor %}</section>{%- endmacro %}
-{% macro render_experience() -%}<section data-section="experience"><h2>{{ section_labels.experience }}</h2>{% for role in experience %}{% set subroles = role.roles|default([]) %}<div class="block{% if role.page_break_before|default(false) %} page-break-before{% endif %}">{% if subroles %}<div class="row"><div class="block-title">{{ role.org }}</div><div class="block-dates">{{ role.dates|default('') }}</div></div>{% if role.sub|default('') %}<div class="org">{{ role.sub }}</div>{% endif %}<div class="subroles">{% for sr in subroles %}<div class="subrole"><div class="row"><div class="block-title">{{ sr.title }}</div><div class="block-dates">{{ sr.dates|default('') }}</div></div>{{ evidence_list(sr.bullets) }}</div>{% endfor %}</div>{% else %}<div class="row"><div class="block-title">{{ role.title }}</div><div class="block-dates">{{ role.dates|default('') }}</div></div><div class="org">{{ role.org }}{% if role.sub|default('') %} · {{ role.sub }}{% endif %}</div>{{ evidence_list(role.bullets) }}{% endif %}</div>{% endfor %}</section>{%- endmacro %}
+{% macro render_experience() -%}<section data-section="experience"><h2>{{ section_labels.experience }}</h2>{% for role in experience %}{% set subroles = role.roles|default([]) %}<div class="block">{% if subroles %}<div class="row"><div class="block-title">{{ role.org }}</div><div class="block-dates">{{ role.dates|default('') }}</div></div>{% if role.sub|default('') %}<div class="org">{{ role.sub }}</div>{% endif %}<div class="subroles">{% for sr in subroles %}<div class="subrole"><div class="row"><div class="block-title">{{ sr.title }}</div><div class="block-dates">{{ sr.dates|default('') }}</div></div>{{ evidence_list(sr.bullets) }}</div>{% endfor %}</div>{% else %}<div class="row"><div class="block-title">{{ role.title }}</div><div class="block-dates">{{ role.dates|default('') }}</div></div><div class="org">{{ role.org }}{% if role.sub|default('') %} · {{ role.sub }}{% endif %}</div>{{ evidence_list(role.bullets) }}{% endif %}</div>{% endfor %}</section>{%- endmacro %}
 {% macro render_projects() -%}{% if projects|default([]) %}<section data-section="projects"><h2>{{ section_labels.projects }}</h2>{% for p in projects %}<div class="project"><div class="row"><div><span class="project-title">{{ p.title }}</span>{% if p.link|default('') %} <span class="sep">·</span> <a href="{{ p.link }}">{{ p.link_label|default('GitHub', true) }}</a>{% endif %}</div><div class="block-dates">{{ p.dates|default('') }}</div></div>{% if p.tools|default('') %}<div class="project-meta">{{ p.tools }}</div>{% endif %}{{ evidence_list(p.bullets) }}</div>{% endfor %}</section>{% endif %}{%- endmacro %}
 {% macro render_education() -%}<section class="education" data-section="education"><h2>{{ section_labels.education }}</h2>{% for e in education %}<div class="block row"><div><div class="education-title">{{ e.degree }}</div><div class="org">{{ e.school }}</div></div><div class="block-dates">{{ e.dates|default('') }}</div></div>{% endfor %}</section>{%- endmacro %}
 {% for section in section_order %}{% if section == 'summary' %}{{ render_summary() }}{% elif section == 'impact' %}{{ render_impact() }}{% elif section == 'skills' %}{{ render_skills() }}{% elif section == 'experience' %}{{ render_experience() }}{% elif section == 'projects' %}{{ render_projects() }}{% elif section == 'education' %}{{ render_education() }}{% endif %}{% endfor %}
