@@ -1,0 +1,33 @@
+{
+  "contract": "jobhuntai-application-quality-v1",
+  "decision": "apply",
+  "artefacts": {
+    "job_description": "job_description.md",
+    "role_identity": "role_identity.json",
+    "evidence_ranking": "evidence_ranking.json",
+    "cv": "cv.json",
+    "cv_diagnostic": "cv_diagnostic.json",
+    "cv_pdf": "cv.pdf",
+    "review_loop": "review_loop.json"
+  },
+  "checks": {
+    "preflight": {"status": "not_run"},
+    "duplicate": {"status": "not_run", "outcome": "unknown"},
+    "visa": {"status": "not_run", "outcome": "unknown", "rationale": ""},
+    "role_identity": {"status": "not_run"},
+    "evidence": {"status": "not_run"},
+    "factual": {"status": "not_run"},
+    "positioning": {"status": "not_run"},
+    "visual": {"status": "not_run"},
+    "render": {"status": "not_run"}
+  },
+  "tracker": {
+    "status": "not_checked",
+    "mode": "read_only",
+    "notes": ""
+  },
+  "drive_save": {
+    "status": "unverified",
+    "files": []
+  }
+}
