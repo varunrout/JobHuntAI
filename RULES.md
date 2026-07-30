@@ -88,6 +88,9 @@ Before drafting, record:
 - the section architecture;
 - the bullet optimisation dimensions;
 - the page strategy;
+- the candidate-role profile used to permit one or two pages;
+- the essential evidence markers that must survive into the final CV;
+- the omission audit for every relevant role, project or proof point excluded;
 - the first-page evidence markers.
 
 The submitted CV must:
@@ -97,6 +100,7 @@ The submitted CV must:
 - use the selected archetype's summary style, skills taxonomy, evidence priorities, stakeholder language, verbs and bullet style;
 - order sections and evidence by the positioning strategy rather than chronology alone;
 - include no more evidence than is needed to prove the hiring case;
+- retain every role-critical evidence marker recorded as essential;
 - avoid defensive title, transition or gap-explaining language;
 - include LinkedIn, `https://varunrout.com` and GitHub;
 - include a direct GitHub link and two or three evidence bullets for every project;
@@ -109,29 +113,57 @@ Every application CV must pass an executable Tailor and Review loop before relea
 
 1. Initialise `review_loop.json` before the first CV draft.
 2. Tailor writes the CV and records the exact SHA-256 hash of `cv.json`.
-3. An independent reviewer evaluates the job description, role identity, evidence ranking, CV payload, diagnostic and rendered PDF.
+3. An independent reviewer evaluates the job description, role identity, evidence ranking, CV payload, CV-length audit, diagnostic and rendered PDF.
 4. The reviewer records either `approve` or `revise` against the exact CV hash.
-5. A `revise` verdict must contain one or more open issue IDs and returns the application to Tailor.
-6. Re-tailoring must explicitly address every open issue ID before another review is allowed.
-7. An `approve` verdict cannot contain open issues.
-8. The reviewer actor cannot be the same as the tailor actor.
-9. Any CV edit after approval invalidates the approval hash and forces another review.
-10. The final package remains `FAILED QA` until the latest CV revision is independently approved.
+5. The reviewer must explicitly answer whether page-count optimisation removed evidence that materially improves the hiring case.
+6. The reviewer must confirm that the omission audit is complete and approve or reject the page strategy.
+7. The CV-length review judgement must record the same reviewer actor, iteration and CV hash as the latest review-loop event.
+8. A `revise` verdict must contain one or more open issue IDs and returns the application to Tailor.
+9. Re-tailoring must explicitly address every open issue ID before another review is allowed.
+10. An `approve` verdict cannot contain open issues.
+11. The reviewer actor cannot be the same as the tailor actor.
+12. Any CV edit after approval invalidates the approval hash and forces another review.
+13. Any page-count change requires a fresh strategic review of the exact revised payload. A visual check alone is insufficient.
+14. The final package remains `FAILED QA` until the latest CV revision is independently approved.
 
 The default maximum is four Tailor and Review iterations. Reaching the limit blocks automatic release for manual diagnosis. It does not permit the pipeline to waive review findings.
 
 ## Page-length logic
 
-One page is not the default for archetype CVs. Determine length from:
+One page is not the default for archetype CVs. Before tailoring, classify the strategy as:
+
+- `ONE_PAGE_ALLOWED`;
+- `TWO_PAGE_PREFERRED`;
+- `TWO_PAGE_REQUIRED`.
+
+Determine length from:
 
 - years of relevant evidence;
+- number of relevant roles and projects;
 - seniority;
-- breadth of responsibilities;
+- breadth of responsibilities and technical capability;
 - strategic depth;
 - leadership expectations;
-- evidence density.
+- evidence density;
+- whether a domain-transfer case needs additional proof.
 
-Two pages are encouraged when they communicate materially more relevant evidence without filler. A second page must be materially used. Never shrink typography to force one page.
+One page is permitted by default only for a narrow profile with no senior or leadership positioning, no more than three relevant years, no more than two relevant roles, no more than one relevant project, limited technical breadth, no more than four essential evidence items and no domain-transfer burden.
+
+Two pages are preferred or required when they communicate materially more relevant evidence without filler. A two-page CV must use at least 70% of its second page with meaningful content. An underfilled page is a repair trigger, not permission to delete evidence.
+
+When a second page is sparse, Tailor must try the following in order and record each step:
+
+1. improve section ordering;
+2. restore relevant omitted evidence;
+3. improve bullet depth;
+4. adjust section placement;
+5. tune spacing within approved limits;
+6. repair page breaks;
+7. only then consider page-count reduction.
+
+Never shrink typography to force a page target. Never remove essential evidence to achieve visual compactness. Every omission must be classified as `harmless` or `strategic_loss`. A strategic-loss omission blocks release.
+
+A `TWO_PAGE_PREFERRED` CV may use one page only through an explicit exception where every essential evidence marker remains, every omission is harmless, the complete sparse-page remediation sequence was attempted and the exact compressed revision passed fresh independent strategic review. A `TWO_PAGE_REQUIRED` CV cannot be released as one page.
 
 ## Visual architecture
 
@@ -149,7 +181,7 @@ Stable section IDs are summary, impact, skills, experience, projects and educati
 
 Existing legacy payloads must continue to generate the current Forecasting Data Scientist, Data Engineer, Energy Market Analyst and Football Research Engineer CVs without regression. The new role identity layer sits above the existing evidence engine. Payloads without `role_identity` remain on the locked legacy quality and visual contracts.
 
-The legacy rendering path remains supported, but the final application package still requires the Tailor and Review loop and application quality manifest.
+The legacy rendering path remains supported, but the final application package still requires the Tailor and Review loop, CV-length audit and application quality manifest.
 
 ## Canonical visual sources
 
@@ -178,9 +210,10 @@ The release gate requires:
 - completed duplicate check;
 - completed visa review;
 - role identity and evidence ranking;
-- non-empty CV payload, diagnostic and PDF;
-- passed factual, positioning, visual and render checks;
+- non-empty CV payload, diagnostic, CV-length audit and PDF;
+- passed CV-length, factual, positioning, visual and render checks;
 - an approved Tailor and Review loop tied to the final CV hash;
+- a CV-length review judgement tied to the same reviewer actor, iteration and CV hash;
 - tracker mode and duplicate history recorded;
 - Drive save verified rather than assumed.
 
@@ -198,6 +231,13 @@ A CV fails when:
 - bullet emphasis does not match the archetype;
 - projects do not support the professional thesis;
 - page length lacks a recorded rationale;
+- one page is used when the candidate-role profile exceeds one-page permission thresholds;
+- a two-page-preferred or two-page-required strategy is compressed without an allowed exception;
+- essential evidence is absent from the final CV;
+- an omission is classified as a strategic loss;
+- sparse-page remediation steps were skipped;
+- page count changed without a fresh strategic review;
+- the second page is under 70% meaningfully filled;
 - page one lacks identity, proof, operating context or consequence;
 - a project has fewer than two bullets or lacks a direct GitHub repository link;
 - any factual, evidence-control or visual-contract gate fails;
@@ -205,6 +245,7 @@ A CV fails when:
 - review was performed by the tailor actor;
 - the latest review requests revision;
 - review issues remain open;
+- the CV-length review judgement does not match the latest independent reviewer, iteration and hash;
 - the final CV hash differs from the approved review hash;
 - the final application quality gate has not passed.
 
