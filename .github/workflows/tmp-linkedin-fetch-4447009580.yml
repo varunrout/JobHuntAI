@@ -26,6 +26,26 @@ jobs:
           test -s fetched/linkedin-job-4447009580.html
           tar -czf fetched/jobhuntai-source-snapshot.tar.gz \
             MASTER_PROFILE.md RULES.md Agents cv_pipeline
+      - name: Verify sponsor register entity
+        run: |
+          curl --fail --location --retry 3 \
+            'https://assets.publishing.service.gov.uk/media/6a6b4a71cceb23e867897720/SP_-_Worker_and_Temporary_Worker_Web_Register_-_2026-07-30.csv' \
+            --output fetched/worker-sponsor-register-2026-07-30.csv
+          python - <<'PY'
+          import csv
+          from pathlib import Path
+          src = Path('fetched/worker-sponsor-register-2026-07-30.csv')
+          out = Path('fetched/spotlight-sponsor-match.txt')
+          matches = []
+          with src.open(encoding='utf-8-sig', newline='') as f:
+              for row in csv.reader(f):
+                  if any('spotlight sports' in cell.lower() or 'centurycomm' in cell.lower() for cell in row):
+                      matches.append(row)
+          out.write_text('\n'.join(' | '.join(row) for row in matches) + ('\n' if matches else ''), encoding='utf-8')
+          if not matches:
+              raise SystemExit('No exact Spotlight Sports/Centurycomm sponsor-register match found')
+          print(out.read_text())
+          PY
       - name: Upload fetched posting
         uses: actions/upload-artifact@v4
         with:
@@ -33,4 +53,5 @@ jobs:
           path: |
             fetched/linkedin-job-4447009580.html
             fetched/jobhuntai-source-snapshot.tar.gz
+            fetched/spotlight-sponsor-match.txt
           if-no-files-found: error
