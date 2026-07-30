@@ -335,6 +335,8 @@ def main() -> int:
         print("TAILOR-REVIEW LOOP APPROVED.")
         return 0
     except (OSError, json.JSONDecodeError, ReviewLoopError) as exc:
+        if args.command != "init" and "state" in locals() and isinstance(state, dict):
+            write_json(state_path, state)
         print(f"REVIEW LOOP FAILED: {exc}", file=sys.stderr)
         return 2
 
