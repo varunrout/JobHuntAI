@@ -17,6 +17,7 @@
         "cv_diagnostic",
         "cv_length_audit",
         "cv_pdf",
+        "rendered_visual_review",
         "review_loop"
       ],
       "properties": {
@@ -27,6 +28,7 @@
         "cv_diagnostic": {"type": "string", "minLength": 1},
         "cv_length_audit": {"type": "string", "minLength": 1},
         "cv_pdf": {"type": "string", "minLength": 1},
+        "rendered_visual_review": {"type": "string", "minLength": 1},
         "review_loop": {"type": "string", "minLength": 1},
         "cover_letter": {"type": "string", "minLength": 1},
         "cover_letter_pdf": {"type": "string", "minLength": 1}
@@ -45,7 +47,8 @@
         "factual",
         "positioning",
         "visual",
-        "render"
+        "render",
+        "rendered_visual_review"
       ],
       "properties": {
         "preflight": {"$ref": "#/$defs/check"},
@@ -81,6 +84,7 @@
         "positioning": {"$ref": "#/$defs/check"},
         "visual": {"$ref": "#/$defs/check"},
         "render": {"$ref": "#/$defs/check"},
+        "rendered_visual_review": {"$ref": "#/$defs/check"},
         "cover_letter": {"$ref": "#/$defs/check"}
       },
       "additionalProperties": true
