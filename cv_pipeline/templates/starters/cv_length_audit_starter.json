@@ -1,0 +1,37 @@
+{
+  "contract": "jobhuntai-cv-length-audit-v1",
+  "strategy_decision": "TWO_PAGE_PREFERRED",
+  "strategy_rationale": "State why the candidate and target role require one or two pages before tailoring begins.",
+  "final_page_count": 2,
+  "candidate_role_profile": {
+    "seniority": "mid",
+    "relevant_years": 0,
+    "relevant_roles": 0,
+    "relevant_projects": 0,
+    "technical_breadth": 0,
+    "domain_transfer_required": false
+  },
+  "essential_evidence": [
+    {
+      "id": "role-critical-proof",
+      "description": "Evidence that must remain in the final CV",
+      "match_any": ["replace with exact CV marker"]
+    }
+  ],
+  "omissions": [],
+  "review_judgement": {
+    "material_evidence_removed": false,
+    "omission_audit_complete": false,
+    "page_strategy_approved": false,
+    "rationale": "Complete during the independent review against the exact tailored CV.",
+    "review_actor": "",
+    "review_iteration": 1,
+    "cv_sha256": ""
+  },
+  "page_transition": {
+    "previous_page_count": 2,
+    "remediation_steps": [],
+    "fresh_strategic_review": false
+  },
+  "page_fill": [0, 0]
+}
