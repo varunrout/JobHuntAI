@@ -42,7 +42,7 @@ class RenderedVisualGateTests(unittest.TestCase):
                         page.insert_text((50, y), "Additional role evidence with quantified outcome and context.", fontsize=size)
                         y += 16
             else:
-                page.insert_text((50, y), "Projects Continued" if continued else "Projects", fontsize=11)
+                page.insert_text((50, y), "Projects (Continued)" if continued else "Projects", fontsize=11)
                 y += 22
                 for _ in range(20):
                     page.insert_text((50, y), "Project and experience evidence with methods, scale and result.", fontsize=size)
@@ -57,10 +57,12 @@ class RenderedVisualGateTests(unittest.TestCase):
         document.save(path)
         return path
 
-    def make_docx(self, forced=False):
+    def make_docx(self, forced=False, attribute_break=False):
         path = self.run_dir / "cv.docx"
         xml = '<w:document xmlns:w="x"><w:body><w:p><w:pPr>'
-        if forced:
+        if attribute_break:
+            xml += '<w:pageBreakBefore w:val="1"/>'
+        elif forced:
             xml += "<w:pageBreakBefore/>"
         xml += "</w:pPr><w:r><w:t>Text</w:t></w:r></w:p></w:body></w:document>"
         with zipfile.ZipFile(path, "w") as archive:
@@ -121,6 +123,11 @@ class RenderedVisualGateTests(unittest.TestCase):
     def test_forced_docx_page_break_blocks(self):
         pdf = self.make_pdf()
         review = self.review_for(pdf, self.make_docx(forced=True))
+        self.assertIn("EXPLICIT_PAGE_BREAK_FORBIDDEN", self.codes(gate.validate(pdf, review, self.run_dir, "review-agent")))
+
+    def test_attribute_bearing_docx_page_break_blocks(self):
+        pdf = self.make_pdf()
+        review = self.review_for(pdf, self.make_docx(attribute_break=True))
         self.assertIn("EXPLICIT_PAGE_BREAK_FORBIDDEN", self.codes(gate.validate(pdf, review, self.run_dir, "review-agent")))
 
     def test_stale_screenshot_blocks(self):
