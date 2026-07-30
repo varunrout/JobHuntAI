@@ -21,6 +21,7 @@ jobs:
           python -m py_compile
           cv_pipeline/quality_gate.py
           cv_pipeline/archetype_quality_gate.py
+          cv_pipeline/cv_length_gate.py
           cv_pipeline/pipeline_gate.py
           cv_pipeline/role_identity.py
           cv_pipeline/evidence_scoring.py
@@ -38,6 +39,9 @@ jobs:
       - name: Mandatory Tailor and Review loop
         working-directory: cv_pipeline
         run: python tests/test_review_loop.py -v
+      - name: CV length and evidence retention gate
+        working-directory: cv_pipeline
+        run: python tests/test_cv_length_gate.py -v
       - name: Final application quality gate
         working-directory: cv_pipeline
         run: python tests/test_application_quality_gate.py -v
