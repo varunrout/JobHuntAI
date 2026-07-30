@@ -12,9 +12,9 @@
   },
   "cv": {
     "page_margin_mm": [10.2, 13.0, 9.5, 13.0],
-    "body_size_pt": 8.45,
-    "body_line_height": 1.235,
-    "heading_size_pt": 9.05,
+    "body_size_pt": 9.5,
+    "body_line_height": 1.2,
+    "heading_size_pt": 10.0,
     "bullet_text_indent_mm": 2.4,
     "bullet_marker_offset_mm": 0.25,
     "bullet_alignment_tolerance_pt": 0.9,
