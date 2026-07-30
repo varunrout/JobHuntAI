@@ -1,0 +1,29 @@
+{
+  "contract": "jobhuntai-rendered-visual-review-v1",
+  "pdf_sha256": "",
+  "page_count": 1,
+  "pages": [],
+  "expected_headings": [
+    "Professional Summary",
+    "Technical Skills",
+    "Experience",
+    "Projects",
+    "Education"
+  ],
+  "manual_review": {
+    "reviewer_actor": "",
+    "outcome": "pending",
+    "inspected_all_pages": false,
+    "no_large_blank_areas": false,
+    "no_duplicate_or_continued_headings": false,
+    "readable_typography": false,
+    "natural_pagination": false,
+    "section_flow_coherent": false,
+    "notes": ""
+  },
+  "editable_source": {
+    "format": "docx",
+    "path": "cv.docx",
+    "native_google_doc_used_as_canonical": false
+  }
+}
