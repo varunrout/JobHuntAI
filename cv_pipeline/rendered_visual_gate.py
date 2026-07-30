@@ -22,7 +22,8 @@ MAX_INTERIOR_GAP = 0.18
 METRIC_TOLERANCE = 0.025
 FONT_TOLERANCE = 0.30
 FORBIDDEN_CONTINUATION = re.compile(
-    r"\b(?:professional\s+summary|skills|technical\s+skills|experience|projects|education)\s*(?:continued|cont\.?)\b",
+    r"\b(?:professional\s+summary|skills|technical\s+skills|experience|projects|education)"
+    r"\s*[\(\-–:]?\s*(?:continued|cont\.?)\s*\)?\b",
     re.I,
 )
 FORBIDDEN_HEADING_TEXT = {"additional project evidence", "additional projects"}
@@ -177,7 +178,7 @@ def _scan_explicit_page_breaks(path: Path, source_format: str) -> list[str]:
         except (OSError, KeyError, zipfile.BadZipFile) as exc:
             return [f"unable to inspect DOCX pagination: {exc}"]
         findings = []
-        if re.search(r"<w:pageBreakBefore(?:\s*/>|>.*?</w:pageBreakBefore>)", xml, re.S):
+        if re.search(r"<w:pageBreakBefore\b[^>]*(?:/>|>.*?</w:pageBreakBefore>)", xml, re.S | re.I):
             findings.append("DOCX contains w:pageBreakBefore")
         if re.search(r"<w:br\b[^>]*w:type=[\"']page[\"']", xml, re.I):
             findings.append("DOCX contains an explicit page break")
