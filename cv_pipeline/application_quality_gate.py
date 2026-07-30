@@ -8,6 +8,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
+import cv_length_gate
 import review_loop
 
 REQUIRED_CHECKS = (
@@ -16,6 +17,7 @@ REQUIRED_CHECKS = (
     "visa",
     "role_identity",
     "evidence",
+    "cv_length",
     "factual",
     "positioning",
     "visual",
@@ -66,6 +68,7 @@ def run(run_dir: Path, manifest_path: Path) -> list[dict[str, str]]:
         "evidence_ranking": True,
         "cv": True,
         "cv_diagnostic": True,
+        "cv_length_audit": True,
         "cv_pdf": False,
         "review_loop": True,
     }
@@ -119,12 +122,21 @@ def run(run_dir: Path, manifest_path: Path) -> list[dict[str, str]]:
     if not isinstance(drive, dict) or drive.get("status") != "verified":
         add_failure(failures, "DRIVE_SAVE_UNVERIFIED", "Drive save must be verified before release")
 
+    state: dict[str, Any] | None = None
     if "review_loop" in resolved and "cv" in resolved and resolved["review_loop"].is_file() and resolved["cv"].is_file():
         try:
             state = load_json(resolved["review_loop"])
             failures.extend(review_loop.verify_release(state, resolved["cv"]))
         except (OSError, json.JSONDecodeError, ValueError, review_loop.ReviewLoopError) as exc:
             add_failure(failures, "REVIEW_LOOP_INVALID", str(exc))
+
+    if all(key in resolved and resolved[key].is_file() for key in ("cv", "cv_length_audit")):
+        try:
+            cv = load_json(resolved["cv"])
+            audit = load_json(resolved["cv_length_audit"])
+            failures.extend(cv_length_gate.validate(cv, audit, state))
+        except (OSError, json.JSONDecodeError, ValueError) as exc:
+            add_failure(failures, "CV_LENGTH_AUDIT_INVALID", str(exc))
 
     return failures
 
