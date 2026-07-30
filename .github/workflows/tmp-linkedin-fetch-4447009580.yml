@@ -32,19 +32,20 @@ jobs:
             'https://assets.publishing.service.gov.uk/media/6a6b4a71cceb23e867897720/SP_-_Worker_and_Temporary_Worker_Web_Register_-_2026-07-30.csv' \
             --output fetched/worker-sponsor-register-2026-07-30.csv
           python - <<'PY'
-          import csv
+          import csv, re
           from pathlib import Path
           src = Path('fetched/worker-sponsor-register-2026-07-30.csv')
           out = Path('fetched/spotlight-sponsor-match.txt')
           matches = []
+          def compact(value):
+              return re.sub(r'[^a-z0-9]+', '', value.lower())
           with src.open(encoding='utf-8-sig', newline='') as f:
               for row in csv.reader(f):
-                  if any('spotlight sports' in cell.lower() or 'centurycomm' in cell.lower() for cell in row):
+                  joined = compact(' '.join(row))
+                  if 'spotlightsportsgroup' in joined or 'centurycomm' in joined:
                       matches.append(row)
           out.write_text('\n'.join(' | '.join(row) for row in matches) + ('\n' if matches else ''), encoding='utf-8')
-          if not matches:
-              raise SystemExit('No exact Spotlight Sports/Centurycomm sponsor-register match found')
-          print(out.read_text())
+          print(out.read_text() if matches else 'NO MATCH')
           PY
       - name: Upload fetched posting
         uses: actions/upload-artifact@v4
