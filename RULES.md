@@ -103,6 +103,23 @@ The submitted CV must:
 - never use the heading `Selected Projects`;
 - preserve the approved typography and bullet geometry.
 
+## Mandatory Tailor and Review loop
+
+Every application CV must pass an executable Tailor and Review loop before release.
+
+1. Initialise `review_loop.json` before the first CV draft.
+2. Tailor writes the CV and records the exact SHA-256 hash of `cv.json`.
+3. An independent reviewer evaluates the job description, role identity, evidence ranking, CV payload, diagnostic and rendered PDF.
+4. The reviewer records either `approve` or `revise` against the exact CV hash.
+5. A `revise` verdict must contain one or more open issue IDs and returns the application to Tailor.
+6. Re-tailoring must explicitly address every open issue ID before another review is allowed.
+7. An `approve` verdict cannot contain open issues.
+8. The reviewer actor cannot be the same as the tailor actor.
+9. Any CV edit after approval invalidates the approval hash and forces another review.
+10. The final package remains `FAILED QA` until the latest CV revision is independently approved.
+
+The default maximum is four Tailor and Review iterations. Reaching the limit blocks automatic release for manual diagnosis. It does not permit the pipeline to waive review findings.
+
 ## Page-length logic
 
 One page is not the default for archetype CVs. Determine length from:
@@ -132,6 +149,8 @@ Stable section IDs are summary, impact, skills, experience, projects and educati
 
 Existing legacy payloads must continue to generate the current Forecasting Data Scientist, Data Engineer, Energy Market Analyst and Football Research Engineer CVs without regression. The new role identity layer sits above the existing evidence engine. Payloads without `role_identity` remain on the locked legacy quality and visual contracts.
 
+The legacy rendering path remains supported, but the final application package still requires the Tailor and Review loop and application quality manifest.
+
 ## Canonical visual sources
 
 Legacy:
@@ -148,6 +167,25 @@ Archetype:
 
 All application PDFs must be generated through `cv_pipeline/render.py`.
 
+## Application release contract
+
+Every application run must create `application_manifest.json` using `jobhuntai-application-quality-v1` and pass `cv_pipeline/application_quality_gate.py`.
+
+The release gate requires:
+
+- apply or apply-lightly decision;
+- saved job description;
+- completed duplicate check;
+- completed visa review;
+- role identity and evidence ranking;
+- non-empty CV payload, diagnostic and PDF;
+- passed factual, positioning, visual and render checks;
+- an approved Tailor and Review loop tied to the final CV hash;
+- tracker mode and duplicate history recorded;
+- Drive save verified rather than assumed.
+
+A missing, failed, blocked or merely assumed item cannot be converted into `Ready to Apply` by prose or manual optimism.
+
 ## Quality gates
 
 A CV fails when:
@@ -162,7 +200,13 @@ A CV fails when:
 - page length lacks a recorded rationale;
 - page one lacks identity, proof, operating context or consequence;
 - a project has fewer than two bullets or lacks a direct GitHub repository link;
-- any factual, evidence-control or visual-contract gate fails.
+- any factual, evidence-control or visual-contract gate fails;
+- no Tailor and Review loop exists;
+- review was performed by the tailor actor;
+- the latest review requests revision;
+- review issues remain open;
+- the final CV hash differs from the approved review hash;
+- the final application quality gate has not passed.
 
 ## Tracking
 
