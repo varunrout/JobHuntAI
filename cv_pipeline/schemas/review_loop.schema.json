@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://jobhuntai.local/schemas/review_loop.schema.json",
+  "title": "JobHuntAI Tailor Review Loop",
+  "type": "object",
+  "required": [
+    "contract",
+    "job_id",
+    "status",
+    "current_iteration",
+    "max_iterations",
+    "approved_cv_sha256",
+    "events",
+    "created_at",
+    "updated_at"
+  ],
+  "properties": {
+    "contract": {"const": "jobhuntai-tailor-review-v1"},
+    "job_id": {"type": "string", "minLength": 1},
+    "status": {
+      "enum": ["awaiting_tailor", "awaiting_review", "revision_required", "approved", "blocked"]
+    },
+    "current_iteration": {"type": "integer", "minimum": 0},
+    "max_iterations": {"type": "integer", "minimum": 1},
+    "approved_cv_sha256": {
+      "type": ["string", "null"],
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "required": ["type", "iteration", "actor", "cv_sha256", "addressed_issue_ids", "timestamp"],
+            "properties": {
+              "type": {"const": "tailor"},
+              "iteration": {"type": "integer", "minimum": 1},
+              "actor": {"type": "string", "minLength": 1},
+              "cv_path": {"type": "string"},
+              "cv_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+              "addressed_issue_ids": {"type": "array", "items": {"type": "string"}},
+              "timestamp": {"type": "string"}
+            },
+            "additionalProperties": true
+          },
+          {
+            "type": "object",
+            "required": ["type", "iteration", "actor", "cv_sha256", "verdict", "issues", "timestamp"],
+            "properties": {
+              "type": {"const": "review"},
+              "iteration": {"type": "integer", "minimum": 1},
+              "actor": {"type": "string", "minLength": 1},
+              "cv_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+              "verdict": {"enum": ["approve", "revise"]},
+              "issues": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["id", "severity", "status", "message", "required_action"],
+                  "properties": {
+                    "id": {"type": "string", "minLength": 1},
+                    "severity": {"enum": ["critical", "major", "minor"]},
+                    "status": {"enum": ["open", "closed"]},
+                    "message": {"type": "string", "minLength": 1},
+                    "required_action": {"type": "string", "minLength": 1}
+                  },
+                  "additionalProperties": false
+                }
+              },
+              "summary": {"type": "string"},
+              "timestamp": {"type": "string"}
+            },
+            "additionalProperties": true
+          }
+        ]
+      }
+    },
+    "created_at": {"type": "string"},
+    "updated_at": {"type": "string"}
+  },
+  "additionalProperties": false
+}
