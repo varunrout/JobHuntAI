@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://jobhuntai.local/schemas/rendered_visual_review.schema.json",
+  "title": "JobHuntAI Rendered Visual Review",
+  "type": "object",
+  "required": ["contract", "pdf_sha256", "page_count", "pages", "expected_headings", "manual_review", "editable_source"],
+  "properties": {
+    "contract": {"const": "jobhuntai-rendered-visual-review-v1"},
+    "pdf_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "page_count": {"type": "integer", "minimum": 1, "maximum": 2},
+    "pages": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 2,
+      "items": {
+        "type": "object",
+        "required": ["page", "screenshot_path", "screenshot_sha256", "meaningful_fill", "bottom_reach", "largest_blank_gap", "body_font_median_pt"],
+        "properties": {
+          "page": {"type": "integer", "minimum": 1, "maximum": 2},
+          "screenshot_path": {"type": "string", "minLength": 1},
+          "screenshot_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+          "meaningful_fill": {"type": "number", "minimum": 0, "maximum": 1},
+          "bottom_reach": {"type": "number", "minimum": 0, "maximum": 1},
+          "largest_blank_gap": {"type": "number", "minimum": 0, "maximum": 1},
+          "body_font_median_pt": {"type": "number", "minimum": 0}
+        },
+        "additionalProperties": false
+      }
+    },
+    "expected_headings": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "manual_review": {
+      "type": "object",
+      "required": ["reviewer_actor", "outcome", "inspected_all_pages", "no_large_blank_areas", "no_duplicate_or_continued_headings", "readable_typography", "natural_pagination", "section_flow_coherent", "notes"],
+      "properties": {
+        "reviewer_actor": {"type": "string", "minLength": 1},
+        "outcome": {"enum": ["pending", "pass", "fail"]},
+        "inspected_all_pages": {"type": "boolean"},
+        "no_large_blank_areas": {"type": "boolean"},
+        "no_duplicate_or_continued_headings": {"type": "boolean"},
+        "readable_typography": {"type": "boolean"},
+        "natural_pagination": {"type": "boolean"},
+        "section_flow_coherent": {"type": "boolean"},
+        "notes": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "editable_source": {
+      "type": "object",
+      "required": ["format", "path", "native_google_doc_used_as_canonical"],
+      "properties": {
+        "format": {"enum": ["docx", "html", "pdf_only"]},
+        "path": {"type": "string"},
+        "native_google_doc_used_as_canonical": {"const": false}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
