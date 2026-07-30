@@ -1,34 +1,31 @@
 name: Temporary LinkedIn fetch 4447009580
 
 on:
-  push:
+  pull_request:
     branches:
-      - agent/tmp-linkedin-fetch-4447009580
+      - main
     paths:
       - .github/workflows/tmp-linkedin-fetch-4447009580.yml
+      - tmp/linkedin-fetch-4447009580.md
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   fetch:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: agent/tmp-linkedin-fetch-4447009580
       - name: Fetch LinkedIn guest job posting
         run: |
-          mkdir -p tmp
+          mkdir -p fetched
           curl --fail --location --retry 3 \
             --user-agent 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/126 Safari/537.36' \
             'https://www.linkedin.com/jobs-guest/jobs/api/jobPosting/4447009580' \
-            --output tmp/linkedin-job-4447009580.html
-          test -s tmp/linkedin-job-4447009580.html
-      - name: Commit fetched posting
-        run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add tmp/linkedin-job-4447009580.html
-          git commit -m 'Fetch LinkedIn job 4447009580 [skip ci]'
-          git push origin HEAD:agent/tmp-linkedin-fetch-4447009580
+            --output fetched/linkedin-job-4447009580.html
+          test -s fetched/linkedin-job-4447009580.html
+      - name: Upload fetched posting
+        uses: actions/upload-artifact@v4
+        with:
+          name: linkedin-job-4447009580
+          path: fetched/linkedin-job-4447009580.html
+          if-no-files-found: error
