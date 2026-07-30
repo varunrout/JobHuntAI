@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Any
 
 import cv_length_gate
+import rendered_visual_gate
 import review_loop
 
 REQUIRED_CHECKS = (
@@ -22,6 +23,7 @@ REQUIRED_CHECKS = (
     "positioning",
     "visual",
     "render",
+    "rendered_visual_review",
 )
 
 
@@ -39,6 +41,45 @@ def resolve(run_dir: Path, value: str) -> Path:
 
 def add_failure(failures: list[dict[str, str]], code: str, message: str) -> None:
     failures.append({"code": code, "message": message})
+
+
+def _latest_review_actor(state: dict[str, Any] | None) -> str | None:
+    if not isinstance(state, dict):
+        return None
+    reviews = [
+        item for item in state.get("events", [])
+        if isinstance(item, dict) and item.get("type") == "review"
+    ]
+    if not reviews:
+        return None
+    return str(reviews[-1].get("actor", "")).strip() or None
+
+
+def _compare_page_fill(
+    failures: list[dict[str, str]],
+    audit: dict[str, Any],
+    rendered_review: dict[str, Any],
+) -> None:
+    audited = audit.get("page_fill")
+    pages = rendered_review.get("pages")
+    if not isinstance(audited, list) or not isinstance(pages, list):
+        add_failure(failures, "PAGE_FILL_SOURCE_MISSING", "CV-length audit and rendered review must both contain page-fill measurements")
+        return
+    actual = [page.get("meaningful_fill") for page in pages if isinstance(page, dict)]
+    if len(audited) != len(actual):
+        add_failure(failures, "PAGE_FILL_COUNT_MISMATCH", "CV-length page-fill count differs from the rendered-page review")
+        return
+    for index, (recorded, measured) in enumerate(zip(audited, actual), start=1):
+        try:
+            delta = abs(float(recorded) - float(measured))
+        except (TypeError, ValueError):
+            delta = 999
+        if delta > rendered_visual_gate.METRIC_TOLERANCE:
+            add_failure(
+                failures,
+                "PAGE_FILL_RENDER_MISMATCH",
+                f"page {index} fill in cv_length_audit.json was not measured from the exact final PDF",
+            )
 
 
 def run(run_dir: Path, manifest_path: Path) -> list[dict[str, str]]:
@@ -70,6 +111,7 @@ def run(run_dir: Path, manifest_path: Path) -> list[dict[str, str]]:
         "cv_diagnostic": True,
         "cv_length_audit": True,
         "cv_pdf": False,
+        "rendered_visual_review": True,
         "review_loop": True,
     }
     resolved: dict[str, Path] = {}
@@ -130,6 +172,7 @@ def run(run_dir: Path, manifest_path: Path) -> list[dict[str, str]]:
         except (OSError, json.JSONDecodeError, ValueError, review_loop.ReviewLoopError) as exc:
             add_failure(failures, "REVIEW_LOOP_INVALID", str(exc))
 
+    audit: dict[str, Any] | None = None
     if all(key in resolved and resolved[key].is_file() for key in ("cv", "cv_length_audit")):
         try:
             cv = load_json(resolved["cv"])
@@ -137,6 +180,24 @@ def run(run_dir: Path, manifest_path: Path) -> list[dict[str, str]]:
             failures.extend(cv_length_gate.validate(cv, audit, state))
         except (OSError, json.JSONDecodeError, ValueError) as exc:
             add_failure(failures, "CV_LENGTH_AUDIT_INVALID", str(exc))
+
+    rendered_review: dict[str, Any] | None = None
+    if all(key in resolved and resolved[key].is_file() for key in ("cv_pdf", "rendered_visual_review")):
+        try:
+            rendered_review = load_json(resolved["rendered_visual_review"])
+            failures.extend(
+                rendered_visual_gate.validate(
+                    resolved["cv_pdf"],
+                    rendered_review,
+                    run_dir,
+                    expected_reviewer_actor=_latest_review_actor(state),
+                )
+            )
+        except (OSError, json.JSONDecodeError, ValueError) as exc:
+            add_failure(failures, "RENDERED_VISUAL_REVIEW_INVALID", str(exc))
+
+    if audit is not None and rendered_review is not None:
+        _compare_page_fill(failures, audit, rendered_review)
 
     return failures
 
