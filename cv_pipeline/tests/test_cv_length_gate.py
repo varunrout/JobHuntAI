@@ -51,6 +51,9 @@ def hsbc_audit(page_count=2):
             "omission_audit_complete": True,
             "page_strategy_approved": True,
             "rationale": "The two-page structure retains every role-critical proof point and uses the second page for relevant supporting evidence rather than filler.",
+            "review_actor": "review-agent",
+            "review_iteration": 1,
+            "cv_sha256": "a" * 64,
         },
         "page_transition": {"previous_page_count": 2, "remediation_steps": [], "fresh_strategic_review": False},
         "page_fill": [0.96, 0.76],
@@ -91,7 +94,15 @@ class CVLengthGateTests(unittest.TestCase):
             "candidate_role_profile": {"seniority": "junior", "relevant_years": 2, "relevant_roles": 1, "relevant_projects": 0, "technical_breadth": 2, "domain_transfer_required": False},
             "essential_evidence": [{"id": "python", "match_any": ["Python"]}, {"id": "sql", "match_any": ["SQL"]}],
             "omissions": [],
-            "review_judgement": {"material_evidence_removed": False, "omission_audit_complete": True, "page_strategy_approved": True, "rationale": "All role-critical evidence is retained and the profile is narrow enough for one page."},
+            "review_judgement": {
+                "material_evidence_removed": False,
+                "omission_audit_complete": True,
+                "page_strategy_approved": True,
+                "rationale": "All role-critical evidence is retained and the profile is narrow enough for one page.",
+                "review_actor": "review-agent",
+                "review_iteration": 1,
+                "cv_sha256": "b" * 64,
+            },
             "page_transition": {},
             "page_fill": [0.92],
         }
@@ -110,17 +121,18 @@ class CVLengthGateTests(unittest.TestCase):
     def test_review_judgement_must_match_independent_review_loop(self):
         cv = hsbc_cv()
         audit = hsbc_audit()
+        reviewed_hash = "c" * 64
         audit["review_judgement"].update({
             "review_actor": "review-agent",
             "review_iteration": 2,
-            "cv_sha256": "abc123",
+            "cv_sha256": reviewed_hash,
         })
         state = {
             "events": [{
                 "type": "review",
                 "actor": "review-agent",
                 "iteration": 2,
-                "cv_sha256": "abc123",
+                "cv_sha256": reviewed_hash,
                 "verdict": "approve",
             }]
         }
@@ -128,6 +140,25 @@ class CVLengthGateTests(unittest.TestCase):
         audit["review_judgement"]["review_actor"] = "tailor-agent"
         codes = {item["code"] for item in cv_length_gate.validate(cv, audit, state)}
         self.assertIn("PAGE_COUNT_REVIEW_ACTOR_MISMATCH", codes)
+
+    def test_two_page_preferred_exception_requires_full_repair_history(self):
+        cv = hsbc_cv(page_count=1)
+        audit = hsbc_audit(page_count=1)
+        audit["one_page_exception"] = {
+            "approved": True,
+            "rationale": "All essential evidence remains and the independently reviewed final one-page layout is materially stronger.",
+        }
+        audit["page_fill"] = [0.94]
+        audit["page_transition"] = {
+            "previous_page_count": 2,
+            "remediation_steps": ["reduce_page_count"],
+            "fresh_strategic_review": True,
+        }
+        codes = {item["code"] for item in cv_length_gate.validate(cv, audit)}
+        self.assertIn("SPARSE_PAGE_REMEDIATION_SKIPPED", codes)
+
+        audit["page_transition"]["remediation_steps"] = list(cv_length_gate.REMEDIATION_ORDER)
+        self.assertEqual([], cv_length_gate.validate(cv, audit))
 
 
 if __name__ == "__main__":
