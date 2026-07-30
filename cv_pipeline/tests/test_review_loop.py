@@ -76,6 +76,21 @@ class ReviewLoopTests(unittest.TestCase):
         with self.assertRaises(review_loop.ReviewLoopError):
             review_loop.record_review(self.state, self.report("approve", [issue]), "review-agent")
 
+    def test_iteration_exhaustion_sets_blocked_state(self):
+        state = review_loop.create_state("JOB-2", max_iterations=1)
+        review_loop.record_tailor(state, self.cv, "tailor-agent")
+        issue = {
+            "id": "POS-1",
+            "severity": "major",
+            "status": "open",
+            "message": "Positioning is unclear",
+            "required_action": "Clarify the professional thesis",
+        }
+        review_loop.record_review(state, self.report("revise", [issue]), "review-agent")
+        with self.assertRaises(review_loop.ReviewLoopError):
+            review_loop.record_tailor(state, self.cv, "tailor-agent", ["POS-1"])
+        self.assertEqual("blocked", state["status"])
+
 
 if __name__ == "__main__":
     unittest.main()
