@@ -1,0 +1,116 @@
+{
+  "identity": {
+    "name": "Alex Morgan",
+    "phone": "+44 7700 900000",
+    "email": "alex.morgan@example.com",
+    "linkedin": "https://www.linkedin.com/in/example",
+    "portfolio": "https://example.com",
+    "github": "https://github.com/example",
+    "location": "London, UK"
+  },
+  "summary": "Data professional with 3+ years building production pipelines, validation frameworks and analytical products across enterprise environments. Strong Python, SQL and cloud-data foundation with hands-on experience in orchestration, modelling and dashboard delivery. Bias toward reliable systems, concise documentation and evidence that survives operational use.",
+  "skills": [
+    {"category": "Cloud & Data", "items": "Azure Data Factory, Databricks, Fabric, Snowflake, PostgreSQL and Delta Lake"},
+    {"category": "Programming", "items": "Python, SQL, PySpark, pandas, NumPy, Bash and Git"},
+    {"category": "Pipelines & Quality", "items": "ETL/ELT, batch ingestion, schema validation, reconciliation, anomaly detection and monitoring"},
+    {"category": "Modelling & Analytics", "items": "forecasting, regression, classification, statistical testing and model evaluation"},
+    {"category": "Delivery", "items": "CI/CD, automated testing, Power BI, Streamlit, documentation and stakeholder communication"}
+  ],
+  "experience": [
+    {
+      "role": "Data Engineer",
+      "employer": "Northstar Retail Co-operative",
+      "location": "London, UK",
+      "dates": "March 2025 - Present",
+      "bullets": [
+        "Own production data pipelines integrating ERP, SFTP, REST API and third-party feeds into governed lakehouse layers.",
+        "Deliver a warehouse migration across more than one hundred tables with reconciliation, parallel-run validation and performance tuning.",
+        "Led root cause investigation on a multi-week silent ingestion failure and redesigned source-count checks to detect schema drift on arrival.",
+        "Partner with finance, BI and engineering teams to translate operational requirements into tested data products.",
+        "Model curated gold datasets and semantic layers for executive reporting, documenting ownership, service levels and lineage.",
+        "Support incident response and continuous improvement through monitored controls, structured post-incident reviews and clear handover notes."
+      ]
+    },
+    {
+      "role": "Research Assistant",
+      "employer": "Example University",
+      "location": "Glasgow, UK",
+      "dates": "Nov 2024 - Mar 2025",
+      "bullets": [
+        "Built reproducible statistical validation workflows with calibration checks, truth tables and auditable documentation.",
+        "Applied comparative analytical methods to identify pathways across a public-service dataset and translated the findings into concise evidence for programme leads.",
+        "Maintained reproducible scripts, versioned inputs and review notes so analytical outputs could be audited and rerun by another researcher.",
+        "Prepared comparative tables, sensitivity checks and presentation material for an interdisciplinary audience."
+      ]
+    },
+    {
+      "role": "Data Consultant",
+      "employer": "Cedar Software Company",
+      "location": "Delhi, India",
+      "dates": "Mar 2023 - Jul 2023",
+      "bullets": [
+        "Integrated Python and SQL with an enterprise ERP platform, improving data-quality reliability and supporting stakeholder validation through dashboards.",
+        "Built validation dashboards for business review and maintained pull-request checks across a cross-functional delivery team.",
+        "Documented transformation logic and source-to-target mappings for handover into controlled production support."
+      ]
+    },
+    {
+      "role": "Python Cloud Developer",
+      "employer": "Blue Ridge Technology",
+      "location": "Delhi, India",
+      "dates": "Jun 2022 - Nov 2022",
+      "bullets": [
+        "Built and evaluated computer-vision inference pipelines in Python, then deployed repeatable services with containers on cloud infrastructure.",
+        "Automated evaluation against stable benchmarks and documented deployment, monitoring and rollback procedures for each release.",
+        "Refactored repeated notebook logic into reusable modules and command-line workflows for consistent execution."
+      ]
+    },
+    {
+      "role": "Technical Lead",
+      "employer": "Community Analytics Foundation",
+      "location": "Delhi, India",
+      "dates": "Sep 2019 - Oct 2021",
+      "bullets": [
+        "Delivered standardised reporting across national programmes and reduced recurring turnaround through reusable data models.",
+        "Coordinated reporting requirements with programme owners and trained contributors to use shared definitions and templates consistently.",
+        "Received formal recognition for contributions to national event tracking and reporting infrastructure."
+      ]
+    }
+  ],
+  "education": [
+    {"degree": "MSc Data Science, 67% (Merit)", "institution": "Example University", "location": "UK", "dates": "Sep 2023 - Sep 2024", "details": "Dissertation: privacy-aware deep learning and evaluation of utility trade-offs."},
+    {"degree": "BSc Information Technology, 79%", "institution": "Example College", "location": "India", "dates": "Apr 2019 - Mar 2023", "details": ""}
+  ],
+  "projects": [
+    {"title": "Real-Time Streaming Data Pipeline", "tools": "Kafka, Spark, PostgreSQL, Streamlit", "link": "https://github.com/example/streaming-pipeline", "link_label": "GitHub", "dates": "2025", "bullets": ["Engineered event ingestion and stateful transformations with watermarking, time-series storage and an operational monitoring dashboard.", "Added reproducible local setup, data-quality checks and benchmark notes covering throughput, state recovery and late-arriving events."]},
+    {"title": "Privacy-Aware Activity Recognition", "tools": "PyTorch, TensorFlow", "link": "https://github.com/example/privacy-har", "link_label": "GitHub", "dates": "2024", "bullets": ["Built video-classification experiments with explicit privacy-noise mechanisms and compared privacy-utility trade-offs against a baseline.", "Documented dataset preparation, evaluation protocol, model limitations and the difference between privacy-enhanced and baseline performance."]},
+    {"title": "Rental Operations Application", "tools": "Python, SQLite", "link": "https://github.com/example/rental-app", "link_label": "GitHub", "dates": "2023", "bullets": ["Built a multi-role workflow for rental, return and wallet transactions with authenticated user journeys and traceable records.", "Separated user, operator and manager permissions and added input validation around account and transaction state changes."]},
+    {"title": "Data Quality Framework", "tools": "Python, SQL, pytest", "link": "https://github.com/example/data-quality-framework", "link_label": "GitHub", "dates": "2024", "bullets": ["Created reusable checks for freshness, completeness, uniqueness, referential integrity and schema drift across scheduled datasets.", "Added command-line reporting, test fixtures and CI execution so failures were visible before downstream reporting ran."]},
+    {"title": "NLP Intent Classifier", "tools": "Python, scikit-learn", "link": "https://github.com/example/nlp-intent", "link_label": "GitHub", "dates": "2023", "bullets": ["Built an intent-classification workflow with preprocessing, baseline comparison and multiple lightweight user interfaces.", "Recorded confusion patterns and error examples to guide iteration rather than relying on aggregate accuracy alone."]},
+    {"title": "Operational Reporting Layer", "tools": "Power BI, SQL", "link": "https://github.com/example/reporting-layer", "link_label": "GitHub", "dates": "2023", "bullets": ["Modelled reusable semantic measures and documented calculation ownership, refresh expectations and source dependencies.", "Built reconciliation pages so business users could compare report totals with upstream systems before sign-off."]},
+    {"title": "Cloud Deployment Workbench", "tools": "Docker, CI/CD", "link": "https://github.com/example/deployment-workbench", "link_label": "GitHub", "dates": "2023", "bullets": ["Packaged a small inference service with repeatable configuration and automated smoke tests across local and hosted environments.", "Documented deployment, monitoring and rollback steps so another contributor could operate the service without hidden setup knowledge."]}
+  ],
+  "supporting_sections": [
+    {
+      "heading": "Achievements & Certifications",
+      "items": [
+        {"title": "Cloud & Data Certifications", "dates": "2024 - 2026", "meta": "", "details": "Data engineering, analytics engineering, cloud fundamentals and infrastructure-as-code credentials spanning multiple platforms."},
+        {"title": "Research Publications", "dates": "2021 - 2025", "meta": "", "details": "Peer-reviewed and preprint work across privacy-aware machine learning, sentiment analysis, virtual reality and applied technology."},
+        {"title": "Programmes & Awards", "dates": "", "meta": "", "details": "Structured problem-solving programme alumnus; university sports and community-service awards for sustained contribution."},
+        {"title": "Selected Research", "dates": "2022 - 2025", "meta": "", "details": "Published work covering sarcasm detection, social-media sentiment, virtual reality in education and augmented reality in agriculture, with clear separation between peer-reviewed and preprint outputs."},
+        {"title": "Technical Programmes", "dates": "2024 - 2026", "meta": "", "details": "Completed structured programmes in problem solving, communicating with impact, adaptive leadership and cloud-data practice."},
+        {"title": "Conference Contributions", "dates": "2023 - 2025", "meta": "", "details": "Prepared posters and short talks explaining model evaluation, privacy trade-offs and reproducible analytical practice to mixed technical audiences."}
+      ]
+    },
+    {
+      "heading": "Volunteering",
+      "items": [
+        {"title": "Student Volunteer", "dates": "Jul 2024 - Jan 2025", "meta": "Heritage Network", "details": "Reviewed website journeys and proposed digital donation improvements; received a letter of recommendation."},
+        {"title": "Member to Secretary", "dates": "Jun 2019 - Jun 2024", "meta": "Community Service Club", "details": "Progressed from member to Secretary and organised more than 500 education, health and welfare events across five years."},
+        {"title": "Data Mentor", "dates": "Jan 2025 - Present", "meta": "Community Skills Network", "details": "Run monthly portfolio reviews and introductory Python sessions for career changers, focusing on reproducibility and honest evidence."},
+        {"title": "Event Data Volunteer", "dates": "2019 - 2021", "meta": "National Programme Network", "details": "Standardised reporting definitions and supported volunteers using shared templates across multiple community programmes."},
+        {"title": "Student Society Committee", "dates": "2019 - 2023", "meta": "Example University", "details": "Coordinated technical workshops, maintained event records and supported handover documentation for successive committees."}
+      ]
+    }
+  ]
+}
