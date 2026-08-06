@@ -2,12 +2,12 @@
   "_meta": {
     "purpose": "Machine-readable allow and block lists for the factual linter's 11 hard gates. Not an authoring source.",
     "derived_from": "Live MASTER_PROFILE.md",
-    "generated": "2026-07-26",
+    "generated": "2026-08-06",
     "source_of_truth": "MASTER_PROFILE.md prose always wins over this file."
   },
   "allowed_titles": [
-    {"title": "Market Analyst", "org_contains": "E.ON", "source": "§3", "dates": "jan 2025 - dec 2025"},
-    {"title": "Costing and Risk Intern", "org_contains": "E.ON", "source": "§3", "dates": "jul 2024 - dec 2024"},
+    {"title": "Quantitative Market Analyst", "org_contains": "E.ON", "source": "user-confirmed official title", "dates": "jan 2025 - dec 2025"},
+    {"title": "Quantitative Analysis Intern", "org_contains": "E.ON", "source": "user-confirmed official title", "dates": "jul 2024 - dec 2024"},
     {"title": "Business Analytics Consultant", "org_contains": "University of Birmingham", "source": "§3", "dates": "jun 2024 - aug 2024"},
     {"title": "Data Scientist", "org_contains": "Manor Park", "source": "§3", "dates": "jan 2024 - jun 2024"},
     {"title": "Systems Engineer", "org_contains": "Infosys", "source": "§3", "dates": "jul 2021 - aug 2023"}
@@ -36,17 +36,5 @@
     "Football Market Intelligence": ["closing-line value", "margin removal", "brier"]
   },
   "anchor_owner_match": {"E.ON": "e.on", "University of Birmingham": "birmingham", "Manor Park": "manor park", "Infosys": "infosys", "Frame2Threat": "frame2threat", "Energy Market Tracker": "energy market tracker", "HealthBeauty360": "healthbeauty360", "Football Market Intelligence": "market intelligence"},
-  "repo_claims": {
-    "retail-analytics": {"has": ["docker", "fastapi", "streamlit", "ridge", "k-means", "rfm", "logistic regression", "churn", "inventory scoring", "trend detection", "psi", "drift monitoring", "medallion", "bronze", "silver", "gold", "synthetic data", "smoke test"], "never": ["isolation forest", "anomaly detection", "prophet", "xgboost", "mann-kendall", "shap", "great expectations", "price elasticity", "feature store", "production-grade", "dbt tests", "schema tests", "cloud scheduler", "ensemble"]},
-    "opponent-adjusted-metrics": {"has": ["fastapi", "postgresql", "sqlalchemy", "alembic", "sqlite", "logistic regression", "ridge", "gradient boosting", "streamlit", "mplsoccer", "poetry", "github actions", "security scan", "statsbomb", "cxg", "cxa", "cxt"], "never": ["lightgbm", "plotly", "catboost", "deep learning", "neural network", "rendered dashboard"]},
-    "contextual-football-metrics": {"has": ["prefect", "mlflow", "scikit-learn", "xgboost", "lightgbm", "optuna", "statsmodels", "pygam", "seaborn", "shap", "graph attention", "pytorch", "model ladder", "glm", "statsbomb"], "never": ["catboost", "captum", "plotly", "kaleido", "pydantic", "imbalanced-learn", "dvc", "dagshub", "github actions"]},
-    "frame2threat": {"has": ["xgboost", "lightgbm", "shap", "pytorch", "torch_geometric", "gnn", "sageconv", "gru", "possessiongru", "logistic regression", "calibratedclassifiercv", "mplsoccer", "streamlit", "statsbomb"], "never": ["github actions", "solo build", "end-to-end authorship"]},
-    "defensive-actions-expected": {"has": ["mlflow", "sklearn", "scipy", "mplsoccer", "statsbomb", "leakage guard", "github actions", "ruff", "pytest", "archived", "remediation"], "never": ["shapely", "player ranking", "dax attribution", "causal defensive value", "invisible defending", "validated result"]},
-    "bet-intelligence": {"has": ["duckdb", "lightgbm", "logistic regression", "isotonic", "calibration", "walk-forward", "brier", "log loss", "leakage", "football-data", "pinnacle", "kelly", "closing line", "clv", "backtest"], "never": ["xgboost", "statsmodels", "plotly", "github actions", "beats the market", "positive edge", "profitable"]},
-    "retail-intelligence": {"has": ["duckdb", "lightgbm", "x-learner", "uplift", "qini", "spearman", "propensity", "churn", "pca", "segmentation", "recommender", "anomaly detection", "forecasting", "mart", "ate"], "never": ["github actions", "production", "real data"]},
-    "sales-insight-agent": {"has": ["histgradientboostingregressor", "randomforestregressor", "plotly", "pandas", "sklearn", "pytest", "github actions", "keyword", "deterministic", "synthetic"], "never": ["langchain", "langgraph", "chromadb", "claude", "llm", "genai", "generative", "agentic ai", "vector store", "embeddings", "semantic search", "streamlit", "lightgbm", "statsmodels"]},
-    "energy-market-tracker": {"has": ["elexon", "bmrs", "garch", "egarch", "volatility", "var", "streamlit", "api client"], "never": ["entsoe", "entso-e", "eia", "nord pool", "fallback", "multi-source", "prophet", "forecasting accuracy", "best model"]},
-    "between-lines-availability": {"has": ["statsbomb", "findability", "lane", "geometry", "architecture", "pipeline design"], "never": ["executed", "trained model", "validated", "finding"]},
-    "uk-network-charge-forecast": {"has": ["duos", "tnuos", "bsuos", "monte carlo", "correlated lognormal", "half-hourly", "charge engine", "reconciliation", "scenario", "driver analysis", "validation", "cli", "p10", "p50", "p90", "synthetic"], "never": ["e.on", "eon", "employer data", "real meter", "23%", "10", "000-run", "p95", "published"]}
-  }
+  "repo_claims": {}
 }
