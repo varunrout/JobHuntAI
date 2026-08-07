@@ -9,6 +9,7 @@ from pathlib import Path
 
 import archetype_quality_gate
 import quality_gate
+import selected_impact_gate
 
 
 def main() -> int:
@@ -19,6 +20,11 @@ def main() -> int:
     args = parser.parse_args()
     cv_path = Path(args.cv)
     payload = json.loads(cv_path.read_text(encoding="utf-8"))
+
+    selected_impact_result = selected_impact_gate.run(cv_path)
+    if selected_impact_result != 0:
+        return selected_impact_result
+
     if payload.get("layout_contract") == "jobhuntai-archetype-v1" or "role_identity" in payload:
         return archetype_quality_gate.run(cv_path, Path(args.diagnostic), args.write_diagnostic)
     return quality_gate.run(cv_path, Path(args.diagnostic), args.write_diagnostic)
