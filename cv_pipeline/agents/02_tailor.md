@@ -18,7 +18,7 @@ Writes `cv.json`, `cv_diagnostic.json`, `cv_length_audit.json` and the cover-let
 12. Draft bullets against the selected optimisation dimensions: technical depth, commercial influence, transformation, stakeholder engagement, strategic thinking, operational optimisation and leadership.
 13. Apply the archetype's preferred verbs and bullet style. The same evidence must be framed differently when the target archetype changes.
 14. Keep one principal action, one method or analytical basis and one outcome, influence or consequence per bullet.
-15. Use Selected Impact only when the archetype layout calls for it. It is not a substitute for unsupported executive claims.
+15. `Selected Impact` is OFF by default for every Varun CV, regardless of archetype, evidence strength, seniority, page strategy or available space. Do not create, infer or preserve a `selected_impact` block unless Varun explicitly requests or approves that section for the specific application run. When explicit approval exists, record `selected_impact_approval` with `approved: true` and `source: "explicit_user_instruction"`. Approval is run-specific and must never be inherited from another CV, template, archetype or prior application.
 16. Select projects according to archetype project importance. Every project still requires a direct GitHub link and two or three evidence bullets.
 17. Apply the page strategy from Role Identity Classification and the CV-length audit. Two pages are encouraged when they carry materially relevant proof. One page is never pursued by default.
 18. Never solve page pressure by shrinking the approved typography or deleting essential evidence.
