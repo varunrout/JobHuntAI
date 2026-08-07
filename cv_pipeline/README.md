@@ -10,7 +10,7 @@ The pipeline separates professional positioning from evidence selection and sepa
 2. `role_identity.py` classifies the role into one dominant professional archetype before any evidence is selected.
 3. `positioning_pipeline.py` combines the accepted identity with `evidence_scoring.py`, so evidence ranking cannot precede classification.
 4. The tailor builds the professional thesis, evidence plan, bullet strategy, section architecture and page strategy.
-5. `pipeline_gate.py` dispatches to the archetype construction gate or the legacy identity gate.
+5. `pipeline_gate.py` first runs `selected_impact_gate.py`, then dispatches to the archetype construction gate or the legacy identity gate.
 6. `lint.py` remains the factual-integrity authority for titles, dates, metrics, attribution and project claims.
 7. `render.py` dispatches to the archetype visual contract or the locked legacy visual contract.
 8. `review_loop.py` records the exact tailored CV hash and forces an independent review after every revision.
@@ -85,7 +85,26 @@ One page is no longer the implicit preference for archetype CVs. The classifier 
 
 ## Archetype layouts
 
-The archetype template retains the approved one-column visual system while allowing controlled section architecture. Stable section IDs are rendered with archetype-specific labels and order. Strategy CVs can use Executive Profile, Selected Impact, Commercial Expertise and Strategy Experience. Technical CVs can prioritise Technical Skills, Projects and Modelling evidence.
+The archetype template retains the approved one-column visual system while allowing controlled section architecture. Stable section IDs are rendered with archetype-specific labels and order. Technical CVs can prioritise Technical Skills, Projects and Modelling evidence. Strategy CVs may use different approved labels and ordering, but archetype configuration alone cannot authorise a Selected Impact section.
+
+### Selected Impact hard lock
+
+`Selected Impact` is OFF by default for every Varun CV.
+
+A `selected_impact` block may exist only when Varun explicitly requests or approves it for that specific application run. Evidence strength, archetype choice, seniority, page strategy, available whitespace, previous CVs and templates are never sufficient approval.
+
+When explicit approval exists, the payload must include:
+
+```json
+{
+  "selected_impact_approval": {
+    "approved": true,
+    "source": "explicit_user_instruction"
+  }
+}
+```
+
+Approval is run-specific and must not be inherited. `selected_impact_gate.py` is fail-closed and blocks the CV before the normal construction gate when the section appears without the required approval record.
 
 `Selected Projects` remains forbidden. The stable project section is labelled `Projects` or another approved archetype-specific project label.
 
@@ -118,8 +137,9 @@ A failed gate returns `failed_qa` with machine-readable failure codes. It never 
 - `schemas/archetype_cv_diagnostic.schema.json`: diagnostic contract
 - `schemas/review_loop.schema.json`: Tailor and Review state contract
 - `schemas/application_manifest.schema.json`: final package contract
+- `selected_impact_gate.py`: fail-closed explicit-approval gate for Selected Impact
 - `archetype_quality_gate.py`: positioning and construction checks
-- `pipeline_gate.py`: legacy versus archetype gate dispatcher
+- `pipeline_gate.py`: Selected Impact policy check plus legacy versus archetype gate dispatcher
 - `review_loop.py`: mandatory Tailor, Review and re-tailor state machine
 - `application_quality_gate.py`: final fail-closed package release gate
 - `templates/cv_archetype_template.html`: dynamic section template
