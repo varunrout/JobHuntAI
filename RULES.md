@@ -105,6 +105,7 @@ The submitted CV must:
 - include LinkedIn, `https://varunrout.com` and GitHub;
 - include a direct GitHub link and two or three evidence bullets for every project;
 - never use the heading `Selected Projects`;
+- treat `Selected Impact` as forbidden by default for every Varun CV; it may appear only after Varun explicitly requests or approves it for that specific application run, with `selected_impact_approval.approved=true` and `selected_impact_approval.source="explicit_user_instruction"`; approval must not be inferred from archetype, evidence strength, page strategy, whitespace, templates, previous CVs or previous approvals;
 - preserve the approved typography and bullet geometry.
 
 ## Mandatory Tailor and Review loop
@@ -171,11 +172,11 @@ The approved one-column serif design remains stable. Archetypes may vary:
 
 - section order;
 - section labels;
-- presence of Selected Impact;
+- presence of Selected Impact only when the run contains recorded explicit user approval;
 - whether projects or experience lead;
 - balance between technical and commercial evidence.
 
-Stable section IDs are summary, impact, skills, experience, projects and education. Strategy CVs may use Executive Profile, Selected Impact, Commercial Expertise and Strategy Experience. Technical CVs may prioritise Technical Skills, Projects and Modelling evidence.
+Stable section IDs are summary, impact, skills, experience, projects and education. Strategy CVs may use Executive Profile, Commercial Expertise and Strategy Experience. `Selected Impact` remains unavailable unless the run-specific explicit-approval rule is satisfied. Technical CVs may prioritise Technical Skills, Projects and Modelling evidence.
 
 ## Backward compatibility
 
@@ -230,6 +231,7 @@ A CV fails when:
 - evidence ranking is not archetype-aware;
 - bullet emphasis does not match the archetype;
 - projects do not support the professional thesis;
+- `Selected Impact` appears without run-specific explicit user approval recorded as `selected_impact_approval.approved=true` and `selected_impact_approval.source="explicit_user_instruction"`;
 - page length lacks a recorded rationale;
 - one page is used when the candidate-role profile exceeds one-page permission thresholds;
 - a two-page-preferred or two-page-required strategy is compressed without an allowed exception;
