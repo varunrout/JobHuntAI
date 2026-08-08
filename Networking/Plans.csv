@@ -6,5 +6,7 @@ PLAN-ENGIE-001,JOB-0001,APP-0001,Networking,4,Send peer post-accept message,Varu
 PLAN-ENGIE-001,JOB-0001,APP-0001,Networking,5,Check Gmail and LinkedIn responses,ChatGPT + Varun,26/07/2026,48 hours elapsed,Planned,,Update Contacts and Touchpoints
 PLAN-ENGIE-001,JOB-0001,APP-0001,Networking,6,Day-7 recruiter follow-up,Varun,31/07/2026,No substantive response,Planned,,Send one concise follow-up
 PLAN-ENGIE-001,JOB-0001,APP-0001,Networking,7,Close or re-plan networking stage,ChatGPT,07/08/2026,Day-14 status known,Planned,,Do not chase indefinitely
-PLAN-SUPER-001,,,Networking,1,Send technical employee connection request,Varun,08/08/2026,Junior Quantitative Analyst role identified,Complete,User confirmed request sent,Radhika Sanap
-PLAN-SUPER-001,,,Networking,2,Review Radhika's reply and decide next message,ChatGPT + Varun,08/08/2026,Exact reply text available,Blocked,,Do not ask for referral immediately; respond to what she actually said
+PLAN-SUPER-001,,,Networking,1,Send technical employee connection request,Varun,08/08/2026,Junior Quantitative Analyst role identified,Complete,LinkedIn request sent,Radhika Sanap
+PLAN-SUPER-001,,,Networking,2,Review Radhika's reply and decide next message,ChatGPT + Varun,08/08/2026,Exact reply available,Complete,LinkedIn screenshot reviewed,Radhika proactively offered a referral
+PLAN-SUPER-001,,,Networking,3,Accept referral offer and ask what information Radhika needs,Varun,08/08/2026,Referral offered,Planned,,Send concise reply while finalising CV
+PLAN-SUPER-001,,,Networking,4,Provide referral materials requested by Radhika,Varun,08/08/2026,Radhika confirms required details,Blocked,,Likely CV and role link; do not send unnecessary material
