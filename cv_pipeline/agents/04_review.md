@@ -20,18 +20,23 @@ The reviewer must use an actor identity different from Tailor and must review th
 12. Does the omission audit identify every relevant role, project or proof point removed from the final CV, and classify each omission as harmless or a strategic loss?
 13. If a sparse second page triggered a rebuild, did Tailor try section ordering, evidence restoration, bullet depth, section placement, approved spacing and page-break repair before considering page-count reduction?
 14. If page count changed, has this exact revision received a fresh strategic review rather than only a visual check?
-15. Are official titles, dates, locations, metrics, attribution and project status factually clean?
-16. Are page count, first-page fill, final-page fill and visual layout acceptable at readable typography?
-17. Does the CV contain any unsupported skill, tool, responsibility, leadership claim or outcome?
-18. Does the PDF exist, open correctly and match the reviewed payload?
-19. Would a recruiter understand why this candidate belongs in this role without reconstructing the argument?
-20. Have all page PNGs generated from the exact final PDF hash been inspected at readable zoom?
-21. Does page one visibly use the page rather than merely pass a text-character-share calculation?
-22. Are there any large lower-page or internal blank areas, hidden pagination breaks or stranded sections?
-23. Does each semantic section have exactly one heading across the whole CV, with no `Experience Continued`, `Projects Continued`, `Education Continued`, `Additional Project Evidence` or equivalent label?
-24. Is rendered body text at least 9.5 pt and comfortable to read?
-25. Does content flow naturally across pages without an explicit DOCX or HTML page break?
-26. Is the canonical editable file the exact verified DOCX or HTML source rather than a native Google Docs conversion with pagination drift?
+15. Are official employment titles, dates, locations, metrics, attribution and project status factually clean?
+16. If the Independent Practice entry is present, does it use the exact locked title, organisation/context, dates and `experience_type` from `independent_practice_policy.json`?
+17. Does every Independent Practice bullet trace to its declared `evidence_refs`, without implying salaried employment, clients, freelance consulting, paid work, production deployment or commercial outcomes that are not separately evidenced?
+18. Does the Independent Practice block read as genuine current technical practice rather than defensive gap language or a target-title imitation?
+19. Where Independent Practice and Projects draw from the same body of work, do they serve different functions rather than repeat the same bullets? Experience should describe current scope and practice; Projects should provide named technical proof.
+20. If the Independent Practice entry is absent, is there explicit Varun instruction or a recorded role-specific Independent Review rationale in the omission audit?
+21. Are page count, first-page fill, final-page fill and visual layout acceptable at readable typography?
+22. Does the CV contain any unsupported skill, tool, responsibility, leadership claim or outcome?
+23. Does the PDF exist, open correctly and match the reviewed payload?
+24. Would a recruiter understand why this candidate belongs in this role without reconstructing the argument?
+25. Have all page PNGs generated from the exact final PDF hash been inspected at readable zoom?
+26. Does page one visibly use the page rather than merely pass a text-character-share calculation?
+27. Are there any large lower-page or internal blank areas, hidden pagination breaks or stranded sections?
+28. Does each semantic section have exactly one heading across the whole CV, with no `Experience Continued`, `Projects Continued`, `Education Continued`, `Additional Project Evidence` or equivalent label?
+29. Is rendered body text at least 9.5 pt and comfortable to read?
+30. Does content flow naturally across pages without an explicit DOCX or HTML page break?
+31. Is the canonical editable file the exact verified DOCX or HTML source rather than a native Google Docs conversion with pagination drift?
 
 ## Review output
 
@@ -101,8 +106,10 @@ The reviewer must also complete `rendered_visual_review.json.manual_review` afte
 - Do not approve body typography below 9.5 pt.
 - Do not approve duplicate semantic headings, any continuation heading or any explicit source page break.
 - Do not approve a native Google Docs conversion as the canonical editable CV.
+- Do not approve an Independent Practice block that changes its locked identity, lacks evidence refs, uses unsupported claims, imitates a target job title, or presents independent work as employer/client work.
+- Do not approve omission of the Independent Practice block without explicit Varun instruction or a recorded role-specific rationale in the omission audit.
 - If the PDF, screenshot or editable-source hash changes, the rendered visual review is stale and must be repeated.
 
-Fail or require revision when positioning is unclear, a secondary archetype competes for attention, evidence selection precedes classification, the page strategy is unsupported, essential evidence is dropped, an omission is a strategic loss, factual integrity fails, the layout contract fails, rendered-page review fails or a required artefact is missing.
+Fail or require revision when positioning is unclear, a secondary archetype competes for attention, evidence selection precedes classification, the page strategy is unsupported, essential evidence is dropped, an omission is a strategic loss, factual integrity fails, the Independent Practice policy fails, the layout contract fails, rendered-page review fails or a required artefact is missing.
 
 After recording `revise`, the workflow returns to Tailor. After recording `approve`, the final application quality gate must still verify the approved CV hash, exact PDF hash, page screenshot hashes, linked CV-length review judgement and all package-level checks before release.
