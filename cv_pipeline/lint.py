@@ -9,6 +9,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 REG = json.loads((ROOT / "evidence_register.json").read_text(encoding="utf-8"))
+INDEPENDENT_POLICY = json.loads((ROOT / "independent_practice_policy.json").read_text(encoding="utf-8"))
 
 
 def cv_units(cv):
@@ -52,14 +53,40 @@ def _norm_dates(value):
     return re.sub(r"\s+", " ", value).strip().lower()
 
 
+def _norm_ref(value):
+    value = (value or "").strip().lower().replace("_", "-")
+    return re.sub(r"\s+", " ", value)
+
+
+def _is_independent_experience(block):
+    return block.get("experience_type") == INDEPENDENT_POLICY["experience_type"]
+
+
 def _title_pairs(cv):
     for e in cv.get("experience", []):
         org = e.get("org", "")
+        experience_type = e.get("experience_type", "employment")
         if e.get("roles"):
             for sr in e["roles"]:
-                yield sr.get("title", ""), org, sr.get("dates", "")
+                yield sr.get("title", ""), org, sr.get("dates", ""), experience_type
         else:
-            yield e.get("title", ""), org, e.get("dates", "")
+            yield e.get("title", ""), org, e.get("dates", ""), experience_type
+
+
+def _valid_independent_refs(cv):
+    valid = set()
+    for owner, fragment in REG.get("anchor_owner_match", {}).items():
+        valid.add(_norm_ref(owner))
+        valid.add(_norm_ref(fragment))
+    for slug in REG.get("repo_claims", {}):
+        valid.add(_norm_ref(slug))
+    for project in cv.get("projects", []):
+        if project.get("title"):
+            valid.add(_norm_ref(project["title"]))
+        link = project.get("link") or ""
+        if link:
+            valid.add(_norm_ref(link.rstrip("/").split("/")[-1]))
+    return valid
 
 
 def lint_cv(cv):
@@ -69,8 +96,16 @@ def lint_cv(cv):
     low = text.lower()
     unfilled = "<<" in raw
 
-    for title, org, dates in _title_pairs(cv):
+    for title, org, dates, experience_type in _title_pairs(cv):
         if "<<" in title:
+            continue
+        if experience_type == INDEPENDENT_POLICY["experience_type"]:
+            if title != INDEPENDENT_POLICY["title"]:
+                violations.append(("BAD_INDEPENDENT_TITLE", f"independent practice title must be {INDEPENDENT_POLICY['title']!r}"))
+            if org != INDEPENDENT_POLICY["organisation"]:
+                violations.append(("BAD_INDEPENDENT_ORG", f"independent practice organisation/context must be {INDEPENDENT_POLICY['organisation']!r}"))
+            if _norm_dates(dates) != _norm_dates(INDEPENDENT_POLICY["dates"]):
+                violations.append(("BAD_INDEPENDENT_TENURE", f"independent practice dates must be {INDEPENDENT_POLICY['dates']!r}"))
             continue
         allowed = [item for item in REG["allowed_titles"] if item["title"].lower() == title.lower() and item["org_contains"].lower() in org.lower()]
         if not allowed:
@@ -81,6 +116,30 @@ def lint_cv(cv):
             known = [item for item in allowed if item.get("dates")]
             if known and not any(_norm_dates(item["dates"]) == _norm_dates(dates) for item in known):
                 violations.append(("BAD_TENURE", f"{title!r} at {org!r} claims {dates!r}; expected " + " or ".join(repr(item["dates"]) for item in known)))
+
+    valid_refs = _valid_independent_refs(cv)
+    for experience in cv.get("experience", []):
+        if not _is_independent_experience(experience):
+            continue
+        if experience.get("roles"):
+            violations.append(("INDEPENDENT_NESTED_ROLE", "Independent Practice must be a standalone experience block, not an employer container with nested roles"))
+        refs = [str(item) for item in experience.get("evidence_refs", []) if str(item).strip()]
+        if len(refs) < int(INDEPENDENT_POLICY.get("minimum_evidence_refs", 2)):
+            violations.append(("INDEPENDENT_EVIDENCE_REFS", f"Independent Practice requires at least {INDEPENDENT_POLICY.get('minimum_evidence_refs', 2)} evidence_refs"))
+        unknown_refs = [item for item in refs if _norm_ref(item) not in valid_refs]
+        if unknown_refs:
+            violations.append(("INDEPENDENT_UNKNOWN_REF", "unrecognised Independent Practice evidence_refs: " + ", ".join(unknown_refs)))
+        independent_blob = " ".join(experience.get("bullets", [])).lower()
+        forbidden_patterns = {
+            "INDEPENDENT_CLIENT_IMPLICATION": r"\b(client work|client project|clients?|for clients?)\b",
+            "INDEPENDENT_PAID_IMPLICATION": r"\b(paid work|paid engagement|paid consulting|salaried)\b",
+            "INDEPENDENT_FREELANCE_IMPLICATION": r"\b(freelance|freelancer)\b",
+            "INDEPENDENT_CONSULTING_IMPLICATION": r"\bconsult(?:ing|ant|ancy)\b",
+            "INDEPENDENT_EMPLOYMENT_IMPLICATION": r"\b(employed by|employment at|hired by)\b",
+        }
+        for code, pattern in forbidden_patterns.items():
+            if re.search(pattern, independent_blob):
+                violations.append((code, f"Independent Practice must not imply unsupported employment or client work: /{pattern}/"))
 
     for token in REG["illustrative_cv_block_tokens"]:
         if token.lower() in low:
@@ -132,19 +191,28 @@ def lint_cv(cv):
         low_label = (label or "").lower()
         return next((name for name, fragment in owners.items() if fragment in low_label), None)
 
+    def allowed_owners_for_independent(experience):
+        refs = {_norm_ref(item) for item in experience.get("evidence_refs", [])}
+        allowed = set()
+        for owner, fragment in owners.items():
+            if _norm_ref(owner) in refs or _norm_ref(fragment) in refs:
+                allowed.add(owner)
+        return allowed
+
     blocks = []
     for experience in cv.get("experience", []):
         org = experience.get("org", "")
-        blocks.append((org, experience.get("bullets", [])))
+        allowed_owners = allowed_owners_for_independent(experience) if _is_independent_experience(experience) else set()
+        blocks.append((org, experience.get("bullets", []), allowed_owners))
         for role in experience.get("roles", []):
-            blocks.append((org, role.get("bullets", [])))
-    blocks.extend((project.get("title", ""), project.get("bullets", []) + [project.get("tools", "")]) for project in cv.get("projects", []))
-    for label, bullets in blocks:
+            blocks.append((org, role.get("bullets", []), set()))
+    blocks.extend((project.get("title", ""), project.get("bullets", []) + [project.get("tools", "")], set()) for project in cv.get("projects", []))
+    for label, bullets, allowed_owners in blocks:
         this_owner = owner_of(label)
         for bullet in bullets:
             low_bullet = (bullet or "").lower()
             for owner, terms in anchors.items():
-                if owner == this_owner:
+                if owner == this_owner or owner in allowed_owners:
                     continue
                 for term in terms:
                     if term in low_bullet:
@@ -226,7 +294,7 @@ def main():
         return 0
     violations = lint_cv(payload) if args.mode == "cv" else lint_cl(payload, args.company)
     if not violations:
-        print(f"LINT CLEAN ({args.mode}): 11 factual gates passed.")
+        print(f"LINT CLEAN ({args.mode}): factual gates passed.")
         return 0
     for code, detail in violations:
         print(f"[{code}] {detail}")
