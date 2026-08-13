@@ -20,22 +20,24 @@ When the user pastes a job description or job link:
 10. Build the competency matrix and verified evidence candidates.
 11. Reweight evidence against the selected archetype and save `evidence_ranking.json`.
 12. Initialise `review_loop.json` with the `jobhuntai-tailor-review-v1` contract.
-13. Tailor the CV and record the exact `cv.json` hash as a tailor iteration.
-14. Render the CV and run construction, factual, positioning, visual and page-strategy gates.
-15. Render every exact final PDF page to PNG and create `rendered_visual_review.json` containing the PDF hash, screenshot hashes, geometry, fill and font measurements.
-16. Run an independent cold review against the job description, canonical evidence, role identity, diagnostic, exact rendered PDF and every page image.
-17. Require the reviewer to inspect all page images and explicitly confirm readable typography, natural pagination, coherent section flow, no large blank areas and no duplicate or continuation headings.
-18. Record the review against the exact tailored CV hash and exact rendered PDF hash.
-19. When the verdict is `revise`, return every open issue to Tailor, require all issue IDs to be addressed, then repeat Tailor, Render and Review.
-20. Continue only when the latest independent review verdict is `approve`, no review issues remain open, the approved hash matches final `cv.json`, and `rendered_visual_gate.py` passes the exact PDF and screenshots.
-21. Produce and review a cover letter only when useful or requested.
-22. Prepare portal answers and the submission checklist.
-23. Build `application_manifest.json` and run `application_quality_gate.py`.
-24. Mark `Ready to Apply` only when the final application quality gate passes.
-25. After the user confirms submission, create the Applications row.
-26. Start Networking automatically for P0 and P1 applications.
-27. Log every networking contact, touchpoint and follow-up.
-28. Reconcile Gmail stages when requested or when new application mail is found.
+13. Load `cv_pipeline/independent_practice_policy.json` and, unless Varun explicitly requested omission or Independent Review previously recorded a role-specific omission rationale, reserve the top Professional Experience slot for the locked Jan 2026 - Present Independent Practice entry. Its bullets must be sourced from verified current technical evidence and its payload must carry traceable `evidence_refs`.
+14. Tailor the CV and record the exact `cv.json` hash as a tailor iteration.
+15. Render the CV and run construction, factual, positioning, visual and page-strategy gates.
+16. Render every exact final PDF page to PNG and create `rendered_visual_review.json` containing the PDF hash, screenshot hashes, geometry, fill and font measurements.
+17. Run an independent cold review against the job description, canonical evidence, role identity, diagnostic, exact rendered PDF and every page image.
+18. Require the reviewer to inspect all page images and explicitly confirm readable typography, natural pagination, coherent section flow, no large blank areas and no duplicate or continuation headings.
+19. Require the reviewer to verify that Independent Practice remains visibly non-employment current technical work, uses the locked identity and dates, maps to its declared evidence refs and does not duplicate Projects verbatim.
+20. Record the review against the exact tailored CV hash and exact rendered PDF hash.
+21. When the verdict is `revise`, return every open issue to Tailor, require all issue IDs to be addressed, then repeat Tailor, Render and Review.
+22. Continue only when the latest independent review verdict is `approve`, no review issues remain open, the approved hash matches final `cv.json`, and `rendered_visual_gate.py` passes the exact PDF and screenshots.
+23. Produce and review a cover letter only when useful or requested.
+24. Prepare portal answers and the submission checklist.
+25. Build `application_manifest.json` and run `application_quality_gate.py`.
+26. Mark `Ready to Apply` only when the final application quality gate passes.
+27. After the user confirms submission, create the Applications row.
+28. Start Networking automatically for P0 and P1 applications.
+29. Log every networking contact, touchpoint and follow-up.
+30. Reconcile Gmail stages when requested or when new application mail is found.
 
 ## Mandatory Tailor and Review loop
 
@@ -71,6 +73,7 @@ Do not mark `Ready to Apply` unless:
 - viability review is complete;
 - Role Identity Classification is complete;
 - the evidence map and archetype ranking exist;
+- the Independent Practice policy is satisfied or its omission is explicitly authorised and recorded;
 - final CV passes factual, positioning, structural, visual and rendered-page review;
 - every exact rendered page screenshot has been inspected and hash-locked to the final PDF;
 - the mandatory Tailor and Review loop is approved and hash-locked to the final CV;
