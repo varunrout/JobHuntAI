@@ -54,7 +54,7 @@ def _norm_dates(value):
 
 
 def _norm_ref(value):
-    value = (value or "").strip().lower().replace("_", "-")
+    value = (value or "").strip().lower().replace("_", " ").replace("-", " ")
     return re.sub(r"\s+", " ", value)
 
 
@@ -73,19 +73,13 @@ def _title_pairs(cv):
             yield e.get("title", ""), org, e.get("dates", ""), experience_type
 
 
-def _valid_independent_refs(cv):
+def _valid_independent_refs(_cv):
     valid = set()
     for owner, fragment in REG.get("anchor_owner_match", {}).items():
         valid.add(_norm_ref(owner))
         valid.add(_norm_ref(fragment))
     for slug in REG.get("repo_claims", {}):
         valid.add(_norm_ref(slug))
-    for project in cv.get("projects", []):
-        if project.get("title"):
-            valid.add(_norm_ref(project["title"]))
-        link = project.get("link") or ""
-        if link:
-            valid.add(_norm_ref(link.rstrip("/").split("/")[-1]))
     return valid
 
 
