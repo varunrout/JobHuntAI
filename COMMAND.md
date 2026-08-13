@@ -16,11 +16,15 @@ Run Role Identity Classification from the job description, seniority, industry, 
 
 Classify the role identity, reweight verified evidence for the selected archetype, build the professional thesis, determine section architecture and page length, then generate a truthful role-specific CV from `MASTER_PROFILE.md`.
 
+For Varun CVs produced from 13 August 2026 onward, load `cv_pipeline/independent_practice_policy.json` and include the locked Jan 2026 - Present Independent Practice entry at the top of Professional Experience by default. The block must remain explicitly non-employment current technical practice, carry traceable `evidence_refs`, and use only verified project or repository evidence. Omit it only on explicit Varun instruction or a recorded role-specific Independent Review rationale.
+
 The command must initialise or continue `review_loop.json`, record the exact tailored `cv.json` hash, produce `cv_diagnostic.json`, canonical HTML and PDF, and then hand the revision to `/review-cv`. Tailoring alone cannot mark the CV ready.
 
 ## /review-cv
 
 Run an independent cold review of the latest tailored CV against the job description, role identity, evidence ranking, canonical evidence, diagnostic and rendered PDF.
+
+The review must also verify the Independent Practice policy: locked identity and dates, traceable evidence refs, no unsupported employer/client implication, and no verbatim duplication with Projects.
 
 Record the verdict against the latest CV hash:
 
