@@ -1,0 +1,21 @@
+{
+  "version": "1.0.0",
+  "experience_type": "independent_practice",
+  "title": "Independent Data Science Research & Engineering",
+  "organisation": "Independent Practice",
+  "dates": "Jan 2026 - Present",
+  "nature": "non_employment",
+  "default_inclusion": true,
+  "minimum_evidence_refs": 2,
+  "rules": [
+    "This block represents genuine independent technical work, not salaried employment, freelance client work, consulting or a company role.",
+    "The title, organisation label and dates are locked and must not be tailored to mimic the target job title.",
+    "Every bullet must be traceable to verified current project or repository evidence.",
+    "Use evidence_refs to identify the projects or evidence owners supporting the block.",
+    "Do not use Career Break, Upskilling, Between Roles, Job Search or equivalent defensive gap language in the CV.",
+    "Do not claim clients, revenue, production deployment, employment, consulting or paid work unless separately verified.",
+    "The Projects section may provide detailed proof for the same body of work, but must not repeat Independent Practice bullets verbatim.",
+    "Independent Practice is current-work chronology, while Projects is the proof layer.",
+    "Omit the block only on explicit Varun instruction or when Independent Review records a role-specific strategic reason."
+  ]
+}
