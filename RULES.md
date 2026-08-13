@@ -32,6 +32,27 @@ Treat work-authorisation feasibility as a first-class filter. Do not spend serio
 
 Never invent job titles, responsibilities, tools, metrics or formal risk ownership. `MASTER_PROFILE.md` remains the sole factual source. Existing claim-status, attribution, title, tenure and source-traceability gates remain binding.
 
+## Current independent-practice rule
+
+Varun has a user-confirmed period of independent technical work from **Jan 2026 - Present**. This period is genuine data science, research and engineering activity across verified technical projects, but it is not salaried employment, freelance client work, consulting or a company role unless separate evidence proves otherwise.
+
+For CVs produced from 13 August 2026 onward, JobHuntAI should include this period at the top of Professional Experience by default using the locked entry defined in `cv_pipeline/independent_practice_policy.json`:
+
+- title: `Independent Data Science Research & Engineering`;
+- organisation/context: `Independent Practice`;
+- dates: `Jan 2026 - Present`;
+- `experience_type`: `independent_practice`.
+
+The entry is a current-work chronology block, not a gap explanation. Do not label it Career Break, Upskilling, Between Roles, Job Search or equivalent. Do not tailor the title to imitate the target vacancy.
+
+Every Independent Practice bullet must be traceable to verified project or repository evidence and the CV payload must include `evidence_refs` identifying the supporting evidence. Do not imply clients, paid work, consulting, employment, production deployment or commercial outcomes unless separately verified.
+
+The Projects section remains the detailed proof layer. The same body of work may support both sections, but the Independent Practice block should describe current scope and practice while Projects provides named technical detail, methods, architecture, evaluation and repository links. Do not duplicate bullets verbatim.
+
+Omit the Independent Practice block only when Varun explicitly requests omission or Independent Review records a role-specific strategic reason. Omission must appear in the omission audit.
+
+This rule does not authorise changes to any historical employment title or date.
+
 ## Stop-before-tailor
 
 Stop for fatal sponsorship, salary, seniority or technical-fit issues.
@@ -97,6 +118,7 @@ The submitted CV must:
 
 - answer "What professional is this candidate?" within the first 10 seconds;
 - keep official work titles and dates unchanged;
+- include the locked Independent Practice current-work entry by default under the rule above, without representing it as employer or client work;
 - use the selected archetype's summary style, skills taxonomy, evidence priorities, stakeholder language, verbs and bullet style;
 - order sections and evidence by the positioning strategy rather than chronology alone;
 - include no more evidence than is needed to prove the hiring case;
@@ -231,6 +253,8 @@ A CV fails when:
 - evidence ranking is not archetype-aware;
 - bullet emphasis does not match the archetype;
 - projects do not support the professional thesis;
+- the Independent Practice entry changes its locked title, organisation/context or dates, lacks evidence refs, implies unsupported employment/client work, or contains claims that cannot be traced to verified current technical evidence;
+- the Independent Practice entry is omitted without explicit Varun instruction or a recorded role-specific Independent Review rationale;
 - `Selected Impact` appears without run-specific explicit user approval recorded as `selected_impact_approval.approved=true` and `selected_impact_approval.source="explicit_user_instruction"`;
 - page length lacks a recorded rationale;
 - one page is used when the candidate-role profile exceeds one-page permission thresholds;
