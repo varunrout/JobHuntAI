@@ -49,7 +49,7 @@ Every Independent Practice bullet must be traceable to verified project or repos
 
 The Projects section remains the detailed proof layer. The same body of work may support both sections, but the Independent Practice block should describe current scope and practice while Projects provides named technical detail, methods, architecture, evaluation and repository links. Do not duplicate bullets verbatim.
 
-Omit the Independent Practice block only when Varun explicitly requests omission or Independent Review records a role-specific strategic reason. Omission must appear in the omission audit.
+Omit the Independent Practice block only when Varun explicitly requests omission or the review panel records a role-specific strategic reason. Omission must appear in the omission audit.
 
 This rule does not authorise changes to any historical employment title or date.
 
@@ -141,26 +141,32 @@ An included block must earn the heading and reader attention it consumes.
 - The floor binds revisions as well as first drafts. If cutting the locally weakest bullet would take its source block below the applicable floor, that cut is illegal; Tailor must fold the strongest fact into a surviving bullet and cut elsewhere, or reconsider whether the entire block belongs.
 - Do not invent filler to satisfy a floor. If the evidence bank cannot feed an included block with truthful JD-relevant evidence, stop with `AUTHORING_REQUIRED` / a content decision rather than shipping a starved block.
 
-## Mandatory Tailor and Review loop
+## Mandatory Tailor and three-reviewer panel loop
 
-Every application CV must pass an executable Tailor and Review loop before release.
+Every new application CV must pass the executable `jobhuntai-review-panel-v2` loop before release. Historical `jobhuntai-tailor-review-v1` artefacts remain readable for backward compatibility but are not the standard for new runs.
 
 1. Initialise `review_loop.json` before the first CV draft.
 2. Tailor writes the CV and records the exact SHA-256 hash of `cv.json`.
-3. An independent reviewer evaluates the job description, role identity, evidence ranking, CV payload, CV-length audit, diagnostic and rendered PDF.
-4. The reviewer records either `approve` or `revise` against the exact CV hash.
-5. The reviewer must explicitly answer whether page-count optimisation removed evidence that materially improves the hiring case.
-6. The reviewer must confirm that the omission audit is complete and approve or reject the page strategy.
-7. The CV-length review judgement must record the same reviewer actor, iteration and CV hash as the latest review-loop event.
-8. A `revise` verdict must contain one or more open issue IDs and returns the application to Tailor.
-9. Re-tailoring must explicitly address every open issue ID before another review is allowed.
-10. An `approve` verdict cannot contain open issues.
-11. The reviewer actor cannot be the same as the tailor actor.
-12. Any CV edit after approval invalidates the approval hash and forces another review.
-13. Any page-count change requires a fresh strategic review of the exact revised payload. A visual check alone is insufficient.
-14. The final package remains `FAILED QA` until the latest CV revision is independently approved.
+3. Freeze that revision and launch three separate cold reviewers against the same exact hash:
+   - `completeness` — hiring case, evidence coverage, block depth, omission audit and page strategy;
+   - `defensibility` — factual integrity, provenance, titles, dates, metrics, tools and claim scope;
+   - `competitiveness` — recruiter clarity, competitive strength, rendered-page quality and visual composition.
+4. Tailor and all three reviewer actors must be distinct. A reviewer actor cannot be reused across lanes.
+5. Cold review means no Tailor drafting rationale and no other reviewer findings are provided before all three reports are recorded.
+6. Reviewer A / Completeness owns `cv_length_audit.json.review_judgement` and must tie it to its actor, iteration and exact CV hash.
+7. Reviewer B / Defensibility owns factual and provenance findings.
+8. Reviewer C / Competitiveness owns `rendered_visual_review.json.manual_review` and must inspect every exact rendered-page image tied to the final PDF hash.
+9. Any open `critical` or `major` issue forces panel verdict `revise`.
+10. Any reviewer explicit `revise` verdict also forces panel `revise`, even when its issue is marked minor.
+11. Open minor observations may remain non-blocking only when the issuing reviewer approves and they do not affect hiring-case completeness, factual integrity, page strategy, readability or recruiter comprehension.
+12. A panel `revise` returns every blocking issue ID to Tailor.
+13. Re-tailoring must explicitly address every blocking issue ID before another iteration is allowed.
+14. Any CV edit creates a new hash, invalidates the complete panel and requires all three cold reviewers to rerun on the new revision.
+15. Any page-count change requires a fresh Completeness review of the exact revised payload and a fresh Competitiveness review of the exact rerendered pages.
+16. Panel approval requires all three lanes, three distinct reviewer actors, the exact current CV hash, no open blocking issue and no reviewer `revise` verdict.
+17. The final package remains `FAILED QA` until the current panel is approved and the final application quality gate independently verifies the panel state.
 
-The default maximum is four Tailor and Review iterations. Reaching the limit blocks automatic release for manual diagnosis. It does not permit the pipeline to waive review findings.
+The default maximum is four Tailor/panel iterations. Reaching the limit blocks automatic release for manual diagnosis. It does not permit the pipeline to waive findings.
 
 ## Page-length logic
 
@@ -189,7 +195,7 @@ A large blank area at a page foot must first be classified as either a **paginat
 
 When a page is sparse, Tailor must use the existing remediation sequence and record the steps. Relevant evidence and bullet depth are restored only when the problem is genuinely content volume; page-break defects are repaired in the template. Never shrink typography to force a page target. Never remove essential evidence to achieve visual compactness. Every omission must be classified as `harmless` or `strategic_loss`. A strategic-loss omission blocks release.
 
-A `TWO_PAGE_PREFERRED` CV may use one page only through an explicit exception where every essential evidence marker remains, every omission is harmless, the complete sparse-page remediation sequence was attempted and the exact compressed revision passed fresh independent strategic review. A `TWO_PAGE_REQUIRED` CV cannot be released as one page.
+A `TWO_PAGE_PREFERRED` CV may use one page only through an explicit exception where every essential evidence marker remains, every omission is harmless, the complete sparse-page remediation sequence was attempted and the exact compressed revision passed fresh Completeness review. A `TWO_PAGE_REQUIRED` CV cannot be released as one page.
 
 ## Visual architecture
 
@@ -209,7 +215,7 @@ Employer blocks, nested sub-roles and projects are breakable across pages. The t
 
 Existing legacy payloads must continue to generate the current Forecasting Data Scientist, Data Engineer, Energy Market Analyst and Football Research Engineer CVs without regression. The new role identity layer sits above the existing evidence engine. Payloads without `role_identity` remain on the locked legacy quality and visual contracts.
 
-The legacy rendering path remains supported, but the final application package still requires the Tailor and Review loop, CV-length audit and application quality manifest.
+The legacy rendering path remains supported. Historical review-loop v1 artefacts remain readable, but new application runs use the three-reviewer panel contract.
 
 ## Canonical visual sources
 
@@ -241,8 +247,9 @@ The release gate requires:
 - role identity and evidence ranking;
 - non-empty CV payload, diagnostic, CV-length audit and PDF;
 - passed CV-length, factual, positioning, visual, composition and render checks;
-- an approved Tailor and Review loop tied to the final CV hash;
-- a CV-length review judgement tied to the same reviewer actor, iteration and CV hash;
+- an approved three-reviewer panel tied to the exact final CV hash;
+- a Completeness-owned CV-length judgement tied to the same iteration and hash;
+- a Competitiveness-owned rendered visual review tied to the exact final PDF and page images;
 - tracker mode and duplicate history recorded;
 - Drive save verified rather than assumed.
 
@@ -263,7 +270,7 @@ A CV fails when:
 - Independent Practice has fewer than 2 evidence bullets;
 - a two-page project has fewer than 3 bullets, or a one-page project has fewer than 2;
 - the Independent Practice entry changes its locked title, organisation/context or dates, lacks evidence refs, implies unsupported employment/client work, or contains claims that cannot be traced to verified current technical evidence;
-- the Independent Practice entry is omitted without explicit Varun instruction or a recorded role-specific Independent Review rationale;
+- the Independent Practice entry is omitted without explicit Varun instruction or a recorded role-specific panel rationale;
 - `Selected Impact` appears without run-specific explicit user approval recorded as `selected_impact_approval.approved=true` and `selected_impact_approval.source="explicit_user_instruction"`;
 - page length lacks a recorded rationale;
 - one page is used when the candidate-role profile exceeds one-page permission thresholds;
@@ -271,18 +278,20 @@ A CV fails when:
 - essential evidence is absent from the final CV;
 - an omission is classified as a strategic loss;
 - sparse-page remediation steps were skipped;
-- page count changed without a fresh strategic review;
+- page count changed without a fresh Completeness and Competitiveness review;
 - Page 1 of a two-page CV is under 90% rendered fill;
 - Page 2 of a two-page CV is under 70% rendered fill;
 - page one lacks identity, proof, operating context or consequence;
 - a project lacks a direct GitHub repository link;
 - any factual, evidence-control, composition or visual-contract gate fails;
-- no Tailor and Review loop exists;
-- review was performed by the tailor actor;
-- the latest review requests revision;
-- review issues remain open;
-- the CV-length review judgement does not match the latest independent reviewer, iteration and hash;
-- the final CV hash differs from the approved review hash;
+- the three-reviewer panel is missing or incomplete;
+- Tailor and reviewer actors are not all distinct;
+- any reviewer is tied to a stale CV hash;
+- any open critical/major review issue remains;
+- any reviewer verdict is `revise`;
+- the CV-length review judgement does not match the Completeness reviewer, iteration and hash;
+- the rendered visual manual review does not match the Competitiveness reviewer and exact PDF/screenshots;
+- the final CV hash differs from the panel-approved hash;
 - the final application quality gate has not passed.
 
 ## Tracking
