@@ -35,6 +35,15 @@ def is_independent_practice(block: dict[str, Any]) -> bool:
     )
 
 
+def _one_page_target(payload: dict[str, Any]) -> bool:
+    strategy = payload.get("page_strategy", {}) if isinstance(payload.get("page_strategy"), dict) else {}
+    target = strategy.get("recommended_page_length", strategy.get("maximum_pages", 2))
+    try:
+        return int(target or 2) == 1
+    except (TypeError, ValueError):
+        return False
+
+
 def check_payload_depth(payload: dict[str, Any]) -> list[tuple[str, str]]:
     """Reject starved employer/project blocks before rendering.
 
@@ -44,7 +53,7 @@ def check_payload_depth(payload: dict[str, Any]) -> list[tuple[str, str]]:
     chronology, not salaried employment.
     """
     failures: list[tuple[str, str]] = []
-    one_page = int(payload.get("page_strategy", {}).get("maximum_pages", 2) or 2) == 1
+    one_page = _one_page_target(payload)
 
     for index, block in enumerate(payload.get("experience", []) or []):
         label = str(block.get("org") or block.get("title") or f"experience[{index}]")
