@@ -26,17 +26,20 @@ The reviewer must use an actor identity different from Tailor and must review th
 18. Does the Independent Practice block read as genuine current technical practice rather than defensive gap language or a target-title imitation?
 19. Where Independent Practice and Projects draw from the same body of work, do they serve different functions rather than repeat the same bullets? Experience should describe current scope and practice; Projects should provide named technical proof.
 20. If the Independent Practice entry is absent, is there explicit Varun instruction or a recorded role-specific Independent Review rationale in the omission audit?
-21. Are page count, first-page fill, final-page fill and visual layout acceptable at readable typography?
-22. Does the CV contain any unsupported skill, tool, responsibility, leadership claim or outcome?
-23. Does the PDF exist, open correctly and match the reviewed payload?
-24. Would a recruiter understand why this candidate belongs in this role without reconstructing the argument?
-25. Have all page PNGs generated from the exact final PDF hash been inspected at readable zoom?
-26. Does page one visibly use the page rather than merely pass a text-character-share calculation?
-27. Are there any large lower-page or internal blank areas, hidden pagination breaks or stranded sections?
-28. Does each semantic section have exactly one heading across the whole CV, with no `Experience Continued`, `Projects Continued`, `Education Continued`, `Additional Project Evidence` or equivalent label?
-29. Is rendered body text at least 9.5 pt and comfortable to read?
-30. Does content flow naturally across pages without an explicit DOCX or HTML page break?
-31. Is the canonical editable file the exact verified DOCX or HTML source rather than a native Google Docs conversion with pagination drift?
+21. Does every normal employer block carry at least 3 JD-relevant evidence bullets across the employer block as a whole, with no included block visibly starved? If a nested sub-role has only 1 or 2 bullets, does its parent employer still clear the 3-bullet floor and does the sub-role earn its line?
+22. Does Independent Practice clear its 2-bullet floor, and does every project clear the applicable floor: 3 bullets on a two-page CV or 2 on a valid one-page CV?
+23. Are page count, first-page fill, final-page fill and visual layout acceptable at readable typography?
+24. Does the CV contain any unsupported skill, tool, responsibility, leadership claim or outcome?
+25. Does the PDF exist, open correctly and match the reviewed payload?
+26. Would a recruiter understand why this candidate belongs in this role without reconstructing the argument?
+27. Have all page PNGs generated from the exact final PDF hash been inspected at readable zoom?
+28. Does page one visibly use the page rather than merely pass a text-character-share calculation?
+29. Are there any large lower-page or internal blank areas, hidden pagination breaks or stranded sections?
+30. Does each semantic section have exactly one heading across the whole CV, with no `Experience Continued`, `Projects Continued`, `Education Continued`, `Additional Project Evidence` or equivalent label?
+31. Is rendered body text at least 9.5 pt and comfortable to read?
+32. Does content flow naturally across pages without an explicit DOCX or HTML page break?
+33. Is the canonical editable file the exact verified DOCX or HTML source rather than a native Google Docs conversion with pagination drift?
+34. If a large page-foot gap appeared, was it diagnosed as pagination/atomicity versus content-volume before evidence was changed?
 
 ## Review output
 
@@ -102,7 +105,8 @@ The reviewer must also complete `rendered_visual_review.json.manual_review` afte
 - Do not approve a one-page exception unless every essential evidence marker remains, every omission is harmless and the exact compressed revision has received a fresh strategic review.
 - A sparse page is a repair trigger, not permission to delete evidence.
 - Do not approve from PDF text extraction, page-fill percentages or JSON diagnostics alone. The exact page images are the visual source of truth.
-- Do not approve if page one reaches less than 82% of its usable height in a two-page CV, the final page reaches less than 70%, or a large blank gap remains.
+- Do not approve if Page 1 reaches less than 90% of its usable height in a two-page CV, the final page reaches less than 70%, or a large blank gap remains.
+- Do not approve a normal employer block below the 3-bullet floor, Independent Practice below 2 bullets, or a project below its page-strategy floor. These floors bind revision cuts as well as first drafts.
 - Do not approve body typography below 9.5 pt.
 - Do not approve duplicate semantic headings, any continuation heading or any explicit source page break.
 - Do not approve a native Google Docs conversion as the canonical editable CV.
@@ -110,6 +114,6 @@ The reviewer must also complete `rendered_visual_review.json.manual_review` afte
 - Do not approve omission of the Independent Practice block without explicit Varun instruction or a recorded role-specific rationale in the omission audit.
 - If the PDF, screenshot or editable-source hash changes, the rendered visual review is stale and must be repeated.
 
-Fail or require revision when positioning is unclear, a secondary archetype competes for attention, evidence selection precedes classification, the page strategy is unsupported, essential evidence is dropped, an omission is a strategic loss, factual integrity fails, the Independent Practice policy fails, the layout contract fails, rendered-page review fails or a required artefact is missing.
+Fail or require revision when positioning is unclear, a secondary archetype competes for attention, evidence selection precedes classification, the page strategy is unsupported, essential evidence is dropped, an omission is a strategic loss, factual integrity fails, the Independent Practice policy fails, the layout contract fails, composition depth fails, rendered-page review fails or a required artefact is missing.
 
 After recording `revise`, the workflow returns to Tailor. After recording `approve`, the final application quality gate must still verify the approved CV hash, exact PDF hash, page screenshot hashes, linked CV-length review judgement and all package-level checks before release.
