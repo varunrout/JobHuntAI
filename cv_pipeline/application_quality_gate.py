@@ -46,6 +46,9 @@ def add_failure(failures: list[dict[str, str]], code: str, message: str) -> None
 def _latest_review_actor(state: dict[str, Any] | None) -> str | None:
     if not isinstance(state, dict):
         return None
+    if state.get("contract") == review_loop.CONTRACT:
+        event = review_loop.latest_review_for_lane(state, "competitiveness")
+        return str((event or {}).get("actor", "")).strip() or None
     reviews = [
         item for item in state.get("events", [])
         if isinstance(item, dict) and item.get("type") == "review"
