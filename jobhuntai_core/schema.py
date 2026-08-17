@@ -2,6 +2,11 @@
 
 This module is intentionally independent of Google APIs. Connectors and agents may
 change, but every write must conform to these values before it reaches Sheets.
+
+CV mode is deliberately not inferred from Role Lane alone. The live tracker proves
+that lanes such as Pricing / Portfolio can legitimately map to different CV modes
+in different domains. Historical migration must therefore use evidence or an
+explicit approved mapping, never a guess.
 """
 
 from __future__ import annotations
@@ -96,17 +101,6 @@ APPLICATION_STATUS_RANK = {
     "Offer": 5,
 }
 APPLICATION_TERMINAL = frozenset({"Rejected", "Withdrawn", "No response", "Closed"})
-
-ROLE_LANE_TO_CV_MODE = {
-    "Energy Forecasting & Risk": "Energy_Forecasting_Risk",
-    "Trading / Market Risk": "Energy_Forecasting_Risk",
-    "Pricing / Portfolio": "Energy_Forecasting_Risk",
-    "Commercial Analytics": "Commercial_Data_Analyst",
-    "Data Analyst / BI": "Commercial_Data_Analyst",
-    "Analytics Engineering": "Commercial_Data_Analyst",
-    "Applied Data Science": "Applied_Data_Scientist",
-    "Reach / Experimental": "Applied_Data_Scientist",
-}
 
 JOB_REQUIRED_FIELDS = ("Job ID", "Company", "Role Title", "Status")
 APPLICATION_REQUIRED_FIELDS = (
