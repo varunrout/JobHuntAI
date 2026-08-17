@@ -4,12 +4,12 @@ on:
   push:
     paths:
       - 'jobhuntai_core/**'
-      - 'tests/test_control_plane.py'
+      - 'tests/test_control_plane*.py'
       - '.github/workflows/control-plane.yml'
   pull_request:
     paths:
       - 'jobhuntai_core/**'
-      - 'tests/test_control_plane.py'
+      - 'tests/test_control_plane*.py'
       - '.github/workflows/control-plane.yml'
 
 permissions:
@@ -24,4 +24,4 @@ jobs:
         with:
           python-version: '3.12'
       - name: Run control-plane regression tests
-        run: python -m unittest discover -s tests -p 'test_control_plane.py' -v
+        run: python -m unittest discover -s tests -p 'test_control_plane*.py' -v
