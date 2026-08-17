@@ -1,19 +1,22 @@
 #!/usr/bin/env python3
 """Render JobHuntAI CVs and cover letters from canonical HTML templates.
 
-Legacy CV payloads continue through the locked classic-gold contract. Archetype
-payloads opt into the separate jobhuntai-archetype-v1 contract.
+Legacy and archetype payloads use separate content contracts but share the
+same serif-blue document design and PDF acceptance checks.
 """
 from __future__ import annotations
 
 import argparse
 import json
 import sys
+import urllib.error
+import urllib.request
 from pathlib import Path
 from typing import Any
 
 from jinja2 import Environment, FileSystemLoader, StrictUndefined, select_autoescape
 from weasyprint import HTML
+from weasyprint.text.fonts import FontConfiguration
 
 from archetype_visual_gate import check_archetype_cv_pdf, check_archetype_template_contract
 from visual_gate import check_cover_letter_pdf, check_cv_pdf, check_template_contract
@@ -21,6 +24,12 @@ from visual_gate import check_cover_letter_pdf, check_cv_pdf, check_template_con
 ROOT = Path(__file__).resolve().parent
 TEMPLATE_DIR = ROOT / "templates"
 TEMPLATES = {"cv": "cv_template.html", "cl": "cover_letter_template.html"}
+FONT_SOURCE_COMMIT = "352f6b7d9d6cc4fa9e242b931291d31b21a6dc84"
+FONT_ASSETS = {
+    "CormorantGaramond.ttf": f"https://raw.githubusercontent.com/google/fonts/{FONT_SOURCE_COMMIT}/ofl/cormorantgaramond/CormorantGaramond%5Bwght%5D.ttf",
+    "Lora.ttf": f"https://raw.githubusercontent.com/google/fonts/{FONT_SOURCE_COMMIT}/ofl/lora/Lora%5Bwght%5D.ttf",
+    "Lora-Italic.ttf": f"https://raw.githubusercontent.com/google/fonts/{FONT_SOURCE_COMMIT}/ofl/lora/Lora-Italic%5Bwght%5D.ttf",
+}
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -29,6 +38,42 @@ def load_json(path: Path) -> dict[str, Any]:
 
 def is_archetype_cv(kind: str, payload: dict[str, Any]) -> bool:
     return kind == "cv" and payload.get("layout_contract") == "jobhuntai-archetype-v1"
+
+
+def _font_cache_dir() -> Path:
+    return Path.home() / ".cache" / "jobhuntai" / "fonts"
+
+
+def _font_face_css() -> str:
+    """Return deterministic @font-face rules, downloading pinned font assets once.
+
+    If the network is unavailable the renderer falls back to installed
+    Cormorant/Lora and then Georgia/serif. The PDF gate still prevents an
+    unintended sans-serif fallback from shipping.
+    """
+    cache = _font_cache_dir()
+    cache.mkdir(parents=True, exist_ok=True)
+    try:
+        for filename, url in FONT_ASSETS.items():
+            target = cache / filename
+            if not target.exists() or target.stat().st_size == 0:
+                urllib.request.urlretrieve(url, target)
+    except (OSError, urllib.error.URLError) as exc:
+        print(f"FONT NOTICE: unable to refresh pinned serif assets ({exc}); using installed CSS fallbacks", file=sys.stderr)
+        return ""
+
+    cormorant = (cache / "CormorantGaramond.ttf").resolve().as_uri()
+    lora = (cache / "Lora.ttf").resolve().as_uri()
+    lora_italic = (cache / "Lora-Italic.ttf").resolve().as_uri()
+    return f"""
+<style data-jobhuntai-fonts="pinned-google-fonts-{FONT_SOURCE_COMMIT}">
+@font-face {{ font-family:"Cormorant Garamond"; src:url("{cormorant}") format("truetype"); font-style:normal; font-weight:400; }}
+@font-face {{ font-family:"Cormorant Garamond"; src:url("{cormorant}") format("truetype"); font-style:normal; font-weight:600; }}
+@font-face {{ font-family:"Lora"; src:url("{lora}") format("truetype"); font-style:normal; font-weight:400; }}
+@font-face {{ font-family:"Lora"; src:url("{lora}") format("truetype"); font-style:normal; font-weight:600; }}
+@font-face {{ font-family:"Lora"; src:url("{lora_italic}") format("truetype"); font-style:italic; font-weight:400; }}
+</style>
+"""
 
 
 def render(kind: str, payload_path: Path, html_out: Path, pdf_out: Path) -> list[tuple[str, str]]:
@@ -47,11 +92,15 @@ def render(kind: str, payload_path: Path, html_out: Path, pdf_out: Path) -> list
     )
     template_name = "cv_archetype_template.html" if archetype_cv else TEMPLATES[kind]
     rendered = environment.get_template(template_name).render(**payload)
+    font_css = _font_face_css()
+    if font_css:
+        rendered = rendered.replace("</head>", font_css + "\n</head>", 1)
 
     html_out.parent.mkdir(parents=True, exist_ok=True)
     pdf_out.parent.mkdir(parents=True, exist_ok=True)
     html_out.write_text(rendered, encoding="utf-8")
-    HTML(string=rendered, base_url=str(TEMPLATE_DIR)).write_pdf(str(pdf_out))
+    font_config = FontConfiguration()
+    HTML(string=rendered, base_url=str(TEMPLATE_DIR)).write_pdf(str(pdf_out), font_config=font_config)
 
     if kind == "cv":
         failures.extend(check_archetype_cv_pdf(pdf_out, payload) if archetype_cv else check_cv_pdf(pdf_out, payload))
