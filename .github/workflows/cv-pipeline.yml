@@ -15,6 +15,18 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Install CV serif fonts
+        run: |
+          set -euo pipefail
+          FONT_COMMIT="352f6b7d9d6cc4fa9e242b931291d31b21a6dc84"
+          FONT_DIR="$HOME/.local/share/fonts/jobhuntai"
+          mkdir -p "$FONT_DIR"
+          curl -fsSL "https://raw.githubusercontent.com/google/fonts/${FONT_COMMIT}/ofl/cormorantgaramond/CormorantGaramond%5Bwght%5D.ttf" -o "$FONT_DIR/CormorantGaramond.ttf"
+          curl -fsSL "https://raw.githubusercontent.com/google/fonts/${FONT_COMMIT}/ofl/lora/Lora%5Bwght%5D.ttf" -o "$FONT_DIR/Lora.ttf"
+          curl -fsSL "https://raw.githubusercontent.com/google/fonts/${FONT_COMMIT}/ofl/lora/Lora-Italic%5Bwght%5D.ttf" -o "$FONT_DIR/Lora-Italic.ttf"
+          fc-cache -f "$FONT_DIR"
+          fc-match "Cormorant Garamond" | grep -qi "Cormorant"
+          fc-match "Lora" | grep -qi "Lora"
       - run: python -m pip install --upgrade pip jsonschema pypdf pymupdf jinja2 weasyprint
       - name: Compile
         run: >-
@@ -61,7 +73,7 @@ jobs:
         run: python tests/test_archetype_visual_contract.py ArchetypeVisualContractTests.test_dynamic_template_contract_passes -v
       - name: Rendered legacy CV geometry passes
         working-directory: cv_pipeline
-        run: python tests/test_visual_contract.py VisualContractTests.test_rendered_cv_passes_visual_geometry -v
+        run: python tests/test_visual_contract.py VisualContractTests.test_rendered_cv_passes_pdf_acceptance -v
       - name: Rendered archetype CV geometry passes
         working-directory: cv_pipeline
         run: python tests/test_archetype_visual_contract.py ArchetypeVisualContractTests.test_strategy_section_order_and_labels_render -v
