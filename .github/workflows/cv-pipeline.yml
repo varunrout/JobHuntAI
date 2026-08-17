@@ -50,6 +50,15 @@ jobs:
           cv_pipeline/archetype_visual_gate.py
           cv_pipeline/render.py
           cv_pipeline/lint.py
+      - name: Sports production render test
+        working-directory: cv_pipeline
+        run: python tmp_sports_render.py
+      - name: Upload sports production render
+        uses: actions/upload-artifact@v4
+        with:
+          name: sports-production-render
+          path: cv_pipeline/tmp_sports_output/
+          if-no-files-found: error
       - name: Mandatory Tailor and Review loop
         working-directory: cv_pipeline
         run: python tests/test_review_loop.py -v
