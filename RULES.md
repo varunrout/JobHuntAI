@@ -183,7 +183,7 @@ Determine length from:
 
 One page is permitted by default only for a narrow profile with no senior or leadership positioning, no more than three relevant years, no more than two relevant roles, no more than one relevant project, limited technical breadth, no more than four essential evidence items and no domain-transfer burden.
 
-Two pages are preferred or required when they communicate materially more relevant evidence without filler. On a two-page CV, rendered Page 1 must reach at least **80%** of page height and Page 2 at least **70%**. These are composition repair floors, not permission to pad. An underfilled page blocks release until the cause is diagnosed and repaired.
+Two pages are preferred or required when they communicate materially more relevant evidence without filler. On a two-page CV, rendered Page 1 must reach at least **90%** of page height and Page 2 at least **70%**. These are composition repair floors, not permission to pad. An underfilled page blocks release until the cause is diagnosed and repaired.
 
 A large blank area at a page foot must first be classified as either a **pagination / atomicity defect** or a **content-volume defect**. If allowing the next employer, nested sub-role or project block to break safely removes the gap, fix the page-break rule before changing evidence. Do not cut bullets to solve an atomic block problem.
 
@@ -272,7 +272,7 @@ A CV fails when:
 - an omission is classified as a strategic loss;
 - sparse-page remediation steps were skipped;
 - page count changed without a fresh strategic review;
-- Page 1 of a two-page CV is under 80% rendered fill;
+- Page 1 of a two-page CV is under 90% rendered fill;
 - Page 2 of a two-page CV is under 70% rendered fill;
 - page one lacks identity, proof, operating context or consequence;
 - a project lacks a direct GitHub repository link;
