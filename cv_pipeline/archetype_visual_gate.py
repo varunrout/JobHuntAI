@@ -93,6 +93,7 @@ def check_archetype_cv_pdf(pdf_path: Path, payload: dict[str, Any]) -> list[tupl
     labels = payload.get("section_labels", {})
     order = payload.get("section_order", [])
     allowed = cv["allowed_section_labels"]
+    forbidden = set(cv["forbidden_headings"])
     expected_left = legacy.mm_to_pt(float(cv["page_margin_mm"][1]))
     tolerance = float(shared["geometry_tolerance_pt"])
     for section in order:
@@ -103,6 +104,8 @@ def check_archetype_cv_pdf(pdf_path: Path, payload: dict[str, Any]) -> list[tupl
         label = labels.get(section, "")
         if label not in allowed.get(section, []):
             failures.append(("SECTION_LABEL_UNCONTROLLED", f"{section} label {label!r} is not approved"))
+            if label in forbidden:
+                failures.append(("PROJECT_HEADING_FORBIDDEN", f"{section} label {label!r} is forbidden"))
             continue
         _, block = _find_block_across_pages(document, label)
         if block is None:

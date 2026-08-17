@@ -55,13 +55,15 @@ class ApplicationQualityGateTests(unittest.TestCase):
         state = review_loop.create_state("JOB-1")
         cv_path = self.run_dir / "cv.json"
         review_loop.record_tailor(state, cv_path, "tailor-agent")
-        report = {
+        base_report = {
             "verdict": "approve",
             "cv_sha256": review_loop.sha256_file(cv_path),
             "issues": [],
-            "summary": "Clean",
+            "summary": "Clean cold review",
         }
-        review_loop.record_review(state, report, "review-agent")
+        review_loop.record_review(state, dict(base_report), "review-completeness", "completeness")
+        review_loop.record_review(state, dict(base_report), "review-defensibility", "defensibility")
+        review_loop.record_review(state, dict(base_report), "review-competitiveness", "competitiveness")
         review_loop.write_json(self.run_dir / "review_loop.json", state)
 
         visual_review_path = self.run_dir / "rendered_visual_review.json"
@@ -70,7 +72,7 @@ class ApplicationQualityGateTests(unittest.TestCase):
             visual_review_path,
             self.run_dir / "rendered_pages",
             ["Professional Summary", "Technical Skills", "Experience", "Education"],
-            "review-agent",
+            "review-competitiveness",
             docx_path,
             "docx",
         )
@@ -107,7 +109,7 @@ class ApplicationQualityGateTests(unittest.TestCase):
                 "omission_audit_complete": True,
                 "page_strategy_approved": True,
                 "rationale": "The final one-page CV retains the complete role-critical evidence set without compression loss.",
-                "review_actor": "review-agent",
+                "review_actor": "review-completeness",
                 "review_iteration": 1,
                 "cv_sha256": review_loop.sha256_file(cv_path),
             },

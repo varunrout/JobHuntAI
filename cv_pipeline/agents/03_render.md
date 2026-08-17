@@ -5,52 +5,41 @@ Renders the approved payload and runs artefact-level checks. It never rewrites c
 ## Contract dispatch
 
 - Legacy payloads without `role_identity` use the locked `cv_template.html` and `visual_gate.py` contract unchanged.
-- Archetype payloads with `layout_contract: jobhuntai-archetype-v1` use `cv_archetype_template.html`, `archetype_visual_gate.py` and `archetype_render_gate.py`.
+- Archetype payloads with `layout_contract: jobhuntai-archetype-v1` use `cv_archetype_template.html`, `archetype_visual_gate.py`, `composition_gate.py` and `archetype_render_gate.py`.
 - Cover letters continue through the existing locked cover-letter contract.
 
 ## Archetype visual system
 
-The approved one-column serif design remains stable. Archetype layouts may change section order, section labels and the presence of Selected Impact. They may not change factual content, typography, bullet alignment, page margins or contact-link requirements.
+The approved one-column serif design remains stable. Archetype layouts may change section order, section labels and the presence of Selected Impact only when explicitly approved. They may not change factual content, typography, bullet alignment, page margins or contact-link requirements.
 
-Stable section IDs are:
-
-- summary
-- impact
-- skills
-- experience
-- projects
-- education
-
-The rendered label is supplied by the archetype registry. `Selected Projects` remains forbidden.
+Stable section IDs are summary, impact, skills, experience, projects and education. `Selected Projects` remains forbidden.
 
 ## Hard gate sequence
 
 1. Run `pipeline_gate.py` and `lint.py`.
-2. Render through `render.py`.
+2. Render through `render.py` with the composition report enabled for archetype CVs.
 3. Run the matching visual contract.
 4. Run `archetype_render_gate.py` for archetype CVs or `render_gate.py` for legacy CVs.
 5. Run `rendered_visual_gate.py capture` against the exact final PDF. Render every page to PNG and create `rendered_visual_review.json` with exact PDF and screenshot hashes.
-6. Inspect every generated page image at readable zoom. Do not infer visual quality from extracted text, character share, JSON geometry or a prior render.
-7. Record the independent review actor's page-specific findings in `rendered_visual_review.json` and run `rendered_visual_gate.py validate`.
-8. Copy `meaningful_fill` values from the validated rendered-page review into `cv_length_audit.json`. Hand-entered or text-share page-fill values are prohibited.
-9. Run `cv_length_gate.py cv.json cv_length_audit.json`.
+6. Hand the exact page images and PDF to the cold `competitiveness` reviewer. Reviewer C must inspect every page at readable zoom; extracted text and metrics cannot substitute for image review.
+7. Record Reviewer C's page-specific findings in `rendered_visual_review.json.manual_review` with the same reviewer actor used in the `competitiveness` lane, then run `rendered_visual_gate.py validate`.
+8. Copy exact `meaningful_fill` values from the validated rendered-page review into `cv_length_audit.json`. Hand-entered or text-share fill values are prohibited.
+9. Run `cv_length_gate.py` against the final CV/audit; the Completeness lane owns the page-strategy judgement.
 10. Delete generated outputs when any gate fails.
 
 ## Required checks
 
-- Page one establishes professional identity, at least two proof points, operating context and consequence.
+- Page one establishes professional identity, proof, operating context and consequence.
 - Page count respects the evidence-based page strategy, with a normal maximum of two pages.
-- A two-page CV must reach at least 82% of the usable first page and 70% of the usable final page with materially relevant evidence.
+- A two-page CV must reach at least 90% of usable Page 1 and 70% of usable Page 2 with materially relevant evidence.
 - A large internal blank gap blocks release even when extracted text counts look acceptable.
-- A two-page CV may not use `Experience Continued`, `Projects Continued`, `Education Continued`, `Additional Project Evidence` or any equivalent duplicate continuation heading. Each semantic section heading appears exactly once in the whole document.
-- Explicit DOCX or HTML page-break directives are prohibited. Pagination must arise naturally from readable typography and content flow.
+- Duplicate or continuation headings are forbidden; each semantic section heading appears exactly once.
+- Explicit source page-break directives are prohibited. Pagination must arise naturally from readable typography and content flow.
 - Body text must have a rendered median of at least 9.5 pt. Typography may not be shrunk to manufacture page fill.
-- A native Google Docs conversion is never the canonical editable CV because conversion can change pagination. Keep the exact verified DOCX or HTML source alongside the fixed-layout PDF.
-- A two-page CV must use at least 70% of its second page with materially relevant evidence and may not contain filler.
-- An underfilled page returns to Tailor for ordered remediation. Render must not convert that visual finding into permission to delete evidence or force one page.
-- If page count changes after rendering, the previous approval is invalid. The exact revised payload and exact rendered PDF must return through Tailor and Independent Review.
-- Section labels and order match the selected archetype or a documented role-specific override.
-- Every project has a visible GitHub link and two or three bullets.
-- The Portfolio link is clickable.
+- A native Google Docs conversion is never the canonical editable CV. Keep the exact verified HTML or DOCX source alongside the fixed-layout PDF.
+- An underfilled page returns to Tailor for diagnosed remediation; Render never deletes evidence to manufacture compactness.
+- If CV content, page count, PDF hash, screenshot hash or editable source changes, the previous Competitiveness visual review is stale and the complete three-reviewer panel must rerun on the new CV hash.
+- Section labels/order match the selected archetype or a documented role-specific override.
+- Every project clears its page-strategy bullet floor and has a visible GitHub link.
+- GitHub and Portfolio CTA links are clickable and their icons/labels render correctly.
 - Bullet continuation lines remain aligned.
-- Typography is never reduced to meet page pressure.

@@ -325,6 +325,24 @@ def _find_block(page, needle: str, exact: bool = False) -> dict[str, Any] | None
     return None
 
 
+def _find_block_prefix(page, needle: str, min_words: int = 8, max_words: int = 18) -> dict[str, Any] | None:
+    """Locate the start block for long rendered text that may be split across PDF blocks."""
+    block = _find_block(page, needle)
+    if block is not None:
+        return block
+    words = normalise(needle).split()
+    if len(words) < min_words:
+        return None
+    probe_lengths = sorted({min(len(words), max_words), 14, 10, min_words}, reverse=True)
+    for count in probe_lengths:
+        if count > len(words):
+            continue
+        block = _find_block(page, " ".join(words[:count]))
+        if block is not None:
+            return block
+    return None
+
+
 def _find_block_across_pages(document, needle: str, exact: bool = False):
     for page in document:
         block = _find_block(page, needle, exact=exact)
@@ -567,7 +585,7 @@ def check_cover_letter_pdf(pdf_path: Path, payload: dict[str, Any]) -> list[tupl
         targets.append(("first body paragraph", str(payload["paragraphs"][0])))
     found: dict[str, dict[str, Any]] = {}
     for label, value in targets:
-        block = _find_block(page, value)
+        block = _find_block_prefix(page, value) if label == "first body paragraph" else _find_block(page, value)
         if block is None:
             failures.append(("LETTER_TEXT_MISSING", f"Unable to locate {label}"))
             continue

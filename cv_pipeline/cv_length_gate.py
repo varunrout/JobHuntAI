@@ -13,6 +13,7 @@ ROOT = Path(__file__).resolve().parent
 SCHEMA_PATH = ROOT / "schemas" / "cv_length_audit.schema.json"
 
 CONTRACT = "jobhuntai-cv-length-audit-v1"
+REVIEW_PANEL_CONTRACT = "jobhuntai-review-panel-v2"
 ONE_PAGE_ALLOWED = "ONE_PAGE_ALLOWED"
 TWO_PAGE_PREFERRED = "TWO_PAGE_PREFERRED"
 TWO_PAGE_REQUIRED = "TWO_PAGE_REQUIRED"
@@ -101,6 +102,14 @@ def _one_page_permitted(profile: dict[str, Any], essential_count: int) -> bool:
         and essential_count <= 4
         and not domain_transfer
     )
+
+
+def _length_review_event(review_state: dict[str, Any]) -> dict[str, Any] | None:
+    events = review_state.get("events", []) if isinstance(review_state, dict) else []
+    reviews = [item for item in events if isinstance(item, dict) and item.get("type") == "review"]
+    if review_state.get("contract") == REVIEW_PANEL_CONTRACT:
+        reviews = [item for item in reviews if item.get("lane") == "completeness"]
+    return reviews[-1] if reviews else None
 
 
 def validate(
@@ -195,20 +204,18 @@ def validate(
         add_failure(failures, "PAGE_COUNT_REVIEW_RATIONALE_MISSING", "review judgement requires a specific rationale")
 
     if review_state is not None:
-        events = review_state.get("events", []) if isinstance(review_state, dict) else []
-        reviews = [item for item in events if isinstance(item, dict) and item.get("type") == "review"]
-        latest_review = reviews[-1] if reviews else None
+        latest_review = _length_review_event(review_state)
         if not latest_review:
-            add_failure(failures, "PAGE_COUNT_REVIEW_NOT_TIED_TO_LOOP", "cv-length review judgement requires an independent review-loop event")
+            add_failure(failures, "PAGE_COUNT_REVIEW_NOT_TIED_TO_LOOP", "cv-length review judgement requires the Completeness review lane")
         else:
             if review.get("review_actor") != latest_review.get("actor"):
-                add_failure(failures, "PAGE_COUNT_REVIEW_ACTOR_MISMATCH", "cv-length audit reviewer must match the latest independent reviewer")
+                add_failure(failures, "PAGE_COUNT_REVIEW_ACTOR_MISMATCH", "cv-length audit reviewer must match the Completeness reviewer")
             if review.get("review_iteration") != latest_review.get("iteration"):
-                add_failure(failures, "PAGE_COUNT_REVIEW_ITERATION_MISMATCH", "cv-length audit must reference the latest reviewed iteration")
+                add_failure(failures, "PAGE_COUNT_REVIEW_ITERATION_MISMATCH", "cv-length audit must reference the current Completeness review iteration")
             if review.get("cv_sha256") != latest_review.get("cv_sha256"):
-                add_failure(failures, "PAGE_COUNT_REVIEW_HASH_MISMATCH", "cv-length audit must be tied to the exact independently reviewed CV hash")
+                add_failure(failures, "PAGE_COUNT_REVIEW_HASH_MISMATCH", "cv-length audit must be tied to the exact CV hash reviewed by Completeness")
             if latest_review.get("verdict") != "approve":
-                add_failure(failures, "PAGE_COUNT_REVIEW_NOT_APPROVED", "latest independent review must approve the audited CV")
+                add_failure(failures, "PAGE_COUNT_REVIEW_NOT_APPROVED", "Completeness reviewer must approve the audited CV")
 
     transition = audit.get("page_transition")
     if not isinstance(transition, dict):

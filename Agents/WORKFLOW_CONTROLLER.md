@@ -44,17 +44,20 @@ When the user pastes a job description or job link:
 9. Save `role_identity.json` with archetype, confidence, secondary archetypes, positioning strategy and recommended page length.
 10. Build the competency matrix and verified evidence candidates.
 11. Reweight evidence against the selected archetype and save `evidence_ranking.json`.
-12. Initialise `review_loop.json` with the `jobhuntai-tailor-review-v1` contract.
-13. Load `cv_pipeline/independent_practice_policy.json` and, unless Varun explicitly requested omission or Independent Review previously recorded a role-specific omission rationale, reserve the top Professional Experience slot for the locked Jan 2026 - Present Independent Practice entry. Its bullets must be sourced from verified current technical evidence and its payload must carry traceable `evidence_refs`.
-14. Tailor the CV and record the exact `cv.json` hash as a tailor iteration.
-15. Render the CV and run construction, factual, positioning, visual and page-strategy gates.
-16. Render every exact final PDF page to PNG and create `rendered_visual_review.json` containing the PDF hash, screenshot hashes, geometry, fill and font measurements.
-17. Run an independent cold review against the job description, canonical evidence, role identity, diagnostic, exact rendered PDF and every page image.
-18. Require the reviewer to inspect all page images and explicitly confirm readable typography, natural pagination, coherent section flow, no large blank areas and no duplicate or continuation headings.
-19. Require the reviewer to verify that Independent Practice remains visibly non-employment current technical work, uses the locked identity and dates, maps to its declared evidence refs and does not duplicate Projects verbatim.
-20. Record the review against the exact tailored CV hash and exact rendered PDF hash.
-21. When the verdict is `revise`, return every open issue to Tailor, require all issue IDs to be addressed, then repeat Tailor, Render and Review.
-22. Continue only when the latest independent review verdict is `approve`, no review issues remain open, the approved hash matches final `cv.json`, and `rendered_visual_gate.py` passes the exact PDF and screenshots.
+12. Initialise `review_loop.json` using `jobhuntai-review-panel-v2` for new runs. Historical `jobhuntai-tailor-review-v1` artefacts remain readable but are not the standard for new applications.
+13. Load `cv_pipeline/independent_practice_policy.json` and reserve the locked Jan 2026 - Present Independent Practice entry unless omission is explicitly authorised.
+14. Tailor the CV and record the exact `cv.json` hash as a Tailor iteration.
+15. Render the CV and run construction, factual, positioning, composition, visual and page-strategy gates.
+16. Render every exact final PDF page to PNG and create `rendered_visual_review.json` containing PDF hash, screenshot hashes, geometry, fill and font measurements.
+17. Freeze the exact CV revision and launch three separate cold reviewer contexts without Tailor rationale or cross-reviewer findings:
+    - `completeness`: hiring case, evidence coverage, block depth, omission audit and page strategy.
+    - `defensibility`: factual integrity, provenance, title/date/metric/tool scope and unsupported implications.
+    - `competitiveness`: recruiter clarity, competitive strength, rendered-page quality, CTA/link rendering and visual composition.
+18. Require all three reviewer actors to differ from Tailor and from one another. Every lane must reference the same exact current `cv.json` SHA-256 hash.
+19. Reviewer A owns `cv_length_audit.json.review_judgement`. Reviewer C owns `rendered_visual_review.json.manual_review`. Reviewer B owns factual/provenance findings.
+20. Aggregate only after all three lane reports are recorded. Any open critical or major issue, or any reviewer explicit `revise`, forces panel verdict `revise`.
+21. On `revise`, return every blocking issue ID to Tailor. Tailor must address all blocking IDs, create a new CV hash, rerender, and all three cold reviewers rerun on the new hash.
+22. Continue only when panel verdict is `approve`, all three lanes are current, reviewer actors are unique, no blocking issue remains, panel hash matches final `cv.json`, the Completeness-owned length judgement matches the same iteration/hash, and the Competitiveness-owned visual review matches the exact PDF/screenshots.
 23. Produce and review a cover letter only when useful or requested.
 24. Prepare portal answers and the submission checklist.
 25. Build `application_manifest.json` and run `application_quality_gate.py`.
@@ -64,52 +67,35 @@ When the user pastes a job description or job link:
 29. Log every networking contact, touchpoint and follow-up.
 30. Reconcile Gmail stages when requested or when new application mail is found.
 
-## Mandatory Tailor and Review loop
+## Mandatory Tailor and three-reviewer panel loop
 
-The loop is a release requirement, not an optional quality check.
-
-- Events must alternate `tailor`, then `review`.
-- The reviewer actor must be different from the tailor actor.
-- Every review must reference the SHA-256 hash of the exact CV revision reviewed.
-- The rendered visual review must reference the SHA-256 hash of the exact PDF and every page screenshot.
-- A `revise` verdict creates a mandatory new tailor iteration.
-- Re-tailoring must explicitly address every open review issue ID.
-- An `approve` verdict cannot contain open issues.
-- Any CV, PDF, screenshot, page-count or editable-source change after approval invalidates approval and requires another render and review.
-- The default maximum is four iterations. Exhaustion blocks automatic release for manual diagnosis rather than weakening the gate.
+- Required lanes are exactly `completeness`, `defensibility` and `competitiveness`.
+- Tailor and all three reviewer actors must be distinct.
+- Reviewers are cold: no Tailor drafting rationale and no other reviewer findings before all reports are recorded.
+- Every lane reviews the same exact current CV hash.
+- Reviewer A owns the CV-length judgement; Reviewer C owns rendered visual manual review.
+- Any critical/major open issue forces revision.
+- Any reviewer explicit `revise` forces revision even if its issue is marked minor.
+- Re-tailoring must explicitly address every blocking issue ID.
+- Any CV edit invalidates the whole panel and all three lanes rerun on the new hash.
+- Any PDF/screenshot/page-count/editable-source change invalidates rendered visual approval.
+- Default maximum is four Tailor/panel iterations. Exhaustion blocks automatic release.
 
 ## Fail-closed rendered-page rules
 
-- The actual page images are the visual source of truth. Extracted text, character share, JSON geometry and prose claims cannot substitute for opening every page image.
-- A two-page CV must use at least 82% of the usable first page and 70% of the usable final page.
+- Exact page images are the visual source of truth.
+- A two-page CV must use at least 90% of usable Page 1 and 70% of usable Page 2.
 - Large internal blank gaps block release.
-- Rendered body text below 9.5 pt blocks release.
-- Every semantic section heading appears exactly once. `Experience Continued`, `Projects Continued`, `Education Continued`, `Additional Project Evidence` and equivalent headings are forbidden.
-- Explicit DOCX `pageBreakBefore`, explicit page-break elements and HTML `break-before: page` or `page-break-before: always` are forbidden. Pagination must flow naturally.
-- A native Google Docs conversion cannot be the canonical editable CV because conversion can change pagination. Store the exact verified DOCX or HTML source alongside the fixed-layout PDF.
-- `cv_length_audit.json.page_fill` must be copied from the exact PDF measurements in `rendered_visual_review.json`. Hand-entered fill figures or text-share estimates block release.
+- Body text below 9.5 pt blocks release.
+- Duplicate/continuation headings and explicit page breaks are forbidden.
+- Native Google Docs conversion cannot be the canonical editable CV.
+- `cv_length_audit.json.page_fill` must come from exact PDF measurements in `rendered_visual_review.json`.
 
 ## Fail-closed gates
 
-Do not mark `Ready to Apply` unless:
+Do not mark `Ready to Apply` unless the control-plane and Doctor checks are clean, intake and evidence artefacts exist, Independent Practice policy is satisfied, composition and rendered-page gates pass, all three cold review lanes complete on the final hash, the panel approves, Completeness owns the CV-length judgement, Competitiveness owns the rendered visual review, Drive save is verified, and `application_quality_gate.py` returns `ready_to_apply`.
 
-- the control-plane write gate and relevant Doctor checks are clean;
-- the job description is saved;
-- the duplicate and tracker checks are complete;
-- viability review is complete;
-- Role Identity Classification is complete;
-- the evidence map and archetype ranking exist;
-- the Independent Practice policy is satisfied or its omission is explicitly authorised and recorded;
-- final CV passes factual, positioning, structural, visual and rendered-page review;
-- every exact rendered page screenshot has been inspected and hash-locked to the final PDF;
-- the mandatory Tailor and Review loop is approved and hash-locked to the final CV;
-- material gaps are recorded;
-- work-authorisation assumptions are explicit;
-- required PDF and canonical editable files exist and are non-empty;
-- Drive save is verified rather than assumed;
-- `application_quality_gate.py` returns `ready_to_apply`.
-
-Do not mark `Applied` unless the user confirms submission or reliable portal or email evidence exists. The employer's rejection belongs on the Applications row. Use `Do not apply` for a pre-application decline on Jobs.
+Do not mark `Applied` unless the user confirms submission or reliable portal/email evidence exists. Employer rejection belongs on Applications. Use `Do not apply` for a pre-application decline on Jobs.
 
 ## Workspace boundary
 
