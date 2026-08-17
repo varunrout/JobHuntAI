@@ -32,6 +32,11 @@ FONT_ASSETS = {
     "Lora-Italic.ttf": f"https://raw.githubusercontent.com/google/fonts/{FONT_SOURCE_COMMIT}/ofl/lora/Lora-Italic%5Bwght%5D.ttf",
 }
 
+GITHUB_ICON_DATA = "PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iIzFBNEY4QiIgZD0iTTEyIC43YTExLjMgMTEuMyAwIDAgMC0zLjYgMjJjLjYuMS44LS4zLjgtLjZ2LTIuMmMtMy4zLjctNC0xLjQtNC0xLjQtLjUtMS40LTEuMy0xLjgtMS4zLTEuOC0xLjEtLjcuMS0uNy4xLS43IDEuMi4xIDEuOCAxLjIgMS44IDEuMiAxLjEgMS44IDIuOCAxLjMgMy40IDEgLjEtLjguNC0xLjMuOC0xLjYtMi42LS4zLTUuNC0xLjMtNS40LTUuNiAwLTEuMi40LTIuMyAxLjItMy4xLS4xLS4zLS41LTEuNS4xLTMuMSAwIDAgMS0uMyAzLjIgMS4yYTExIDExIDAgMCAxIDUuOCAwQzE2LjEgNCAxNy4xIDQuMSAxNy4xIDQuMWMuNiAxLjYuMiAyLjguMSAzLjEuOC44IDEuMiAxLjkgMS4yIDMuMSAwIDQuMy0yLjggNS4zLTUuNCA1LjYuNC40LjggMS4xLjggMi4xdjMuMWMwIC4zLjIuNy44LjZBMTEuMyAxMS4zIDAgMCAwIDEyIC43WiIvPjwvc3ZnPg=="
+PORTFOLIO_ICON_DATA = "PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iOS4yIiBmaWxsPSJub25lIiBzdHJva2U9IiMxQTRGOEIiIHN0cm9rZS13aWR0aD0iMS44Ii8+PHBhdGggZD0iTTIuOSAxMmgxOC4yTTEyIDIuOGMyLjQgMi41IDMuNiA1LjYgMy42IDkuMlMxNC40IDE4LjcgMTIgMjEuMk0xMiAyLjhDOS42IDUuMyA4LjQgOC40IDguNCAxMnMxLjIgNi43IDMuNiA5LjIiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzFBNEY4QiIgc3Ryb2tlLXdpZHRoPSIxLjUiLz48L3N2Zz4="
+GITHUB_INLINE_SVG = '<svg class="cta-ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="#1A4F8B" d="M12 .7a11.3 11.3 0 0 0-3.6 22c.6.1.8-.3.8-.6v-2.2c-3.3.7-4-1.4-4-1.4-.5-1.4-1.3-1.8-1.3-1.8-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1.1 1.8 2.8 1.3 3.4 1 .1-.8.4-1.3.8-1.6-2.6-.3-5.4-1.3-5.4-5.6 0-1.2.4-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.2 1.2a11 11 0 0 1 5.8 0C16.1 4 17.1 4.1 17.1 4.1c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.9 1.2 3.1 0 4.3-2.8 5.3-5.4 5.6.4.4.8 1.1.8 2.1v3.1c0 .3.2.7.8.6A11.3 11.3 0 0 0 12 .7Z"/></svg>'
+PORTFOLIO_INLINE_SVG = '<svg class="cta-ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.2" fill="none" stroke="#1A4F8B" stroke-width="1.8"/><path d="M2.9 12h18.2M12 2.8c2.4 2.5 3.6 5.6 3.6 9.2S14.4 18.7 12 21.2M12 2.8C9.6 5.3 8.4 8.4 8.4 12s1.2 6.7 3.6 9.2" fill="none" stroke="#1A4F8B" stroke-width="1.5"/></svg>'
+
 
 def load_json(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
@@ -77,6 +82,17 @@ def _font_face_css() -> str:
 """
 
 
+def _materialise_cta_icons(rendered: str) -> str:
+    """Replace inline SVG CTA icons with embedded image SVGs for WeasyPrint.
+
+    Inline SVG inside anchors is not consistently painted by the PDF renderer.
+    Data-URI images are deterministic, self-contained and render reliably.
+    """
+    github_img = f'<img class="cta-ico" alt="" src="data:image/svg+xml;base64,{GITHUB_ICON_DATA}">'
+    portfolio_img = f'<img class="cta-ico" alt="" src="data:image/svg+xml;base64,{PORTFOLIO_ICON_DATA}">'
+    return rendered.replace(GITHUB_INLINE_SVG, github_img).replace(PORTFOLIO_INLINE_SVG, portfolio_img)
+
+
 def _write_composition_report(path: Path | None, report: dict[str, Any]) -> None:
     if path is None:
         return
@@ -112,6 +128,7 @@ def render(
     )
     template_name = "cv_archetype_template.html" if archetype_cv else TEMPLATES[kind]
     rendered = environment.get_template(template_name).render(**payload)
+    rendered = _materialise_cta_icons(rendered)
     font_css = _font_face_css()
     if font_css:
         rendered = rendered.replace("</head>", font_css + "\n</head>", 1)
