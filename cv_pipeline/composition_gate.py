@@ -17,8 +17,9 @@ EMPLOYER_MIN_BULLETS = 3
 INDEPENDENT_PRACTICE_MIN_BULLETS = 2
 TWO_PAGE_PROJECT_MIN_BULLETS = 3
 ONE_PAGE_PROJECT_MIN_BULLETS = 2
-FIRST_PAGE_MIN_FILL = 0.80
+FIRST_PAGE_MIN_FILL = 0.90
 SECOND_PAGE_MIN_FILL = 0.70
+CONTENT_LEAF_TYPES = {"TextBox", "InlineReplacedBox", "BlockReplacedBox", "ReplacedBox"}
 
 
 def block_bullet_count(block: dict[str, Any]) -> int:
@@ -87,16 +88,23 @@ def check_payload_depth(payload: dict[str, Any]) -> list[tuple[str, str]]:
     return failures
 
 
-def _lowest_edge(box: Any) -> float:
-    """Return the lowest laid-out edge in a WeasyPrint box subtree."""
-    y = float(getattr(box, "position_y", 0.0)) + float(getattr(box, "height", 0.0))
-    for child in getattr(box, "children", []) or []:
-        y = max(y, _lowest_edge(child))
-    return y
+def _lowest_content_edge(box: Any) -> float:
+    """Return the lowest actual content edge, ignoring page-filling containers.
+
+    Raw WeasyPrint block containers often extend to the page boundary even when
+    the visible document is sparse. Measuring only terminal text/replaced boxes
+    makes page-one whitespace observable instead of falsely reporting 100% fill.
+    """
+    children = getattr(box, "children", []) or []
+    if not children:
+        if type(box).__name__ not in CONTENT_LEAF_TYPES:
+            return 0.0
+        return float(getattr(box, "position_y", 0.0)) + float(getattr(box, "height", 0.0))
+    return max((_lowest_content_edge(child) for child in children), default=0.0)
 
 
 def page_fill_ratios(document: Any) -> list[float]:
-    """Measure each rendered page from its top to the lowest painted layout box."""
+    """Measure each page from its top to the lowest real content leaf."""
     ratios: list[float] = []
     for page in getattr(document, "pages", []) or []:
         page_box = getattr(page, "_page_box", None)
@@ -108,7 +116,7 @@ def page_fill_ratios(document: Any) -> list[float]:
         if height <= 0 or not children:
             ratios.append(0.0)
             continue
-        lowest = max(_lowest_edge(child) for child in children)
+        lowest = max((_lowest_content_edge(child) for child in children), default=0.0)
         ratios.append(max(0.0, min(lowest / height, 1.0)))
     return ratios
 
@@ -116,9 +124,9 @@ def page_fill_ratios(document: Any) -> list[float]:
 def check_document_composition(document: Any) -> tuple[list[tuple[str, str]], list[float]]:
     """Hard-fail materially sparse two-page composition.
 
-    Page one uses a conservative 80% floor: this is intentionally a defect
-    detector, not a demand for edge-to-edge text. Page two uses JobHuntAI's
-    existing 70% substantive-fill contract.
+    Page one uses a 90% content-edge floor to prevent the recurring visible
+    blank-foot defect. Page two uses JobHuntAI's existing 70% substantive-fill
+    contract. These are repair floors, not padding targets.
     """
     failures: list[tuple[str, str]] = []
     fill = page_fill_ratios(document)
