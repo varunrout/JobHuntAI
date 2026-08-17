@@ -118,6 +118,13 @@ class CVLengthGateTests(unittest.TestCase):
         self.assertIn("SECOND_PAGE_UNDERFILLED", codes)
         self.assertNotIn("ONE_PAGE_NOT_PERMITTED", codes)
 
+    def test_first_page_underfill_is_blocked(self):
+        audit = hsbc_audit()
+        audit["page_fill"] = [0.86, 0.78]
+        codes = {item["code"] for item in cv_length_gate.validate(hsbc_cv(), audit)}
+        self.assertIn("PAGE_ONE_UNDERFILLED", codes)
+        self.assertNotIn("SECOND_PAGE_UNDERFILLED", codes)
+
     def test_review_judgement_must_match_independent_review_loop(self):
         cv = hsbc_cv()
         audit = hsbc_audit()
