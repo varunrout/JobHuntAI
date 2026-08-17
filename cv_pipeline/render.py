@@ -18,6 +18,7 @@ from jinja2 import Environment, FileSystemLoader, StrictUndefined, select_autoes
 from weasyprint import HTML
 from weasyprint.text.fonts import FontConfiguration
 
+import composition_gate
 from archetype_visual_gate import check_archetype_cv_pdf, check_archetype_template_contract
 from visual_gate import check_cover_letter_pdf, check_cv_pdf, check_template_contract
 
@@ -76,12 +77,31 @@ def _font_face_css() -> str:
 """
 
 
-def render(kind: str, payload_path: Path, html_out: Path, pdf_out: Path) -> list[tuple[str, str]]:
+def _write_composition_report(path: Path | None, report: dict[str, Any]) -> None:
+    if path is None:
+        return
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+
+
+def render(
+    kind: str,
+    payload_path: Path,
+    html_out: Path,
+    pdf_out: Path,
+    composition_out: Path | None = None,
+) -> list[tuple[str, str]]:
     payload = load_json(payload_path)
     archetype_cv = is_archetype_cv(kind, payload)
     failures = check_archetype_template_contract() if archetype_cv else check_template_contract()
     if failures:
         return failures
+
+    if archetype_cv:
+        depth_failures = composition_gate.check_payload_depth(payload)
+        if depth_failures:
+            _write_composition_report(composition_out, composition_gate.composition_report(payload))
+            return depth_failures
 
     environment = Environment(
         loader=FileSystemLoader(str(TEMPLATE_DIR)),
@@ -100,7 +120,15 @@ def render(kind: str, payload_path: Path, html_out: Path, pdf_out: Path) -> list
     pdf_out.parent.mkdir(parents=True, exist_ok=True)
     html_out.write_text(rendered, encoding="utf-8")
     font_config = FontConfiguration()
-    HTML(string=rendered, base_url=str(TEMPLATE_DIR)).write_pdf(str(pdf_out), font_config=font_config)
+    document = HTML(string=rendered, base_url=str(TEMPLATE_DIR)).render(font_config=font_config)
+
+    composition_report: dict[str, Any] | None = None
+    if archetype_cv:
+        composition_report = composition_gate.composition_report(payload, document)
+        failures.extend((item["code"], item["detail"]) for item in composition_report["failures"])
+        _write_composition_report(composition_out, composition_report)
+
+    document.write_pdf(str(pdf_out))
 
     if kind == "cv":
         failures.extend(check_archetype_cv_pdf(pdf_out, payload) if archetype_cv else check_cv_pdf(pdf_out, payload))
@@ -118,8 +146,15 @@ def main() -> int:
     parser.add_argument("payload")
     parser.add_argument("--html-out", required=True)
     parser.add_argument("--pdf-out", required=True)
+    parser.add_argument("--composition-out", help="Optional JSON report with block-depth and per-page fill measurements")
     args = parser.parse_args()
-    failures = render(args.kind, Path(args.payload), Path(args.html_out), Path(args.pdf_out))
+    failures = render(
+        args.kind,
+        Path(args.payload),
+        Path(args.html_out),
+        Path(args.pdf_out),
+        Path(args.composition_out) if args.composition_out else None,
+    )
     if failures:
         print(f"RENDER BLOCKED - {len(failures)} failure(s):")
         for code, detail in failures:
