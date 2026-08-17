@@ -53,6 +53,9 @@ jobs:
       - name: Mandatory Tailor and Review loop
         working-directory: cv_pipeline
         run: python tests/test_review_loop.py -v
+      - name: Review panel lane ownership
+        working-directory: cv_pipeline
+        run: python tests/test_review_panel_integration.py -v
       - name: CV length and evidence retention gate
         working-directory: cv_pipeline
         run: python tests/test_cv_length_gate.py -v
