@@ -13,6 +13,26 @@ import application_quality_gate
 import cv_length_gate
 import rendered_visual_gate
 import review_loop
+import review_scoring
+
+
+def scored_report(lane, cv_path, score=92):
+    remaining = float(score)
+    breakdown = {}
+    for dimension, maximum in review_scoring.LANE_RUBRICS[lane].items():
+        points = min(float(maximum), remaining)
+        breakdown[dimension] = points
+        remaining = round(remaining - points, 1)
+    return {
+        "lane": lane,
+        "verdict": "approve",
+        "score": score,
+        "score_breakdown": breakdown,
+        "score_rationale": "The exact final CV was scored against every fixed lane dimension, with points withheld where the evidence or presentation was less than perfect.",
+        "cv_sha256": review_loop.sha256_file(cv_path),
+        "issues": [],
+        "summary": "Clean cold review",
+    }
 
 
 class ApplicationQualityGateTests(unittest.TestCase):
@@ -55,15 +75,9 @@ class ApplicationQualityGateTests(unittest.TestCase):
         state = review_loop.create_state("JOB-1")
         cv_path = self.run_dir / "cv.json"
         review_loop.record_tailor(state, cv_path, "tailor-agent")
-        base_report = {
-            "verdict": "approve",
-            "cv_sha256": review_loop.sha256_file(cv_path),
-            "issues": [],
-            "summary": "Clean cold review",
-        }
-        review_loop.record_review(state, dict(base_report), "review-completeness", "completeness")
-        review_loop.record_review(state, dict(base_report), "review-defensibility", "defensibility")
-        review_loop.record_review(state, dict(base_report), "review-competitiveness", "competitiveness")
+        review_loop.record_review(state, scored_report("completeness", cv_path, 92), "review-completeness", "completeness")
+        review_loop.record_review(state, scored_report("defensibility", cv_path, 94), "review-defensibility", "defensibility")
+        review_loop.record_review(state, scored_report("competitiveness", cv_path, 92), "review-competitiveness", "competitiveness")
         review_loop.write_json(self.run_dir / "review_loop.json", state)
 
         visual_review_path = self.run_dir / "rendered_visual_review.json"
@@ -214,7 +228,6 @@ class ApplicationQualityGateTests(unittest.TestCase):
 
     def test_unverified_drive_save_blocks_release(self):
         self.manifest["drive_save"]["status"] = "assumed"
-        self.write_manifest()
         codes = {failure["code"] for failure in self.run_gate()}
         self.assertIn("DRIVE_SAVE_UNVERIFIED", codes)
 
