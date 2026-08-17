@@ -125,10 +125,21 @@ The submitted CV must:
 - retain every role-critical evidence marker recorded as essential;
 - avoid defensive title, transition or gap-explaining language;
 - include LinkedIn, `https://varunrout.com` and GitHub;
-- include a direct GitHub link and two or three evidence bullets for every project;
+- include a direct GitHub link and three evidence bullets for every project on a two-page CV; a one-page CV may use two only when the project still earns its space;
 - never use the heading `Selected Projects`;
 - treat `Selected Impact` as forbidden by default for every Varun CV; it may appear only after Varun explicitly requests or approves it for that specific application run, with `selected_impact_approval.approved=true` and `selected_impact_approval.source="explicit_user_instruction"`; approval must not be inferred from archetype, evidence strength, page strategy, whitespace, templates, previous CVs or previous approvals;
 - preserve the approved typography and bullet geometry.
+
+### Block depth and editorial justice
+
+An included block must earn the heading and reader attention it consumes.
+
+- Every normal employer / salaried experience block must contain at least **3 JD-relevant evidence bullets** across the block as a whole. Default target is **3 to 5**, with the most JD-relevant block normally carrying 4 or 5 where the evidence supports it.
+- For a multi-role employer such as E.ON, the floor is measured across the employer block. A nested sub-role may carry 1 or 2 bullets if the parent employer block still has at least 3 total and the sub-role independently earns its line.
+- Independent Practice has a **2-bullet hard floor** because it is current-work chronology rather than an employer block; 3 to 5 remains the preferred depth when relevant evidence exists.
+- A two-page project block has a **3-bullet floor**. A one-page project may use 2 when the one-page strategy is valid and both bullets materially support the hiring case.
+- The floor binds revisions as well as first drafts. If cutting the locally weakest bullet would take its source block below the applicable floor, that cut is illegal; Tailor must fold the strongest fact into a surviving bullet and cut elsewhere, or reconsider whether the entire block belongs.
+- Do not invent filler to satisfy a floor. If the evidence bank cannot feed an included block with truthful JD-relevant evidence, stop with `AUTHORING_REQUIRED` / a content decision rather than shipping a starved block.
 
 ## Mandatory Tailor and Review loop
 
@@ -172,19 +183,11 @@ Determine length from:
 
 One page is permitted by default only for a narrow profile with no senior or leadership positioning, no more than three relevant years, no more than two relevant roles, no more than one relevant project, limited technical breadth, no more than four essential evidence items and no domain-transfer burden.
 
-Two pages are preferred or required when they communicate materially more relevant evidence without filler. A two-page CV must use at least 70% of its second page with meaningful content. An underfilled page is a repair trigger, not permission to delete evidence.
+Two pages are preferred or required when they communicate materially more relevant evidence without filler. On a two-page CV, rendered Page 1 must reach at least **80%** of page height and Page 2 at least **70%**. These are composition repair floors, not permission to pad. An underfilled page blocks release until the cause is diagnosed and repaired.
 
-When a second page is sparse, Tailor must try the following in order and record each step:
+A large blank area at a page foot must first be classified as either a **pagination / atomicity defect** or a **content-volume defect**. If allowing the next employer, nested sub-role or project block to break safely removes the gap, fix the page-break rule before changing evidence. Do not cut bullets to solve an atomic block problem.
 
-1. improve section ordering;
-2. restore relevant omitted evidence;
-3. improve bullet depth;
-4. adjust section placement;
-5. tune spacing within approved limits;
-6. repair page breaks;
-7. only then consider page-count reduction.
-
-Never shrink typography to force a page target. Never remove essential evidence to achieve visual compactness. Every omission must be classified as `harmless` or `strategic_loss`. A strategic-loss omission blocks release.
+When a page is sparse, Tailor must use the existing remediation sequence and record the steps. Relevant evidence and bullet depth are restored only when the problem is genuinely content volume; page-break defects are repaired in the template. Never shrink typography to force a page target. Never remove essential evidence to achieve visual compactness. Every omission must be classified as `harmless` or `strategic_loss`. A strategic-loss omission blocks release.
 
 A `TWO_PAGE_PREFERRED` CV may use one page only through an explicit exception where every essential evidence marker remains, every omission is harmless, the complete sparse-page remediation sequence was attempted and the exact compressed revision passed fresh independent strategic review. A `TWO_PAGE_REQUIRED` CV cannot be released as one page.
 
@@ -199,6 +202,8 @@ The approved one-column serif design remains stable. Archetypes may vary:
 - balance between technical and commercial evidence.
 
 Stable section IDs are summary, impact, skills, experience, projects and education. Strategy CVs may use Executive Profile, Commercial Expertise and Strategy Experience. `Selected Impact` remains unavailable unless the run-specific explicit-approval rule is satisfied. Technical CVs may prioritise Technical Skills, Projects and Modelling evidence.
+
+Employer blocks, nested sub-roles and projects are breakable across pages. The template must instead weld the joints that may not split: section headings to following content, role/project headings to their first evidence, descriptors to evidence, and each individual bullet internally. Pagination must never be fixed by per-application font, margin or spacing changes.
 
 ## Backward compatibility
 
@@ -219,6 +224,7 @@ Archetype:
 - `cv_pipeline/templates/cv_archetype_template.html`
 - `cv_pipeline/archetype_visual_contract.json`
 - `cv_pipeline/archetype_visual_gate.py`
+- `cv_pipeline/composition_gate.py`
 
 All application PDFs must be generated through `cv_pipeline/render.py`.
 
@@ -234,7 +240,7 @@ The release gate requires:
 - completed visa review;
 - role identity and evidence ranking;
 - non-empty CV payload, diagnostic, CV-length audit and PDF;
-- passed CV-length, factual, positioning, visual and render checks;
+- passed CV-length, factual, positioning, visual, composition and render checks;
 - an approved Tailor and Review loop tied to the final CV hash;
 - a CV-length review judgement tied to the same reviewer actor, iteration and CV hash;
 - tracker mode and duplicate history recorded;
@@ -253,6 +259,9 @@ A CV fails when:
 - evidence ranking is not archetype-aware;
 - bullet emphasis does not match the archetype;
 - projects do not support the professional thesis;
+- a normal employer block has fewer than 3 total evidence bullets;
+- Independent Practice has fewer than 2 evidence bullets;
+- a two-page project has fewer than 3 bullets, or a one-page project has fewer than 2;
 - the Independent Practice entry changes its locked title, organisation/context or dates, lacks evidence refs, implies unsupported employment/client work, or contains claims that cannot be traced to verified current technical evidence;
 - the Independent Practice entry is omitted without explicit Varun instruction or a recorded role-specific Independent Review rationale;
 - `Selected Impact` appears without run-specific explicit user approval recorded as `selected_impact_approval.approved=true` and `selected_impact_approval.source="explicit_user_instruction"`;
@@ -263,10 +272,11 @@ A CV fails when:
 - an omission is classified as a strategic loss;
 - sparse-page remediation steps were skipped;
 - page count changed without a fresh strategic review;
-- the second page is under 70% meaningfully filled;
+- Page 1 of a two-page CV is under 80% rendered fill;
+- Page 2 of a two-page CV is under 70% rendered fill;
 - page one lacks identity, proof, operating context or consequence;
-- a project has fewer than two bullets or lacks a direct GitHub repository link;
-- any factual, evidence-control or visual-contract gate fails;
+- a project lacks a direct GitHub repository link;
+- any factual, evidence-control, composition or visual-contract gate fails;
 - no Tailor and Review loop exists;
 - review was performed by the tailor actor;
 - the latest review requests revision;
