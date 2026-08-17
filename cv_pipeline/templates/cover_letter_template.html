@@ -5,69 +5,101 @@
 <style>
 :root {
   --ink:#201f1d;
-  --link:#7d5411;
-  --rule:#201f1d;
-  --divider:#d7d3d3;
-  --muted:#605d5d;
-  --accent:#c28d41;
-  --accent-soft:#facb8d;
-  --surface:#fffdf9;
-  --font:"Lora","Georgia","DejaVu Serif","Liberation Serif",serif;
-  --font-heading:"Cormorant Garamond","Georgia","DejaVu Serif","Liberation Serif",serif;
-  --body-size:9.55pt;
-  --body-line-height:1.44;
+  --link:#1A4F8B;
+  --button-ground:#E9F0F8;
+  --neutral-700:#605d5d;
+  --neutral-800:#444141;
+  --divider:rgba(32,31,29,0.16);
+  --surface:#ffffff;
+  --font:"Lora",Georgia,serif;
+  --font-heading:"Cormorant Garamond",Georgia,serif;
+  --body-size:10.4pt;
+  --body-line-height:1.38;
 }
-@page { size:A4; margin:14mm 17mm 13mm 17mm; }
+@page { size:A4; margin:10mm; }
 * { box-sizing:border-box; margin:0; padding:0; }
 html { background:var(--surface); }
-body[data-visual-contract="jobhuntai-classic-gold-v2"] {
+body[data-visual-contract="jobhuntai-serif-blue-v3"] {
   font-family:var(--font);
   font-size:var(--body-size);
   line-height:var(--body-line-height);
   color:var(--ink);
   background:var(--surface);
+  text-align:left;
+  hyphens:none;
+  -webkit-hyphens:none;
   -webkit-print-color-adjust:exact;
   print-color-adjust:exact;
 }
-a { color:var(--link); text-decoration:none; border-bottom:.45pt solid var(--accent-soft); }
-header { text-align:left; display:flex; flex-direction:column; gap:1.1mm; padding-bottom:2.1mm; border-bottom:1.7pt solid var(--rule); }
+a { color:var(--link); text-decoration:none; }
+header {
+  text-align:left;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  column-gap:12px;
+  align-items:start;
+  padding-bottom:7px;
+  border-bottom:2px solid var(--ink);
+}
+.header-left { min-width:0; }
 .name {
   font-family:var(--font-heading);
-  font-size:27pt;
+  font-size:23pt;
   font-weight:400;
-  line-height:.94;
-  letter-spacing:.055em;
+  line-height:.95;
+  letter-spacing:.06em;
   text-transform:uppercase;
 }
 .headline {
+  margin-top:3px;
   font-family:var(--font-heading);
-  font-size:10.1pt;
-  line-height:1.1;
-  letter-spacing:.018em;
-  color:#444141;
+  font-size:11.5pt;
+  line-height:1.12;
+  letter-spacing:.02em;
+  color:var(--neutral-800);
 }
+.location { white-space:nowrap; }
 .contact {
-  font-size:7.75pt;
-  line-height:1.18;
-  letter-spacing:.018em;
-  color:var(--muted);
-  display:flex;
-  flex-wrap:wrap;
-  gap:.3mm 2.1mm;
-  align-items:baseline;
+  margin-top:3px;
+  font-family:var(--font);
+  font-size:8.8pt;
+  line-height:1.15;
+  letter-spacing:.01em;
+  color:var(--neutral-700);
+  white-space:nowrap;
+  font-variant-numeric:tabular-nums;
 }
-.sep { color:var(--accent); }
+.sep { color:var(--neutral-700); }
+.contact .sep { padding:0 2px; }
+.cta-stack { display:block; }
+.cta-btn {
+  display:block;
+  padding:3px 11px;
+  background:#E9F0F8;
+  border:1px solid #1A4F8B;
+  color:#1A4F8B;
+  border-radius:4px;
+  font-family:"Lora",Georgia,serif;
+  font-weight:600;
+  font-size:9pt;
+  letter-spacing:.01em;
+  line-height:1.15;
+  white-space:nowrap;
+}
+.cta-btn + .cta-btn { margin-top:6px; }
+.cta-ico { width:12px; height:12px; margin-right:7px; vertical-align:-1px; }
 .letter-column { width:100%; margin:0; padding:0; }
 .role {
   width:100%;
   margin:3mm 0 .6mm 0;
-  padding:0 0 .8mm 0;
+  padding:0 0 3px 0;
   font-family:var(--font-heading);
   font-size:11.7pt;
   font-weight:600;
   line-height:1.1;
   letter-spacing:.025em;
-  border-bottom:.65pt solid var(--divider);
+  color:var(--ink);
+  border-bottom:1px solid var(--divider);
 }
 .role::before { content:"Re: "; color:var(--ink); }
 .meta {
@@ -78,7 +110,7 @@ header { text-align:left; display:flex; flex-direction:column; gap:1.1mm; paddin
   grid-template-columns:minmax(0,1fr) auto;
   column-gap:4mm;
   align-items:baseline;
-  color:#444141;
+  color:var(--neutral-800);
 }
 .meta strong {
   font-family:var(--font-heading);
@@ -89,15 +121,16 @@ header { text-align:left; display:flex; flex-direction:column; gap:1.1mm; paddin
 }
 .meta span {
   font-size:8.3pt;
-  letter-spacing:.075em;
+  letter-spacing:.05em;
   text-transform:uppercase;
-  color:var(--muted);
+  color:var(--neutral-700);
   white-space:nowrap;
+  font-variant-numeric:tabular-nums;
 }
 .recipient-details {
   margin:-2.2mm 0 3.4mm 0;
   font-size:9.1pt;
-  color:#444141;
+  color:var(--neutral-800);
 }
 .letter-column p { width:100%; margin:0 0 2.2mm 0; padding:0; text-align:left; orphans:3; widows:3; }
 .letter-body { width:100%; }
@@ -110,24 +143,34 @@ header { text-align:left; display:flex; flex-direction:column; gap:1.1mm; paddin
   font-weight:600;
   letter-spacing:.035em;
   padding:3.6mm 0 .6mm 0;
-  border-bottom:.6pt solid var(--divider);
+  border-bottom:1px solid var(--divider);
 }
 .enclosed {
   margin-top:3.3mm !important;
   font-size:8.2pt;
-  letter-spacing:.08em;
+  letter-spacing:.05em;
   text-transform:uppercase;
-  color:var(--muted);
+  color:var(--neutral-700);
 }
 </style>
 </head>
-<body data-visual-contract="jobhuntai-classic-gold-v2">
+<body data-visual-contract="jobhuntai-serif-blue-v3">
+{% macro https_href(value) -%}{% set clean = value|default('', true)|trim %}{% if clean.startswith('https://') %}{{ clean }}{% elif clean.startswith('http://') %}https://{{ clean[7:] }}{% else %}https://{{ clean }}{% endif %}{%- endmacro %}
+{% macro url_label(value) -%}{% set clean = value|default('', true)|trim %}{% if clean.startswith('https://') %}{{ clean[8:].rstrip('/') }}{% elif clean.startswith('http://') %}{{ clean[7:].rstrip('/') }}{% else %}{{ clean.rstrip('/') }}{% endif %}{%- endmacro %}
+{% set github_value = identity.github|default('', true)|trim %}
+{% set portfolio_value = identity.portfolio|default('', true)|trim %}
 <header>
-  <div class="name">{{ identity.name }}</div>
-  <div class="headline">{{ identity.headline|default('', true) }}{% if identity.location|default('') %} <span class="sep">·</span> {{ identity.location }}{% endif %}</div>
-  <div class="contact">
-    <span>{{ identity.phone }}</span><span class="sep">|</span><a href="mailto:{{ identity.email }}">{{ identity.email }}</a><span class="sep">|</span><a href="{{ identity.linkedin }}">LinkedIn</a><span class="sep">|</span><a href="{{ identity.portfolio }}">Portfolio</a><span class="sep">|</span><a href="{{ identity.github }}">GitHub</a>
+  <div class="header-left">
+    <div class="name">{{ identity.name }}</div>
+    <div class="headline">{{ identity.headline|default('', true) }}{% if identity.location|default('') %} <span class="sep">·</span> <span class="location">{{ identity.location }}</span>{% endif %}</div>
+    <div class="contact">
+      <span>{{ identity.phone }}</span><span class="sep">|</span><a href="mailto:{{ identity.email }}">{{ identity.email }}</a><span class="sep">|</span><a href="{{ https_href(identity.linkedin) }}">LinkedIn</a>
+    </div>
   </div>
+  {% if github_value or portfolio_value %}<div class="cta-stack">
+    {% if github_value %}<a class="cta-btn" href="{{ https_href(github_value) }}"><svg class="cta-ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="#1A4F8B" d="M12 .7a11.3 11.3 0 0 0-3.6 22c.6.1.8-.3.8-.6v-2.2c-3.3.7-4-1.4-4-1.4-.5-1.4-1.3-1.8-1.3-1.8-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1.1 1.8 2.8 1.3 3.4 1 .1-.8.4-1.3.8-1.6-2.6-.3-5.4-1.3-5.4-5.6 0-1.2.4-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.2 1.2a11 11 0 0 1 5.8 0C16.1 4 17.1 4.1 17.1 4.1c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.9 1.2 3.1 0 4.3-2.8 5.3-5.4 5.6.4.4.8 1.1.8 2.1v3.1c0 .3.2.7.8.6A11.3 11.3 0 0 0 12 .7Z"/></svg>{{ url_label(github_value) }}</a>{% endif %}
+    {% if portfolio_value %}<a class="cta-btn" href="{{ https_href(portfolio_value) }}"><svg class="cta-ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.2" fill="none" stroke="#1A4F8B" stroke-width="1.8"/><path d="M2.9 12h18.2M12 2.8c2.4 2.5 3.6 5.6 3.6 9.2S14.4 18.7 12 21.2M12 2.8C9.6 5.3 8.4 8.4 8.4 12s1.2 6.7 3.6 9.2" fill="none" stroke="#1A4F8B" stroke-width="1.5"/></svg>{{ url_label(portfolio_value) }}</a>{% endif %}
+  </div>{% endif %}
 </header>
 <main class="letter-column">
 <div class="role">{{ role_title }}</div>
