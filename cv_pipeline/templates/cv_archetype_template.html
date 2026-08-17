@@ -104,9 +104,11 @@ h2 {
   padding-bottom:3px;
   margin-bottom:1.05mm;
   break-after:avoid;
+  page-break-after:avoid;
 }
+p { orphans:3; widows:3; }
 .summary { text-align:left; }
-.capabilities p { margin-bottom:.25mm; break-inside:avoid; }
+.capabilities p { margin-bottom:.25mm; break-inside:avoid; page-break-inside:avoid; }
 .capabilities .cat {
   font-family:var(--font-heading);
   font-size:9.8pt;
@@ -114,7 +116,9 @@ h2 {
   letter-spacing:.02em;
   color:var(--neutral-800);
 }
-.block { margin-bottom:1.15mm; break-inside:avoid; }
+/* Employer/project blocks are intentionally breakable. Atomic blocks caused
+   large blank areas at page feet. Weld only the joints that must stay together. */
+.block { margin-bottom:1.15mm; break-inside:auto; page-break-inside:auto; }
 .block:last-child { margin-bottom:0; }
 .row {
   display:grid;
@@ -122,6 +126,7 @@ h2 {
   column-gap:4mm;
   align-items:baseline;
   break-after:avoid;
+  page-break-after:avoid;
 }
 .block-title,.project-title,.education-title,.impact-title {
   font-family:var(--font-heading);
@@ -145,7 +150,10 @@ h2 {
   font-size:8.8pt;
   color:var(--neutral-800);
   margin-top:.15mm;
+  break-before:avoid;
+  page-break-before:avoid;
   break-after:avoid;
+  page-break-after:avoid;
 }
 .tools { font-style:italic; font-weight:400; }
 .subroles {
@@ -153,7 +161,7 @@ h2 {
   padding-left:2.1mm;
   border-left:1px solid var(--divider);
 }
-.subrole { margin-bottom:1mm; break-inside:avoid; }
+.subrole { margin-bottom:1mm; break-inside:auto; page-break-inside:auto; }
 .subrole:last-child { margin-bottom:0; }
 .subrole .block-title { font-size:10pt; }
 .evidence-list {
@@ -163,6 +171,8 @@ h2 {
   font-family:var(--font);
   font-size:var(--body-size);
   line-height:var(--body-line-height);
+  orphans:2;
+  widows:2;
 }
 .evidence-list li {
   position:relative;
@@ -173,6 +183,7 @@ h2 {
   font-size:var(--body-size);
   line-height:var(--body-line-height);
   break-inside:avoid;
+  page-break-inside:avoid;
 }
 .evidence-list li::before {
   content:"·";
@@ -192,14 +203,25 @@ h2 {
   color:var(--ink);
 }
 .bullet-text { display:inline; }
-.project,.impact-item { margin-bottom:.75mm; break-inside:avoid; }
+.project { margin-bottom:.75mm; break-inside:auto; page-break-inside:auto; }
+.impact-item { margin-bottom:.75mm; break-inside:avoid; page-break-inside:avoid; }
 .project:last-child,.impact-item:last-child { margin-bottom:0; }
-.project-head { break-after:avoid; }
-.project-meta,.impact-context { font-style:italic; font-size:8.8pt; color:var(--neutral-800); margin-top:.15mm; }
+.project-head { break-after:avoid; page-break-after:avoid; }
+.project-meta {
+  font-style:italic;
+  font-size:8.8pt;
+  color:var(--neutral-800);
+  margin-top:.15mm;
+  break-before:avoid;
+  page-break-before:avoid;
+  break-after:avoid;
+  page-break-after:avoid;
+}
+.impact-context { font-style:italic; font-size:8.8pt; color:var(--neutral-800); margin-top:.15mm; }
 .impact-item { padding-left:2.2mm; border-left:1px solid var(--ink); }
 body[data-layout-variant="strategy"] .impact-title,
 body[data-layout-variant="commercial"] .impact-title { font-size:10.5pt; }
-.education .block { margin-bottom:.45mm; }
+.education .block { margin-bottom:.45mm; break-inside:avoid; page-break-inside:avoid; }
 </style>
 </head>
 <body data-visual-contract="jobhuntai-archetype-serif-blue-v2" data-archetype="{{ archetype }}" data-layout-variant="{{ layout_variant|default('technical', true) }}">
