@@ -80,6 +80,26 @@ class ReviewLoopTests(unittest.TestCase):
         self.assertEqual("approved", self.state["status"])
         self.assertEqual(2, self.state["current_iteration"])
 
+    def test_explicit_revise_minor_issue_is_required_on_retailor(self):
+        issue = {
+            "id": "COMPET-009",
+            "severity": "minor",
+            "status": "open",
+            "message": "Reviewer explicitly requires a small recruiter-clarity change",
+            "required_action": "Tighten the opening phrase before release",
+        }
+        review_loop.record_tailor(self.state, self.cv, "tailor-agent")
+        review_loop.record_review(self.state, self.report(), "review-a", "completeness")
+        review_loop.record_review(self.state, self.report(), "review-b", "defensibility")
+        review_loop.record_review(self.state, self.report("revise", [issue]), "review-c", "competitiveness")
+        self.assertEqual("revision_required", self.state["status"])
+        panel = [e for e in self.state["events"] if e.get("type") == "panel"][-1]
+        self.assertEqual(["COMPET-009"], [item["id"] for item in panel["blocking_issues"]])
+        with self.assertRaises(review_loop.ReviewLoopError):
+            review_loop.record_tailor(self.state, self.cv, "tailor-agent")
+        self.cv.write_text('{"version": 2}\n', encoding="utf-8")
+        review_loop.record_tailor(self.state, self.cv, "tailor-agent", ["COMPET-009"])
+
     def test_open_minor_note_may_survive_panel_approval(self):
         minor = {
             "id": "COMP-009",
