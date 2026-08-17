@@ -17,6 +17,8 @@ ONE_PAGE_ALLOWED = "ONE_PAGE_ALLOWED"
 TWO_PAGE_PREFERRED = "TWO_PAGE_PREFERRED"
 TWO_PAGE_REQUIRED = "TWO_PAGE_REQUIRED"
 DECISIONS = {ONE_PAGE_ALLOWED, TWO_PAGE_PREFERRED, TWO_PAGE_REQUIRED}
+FIRST_PAGE_MIN_FILL = 0.90
+SECOND_PAGE_MIN_FILL = 0.70
 REMEDIATION_ORDER = (
     "section_order",
     "restore_relevant_evidence",
@@ -237,11 +239,14 @@ def validate(
             add_failure(failures, "PAGE_FILL_AUDIT_MISSING", "two-page CV requires page-fill measurements")
         else:
             try:
+                first_fill = float(page_fill[0])
                 second_fill = float(page_fill[1])
             except (TypeError, ValueError):
-                second_fill = -1
-            if second_fill < 0.70:
-                add_failure(failures, "SECOND_PAGE_UNDERFILLED", "second page must be at least 70% meaningfully filled")
+                first_fill = second_fill = -1
+            if first_fill < FIRST_PAGE_MIN_FILL:
+                add_failure(failures, "PAGE_ONE_UNDERFILLED", f"page one must be at least {FIRST_PAGE_MIN_FILL:.0%} filled")
+            if second_fill < SECOND_PAGE_MIN_FILL:
+                add_failure(failures, "SECOND_PAGE_UNDERFILLED", f"second page must be at least {SECOND_PAGE_MIN_FILL:.0%} meaningfully filled")
 
     return failures
 
