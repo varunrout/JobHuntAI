@@ -26,6 +26,27 @@ Review:
 14. Does the final PDF look like one intentional document rather than assembled blocks?
 15. Would a strong competing candidate make this CV look underdeveloped in any section?
 
+## Scoring rubric — 100 points
+
+Score the CV as an actual competing application, not as a checklist that merely avoided errors.
+
+- `ten_second_identity` — **15**: professional identity and target fit are obvious in a rapid scan.
+- `proof_strength_differentiation` — **25**: strongest evidence is specific, credible, differentiated and competitive for this vacancy.
+- `evidence_hierarchy` — **20**: strongest proof owns the most valuable space; weak/old evidence does not crowd it out.
+- `visual_pagination` — **25**: hierarchy, whitespace, page fill, block splitting and visual flow are intentional across every rendered page.
+- `readability_cta_links` — **15**: typography, scanability, GitHub/portfolio buttons, icons and functional links are presentation-ready.
+
+The five point values must sum exactly to `score`.
+
+Score bands:
+- **95–100** exceptional
+- **90–94.9** excellent
+- **85–89.9** strong / release-capable
+- **75–84.9** revision required
+- **below 75** weak
+
+A lane score below **85/100** blocks release even when there is no single critical defect. The three-lane panel average must be at least **88/100**.
+
 ## Owned artefact
 
 This lane owns `rendered_visual_review.json.manual_review`. It must inspect every exact page image tied to the final PDF hash and write:
@@ -54,10 +75,19 @@ Write a report with `lane: "competitiveness"` and issue IDs prefixed `COMPET-`.
 {
   "lane": "competitiveness",
   "verdict": "approve | revise",
+  "score": 93,
+  "score_breakdown": {
+    "ten_second_identity": 14,
+    "proof_strength_differentiation": 23,
+    "evidence_hierarchy": 19,
+    "visual_pagination": 23,
+    "readability_cta_links": 14
+  },
+  "score_rationale": "Specific recruiter-and-render explanation of what earns the score and what prevents a higher one.",
   "cv_sha256": "exact current hash",
   "summary": "cold recruiter and visual assessment",
   "issues": []
 }
 ```
 
-Large blank space, unreadable typography, weak 10-second identity, broken CTA/link rendering, or a materially uncompetitive evidence hierarchy is `major` or `critical` and requires `revise`.
+Large blank space, unreadable typography, weak 10-second identity, broken CTA/link rendering, or a materially uncompetitive evidence hierarchy is `major` or `critical` and requires `revise`. A technically clean document can still score below 85 if it is not competitive enough for the vacancy.

@@ -44,20 +44,20 @@ When the user pastes a job description or job link:
 9. Save `role_identity.json` with archetype, confidence, secondary archetypes, positioning strategy and recommended page length.
 10. Build the competency matrix and verified evidence candidates.
 11. Reweight evidence against the selected archetype and save `evidence_ranking.json`.
-12. Initialise `review_loop.json` using `jobhuntai-review-panel-v2` for new runs. Historical `jobhuntai-tailor-review-v1` artefacts remain readable but are not the standard for new applications.
+12. Initialise `review_loop.json` using `jobhuntai-review-panel-v3` for new runs. Historical `jobhuntai-review-panel-v2` and `jobhuntai-tailor-review-v1` artefacts remain readable but are not the standard for new applications.
 13. Load `cv_pipeline/independent_practice_policy.json` and reserve the locked Jan 2026 - Present Independent Practice entry unless omission is explicitly authorised.
 14. Tailor the CV and record the exact `cv.json` hash as a Tailor iteration.
 15. Render the CV and run construction, factual, positioning, composition, visual and page-strategy gates.
 16. Render every exact final PDF page to PNG and create `rendered_visual_review.json` containing PDF hash, screenshot hashes, geometry, fill and font measurements.
-17. Freeze the exact CV revision and launch three separate cold reviewer contexts without Tailor rationale or cross-reviewer findings:
+17. Freeze the exact CV revision and launch three separate cold reviewer contexts without Tailor rationale or cross-reviewer findings/scores:
     - `completeness`: hiring case, evidence coverage, block depth, omission audit and page strategy.
     - `defensibility`: factual integrity, provenance, title/date/metric/tool scope and unsupported implications.
     - `competitiveness`: recruiter clarity, competitive strength, rendered-page quality, CTA/link rendering and visual composition.
-18. Require all three reviewer actors to differ from Tailor and from one another. Every lane must reference the same exact current `cv.json` SHA-256 hash.
+18. Require all three reviewer actors to differ from Tailor and from one another. Every lane must reference the same exact current `cv.json` SHA-256 hash and return the fixed lane-specific 0–100 score breakdown plus score rationale.
 19. Reviewer A owns `cv_length_audit.json.review_judgement`. Reviewer C owns `rendered_visual_review.json.manual_review`. Reviewer B owns factual/provenance findings.
-20. Aggregate only after all three lane reports are recorded. Any open critical or major issue, or any reviewer explicit `revise`, forces panel verdict `revise`.
-21. On `revise`, return every blocking issue ID to Tailor. Tailor must address all blocking IDs, create a new CV hash, rerender, and all three cold reviewers rerun on the new hash.
-22. Continue only when panel verdict is `approve`, all three lanes are current, reviewer actors are unique, no blocking issue remains, panel hash matches final `cv.json`, the Completeness-owned length judgement matches the same iteration/hash, and the Competitiveness-owned visual review matches the exact PDF/screenshots.
+20. Aggregate only after all three lane reports are recorded. Any open critical or major issue, any reviewer explicit `revise`, any lane score below 85/100, or a three-lane mean below 88/100 forces panel verdict `revise`.
+21. On `revise`, return every blocking issue ID — including `SCORE-*` issues — to Tailor. Tailor must address all blocking IDs, create a new CV hash, rerender, and all three cold reviewers rerun and rescore the new hash.
+22. Continue only when panel verdict is `approve`, all three lanes are current, reviewer actors are unique, no blocking issue remains, every lane score is at least 85, the panel average is at least 88, panel hash matches final `cv.json`, the Completeness-owned length judgement matches the same iteration/hash, and the Competitiveness-owned visual review matches the exact PDF/screenshots.
 23. Produce and review a cover letter only when useful or requested.
 24. Prepare portal answers and the submission checklist.
 25. Build `application_manifest.json` and run `application_quality_gate.py`.
@@ -67,17 +67,21 @@ When the user pastes a job description or job link:
 29. Log every networking contact, touchpoint and follow-up.
 30. Reconcile Gmail stages when requested or when new application mail is found.
 
-## Mandatory Tailor and three-reviewer panel loop
+## Mandatory Tailor and scored three-reviewer panel loop
 
 - Required lanes are exactly `completeness`, `defensibility` and `competitiveness`.
 - Tailor and all three reviewer actors must be distinct.
-- Reviewers are cold: no Tailor drafting rationale and no other reviewer findings before all reports are recorded.
+- Reviewers are cold: no Tailor drafting rationale and no other reviewer findings/scores before all reports are recorded.
 - Every lane reviews the same exact current CV hash.
 - Reviewer A owns the CV-length judgement; Reviewer C owns rendered visual manual review.
-- Any critical/major open issue forces revision.
+- Every v3 lane must return `score`, exact fixed-weight `score_breakdown`, and evidence-based `score_rationale`.
+- Each v3 lane must score at least **85/100**.
+- The arithmetic v3 panel average must be at least **88/100**.
+- Any critical/major open issue forces revision regardless of score.
 - Any reviewer explicit `revise` forces revision even if its issue is marked minor.
+- Any below-floor lane or panel average creates a blocking `SCORE-*` issue.
 - Re-tailoring must explicitly address every blocking issue ID.
-- Any CV edit invalidates the whole panel and all three lanes rerun on the new hash.
+- Any CV edit invalidates the whole panel and all three lanes/scores rerun from scratch on the new hash.
 - Any PDF/screenshot/page-count/editable-source change invalidates rendered visual approval.
 - Default maximum is four Tailor/panel iterations. Exhaustion blocks automatic release.
 
@@ -93,7 +97,7 @@ When the user pastes a job description or job link:
 
 ## Fail-closed gates
 
-Do not mark `Ready to Apply` unless the control-plane and Doctor checks are clean, intake and evidence artefacts exist, Independent Practice policy is satisfied, composition and rendered-page gates pass, all three cold review lanes complete on the final hash, the panel approves, Completeness owns the CV-length judgement, Competitiveness owns the rendered visual review, Drive save is verified, and `application_quality_gate.py` returns `ready_to_apply`.
+Do not mark `Ready to Apply` unless the control-plane and Doctor checks are clean, intake and evidence artefacts exist, Independent Practice policy is satisfied, composition and rendered-page gates pass, all three cold review lanes complete on the final hash, every v3 lane score clears 85, the v3 panel average clears 88, the panel approves, Completeness owns the CV-length judgement, Competitiveness owns the rendered visual review, Drive save is verified, and `application_quality_gate.py` returns `ready_to_apply`.
 
 Do not mark `Applied` unless the user confirms submission or reliable portal/email evidence exists. Employer rejection belongs on Applications. Use `Do not apply` for a pre-application decline on Jobs.
 

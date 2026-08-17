@@ -31,6 +31,27 @@ Review:
 - Do not accept plausible wording as evidence.
 - If support cannot be located, issue `AUTHORING_REQUIRED` / a blocking review issue rather than weakening the truth standard.
 
+## Scoring rubric — 100 points
+
+Score from evidence outward. No factual problem may be hidden inside a high aggregate score.
+
+- `titles_dates_chronology` — **15**: official titles, employers, dates, locations and chronology are exact.
+- `metrics_tools_provenance` — **25**: metrics, scale claims, tools and technologies have traceable canonical support.
+- `scope_attribution` — **25**: ownership, deployment, leadership, stakeholder, commercial and domain-transfer language is correctly scoped and attributed.
+- `independent_practice_project_truth` — **20**: Independent Practice and project wording respects non-employment, repository state, evidence refs and implementation boundaries.
+- `rendered_source_parity` — **15**: Skills and rendered PDF remain evidence-backed and match the approved payload.
+
+The five point values must sum exactly to `score`.
+
+Score bands:
+- **95–100** exceptional
+- **90–94.9** excellent
+- **85–89.9** strong / release-capable
+- **75–84.9** revision required
+- **below 75** weak
+
+A lane score below **85/100** blocks release. The panel average must also be at least **88/100**. Any unsupported or materially misleading claim still forces `revise` regardless of score.
+
 ## Review output
 
 Write a report with `lane: "defensibility"` and issue IDs prefixed `DEF-`.
@@ -39,10 +60,19 @@ Write a report with `lane: "defensibility"` and issue IDs prefixed `DEF-`.
 {
   "lane": "defensibility",
   "verdict": "approve | revise",
+  "score": 96,
+  "score_breakdown": {
+    "titles_dates_chronology": 15,
+    "metrics_tools_provenance": 24,
+    "scope_attribution": 24,
+    "independent_practice_project_truth": 19,
+    "rendered_source_parity": 14
+  },
+  "score_rationale": "Specific evidence-based explanation of the score, including any points withheld for residual ambiguity.",
   "cv_sha256": "exact current hash",
   "summary": "cold factual and provenance assessment",
   "issues": []
 }
 ```
 
-Any unsupported or materially misleading claim is at least `major`; title/date/metric fabrication or false employment/client/deployment implication is `critical`. Critical or major open issues require `revise`.
+Any unsupported or materially misleading claim is at least `major`; title/date/metric fabrication or false employment/client/deployment implication is `critical`. Critical or major open issues require `revise`. Do not award 100 simply because every checked claim is supportable; 100 means the document is exceptionally clean, precisely scoped and leaves effectively no meaningful ambiguity.

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Fail-closed Tailor -> three-reviewer panel -> re-tailor state machine."""
+"""Fail-closed Tailor -> scored three-reviewer panel -> re-tailor state machine."""
 from __future__ import annotations
 
 import argparse
@@ -10,8 +10,12 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-CONTRACT = "jobhuntai-review-panel-v2"
+import review_scoring
+
+CONTRACT = "jobhuntai-review-panel-v3"
+PANEL_V2_CONTRACT = "jobhuntai-review-panel-v2"
 LEGACY_CONTRACT = "jobhuntai-tailor-review-v1"
+PANEL_CONTRACTS = {CONTRACT, PANEL_V2_CONTRACT}
 APPROVE = "approve"
 REVISE = "revise"
 REVIEW_LANES = ("completeness", "defensibility", "competitiveness")
@@ -59,6 +63,10 @@ def create_state(job_id: str, max_iterations: int = 4) -> dict[str, Any]:
         "current_iteration": 0,
         "max_iterations": max_iterations,
         "required_review_lanes": list(REVIEW_LANES),
+        "score_policy": {
+            "lane_minimum": review_scoring.LANE_MIN_SCORE,
+            "panel_minimum": review_scoring.PANEL_MIN_SCORE,
+        },
         "approved_cv_sha256": None,
         "events": [],
         "created_at": now,
@@ -122,7 +130,7 @@ def _required_issue_ids_for_retailor(state: dict[str, Any]) -> set[str]:
 
 def validate_state_shape(state: dict[str, Any]) -> None:
     contract = state.get("contract")
-    if contract not in {CONTRACT, LEGACY_CONTRACT}:
+    if contract not in PANEL_CONTRACTS | {LEGACY_CONTRACT}:
         raise ReviewLoopError(f"unsupported review-loop contract: {contract!r}")
     allowed = {"awaiting_tailor", "awaiting_review", "awaiting_reviews", "revision_required", "approved", "blocked"}
     if state.get("status") not in allowed:
@@ -131,8 +139,16 @@ def validate_state_shape(state: dict[str, Any]) -> None:
         raise ReviewLoopError("current_iteration must be a non-negative integer")
     if not isinstance(state.get("max_iterations"), int) or state["max_iterations"] < 1:
         raise ReviewLoopError("max_iterations must be a positive integer")
-    if contract == CONTRACT and state.get("required_review_lanes") != list(REVIEW_LANES):
+    if contract in PANEL_CONTRACTS and state.get("required_review_lanes") != list(REVIEW_LANES):
         raise ReviewLoopError(f"required_review_lanes must be {list(REVIEW_LANES)!r}")
+    if contract == CONTRACT:
+        policy = state.get("score_policy")
+        expected = {
+            "lane_minimum": review_scoring.LANE_MIN_SCORE,
+            "panel_minimum": review_scoring.PANEL_MIN_SCORE,
+        }
+        if policy != expected:
+            raise ReviewLoopError(f"score_policy must be {expected!r}")
     _events(state)
 
 
@@ -178,7 +194,7 @@ def record_tailor(
     }
     _events(state).append(event)
     state["current_iteration"] = iteration
-    state["status"] = "awaiting_reviews" if state.get("contract") == CONTRACT else "awaiting_review"
+    state["status"] = "awaiting_reviews" if state.get("contract") in PANEL_CONTRACTS else "awaiting_review"
     state["approved_cv_sha256"] = None
     state["updated_at"] = event["timestamp"]
     return state
@@ -219,6 +235,40 @@ def _normalise_issues(report: dict[str, Any]) -> list[dict[str, Any]]:
     return issues
 
 
+def _score_blocking_issues(reviews: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], float]:
+    panel_score = review_scoring.panel_score(reviews)
+    issues: list[dict[str, Any]] = []
+    for review in reviews:
+        lane = str(review.get("lane", ""))
+        score = float(review.get("score", 0))
+        if score < review_scoring.LANE_MIN_SCORE:
+            weak = review_scoring.weakest_dimensions(lane, review.get("score_breakdown", {}))
+            issues.append({
+                "id": f"SCORE-{lane.upper()}",
+                "severity": "major",
+                "status": "open",
+                "lane": lane,
+                "message": (
+                    f"{lane} reviewer scored the CV {score:.1f}/100, below the "
+                    f"{review_scoring.LANE_MIN_SCORE:.0f}/100 lane release floor"
+                ),
+                "required_action": "Improve the weakest scoring dimensions: " + ", ".join(weak),
+            })
+    if not issues and panel_score < review_scoring.PANEL_MIN_SCORE:
+        issues.append({
+            "id": "SCORE-PANEL",
+            "severity": "major",
+            "status": "open",
+            "lane": "panel",
+            "message": (
+                f"panel average is {panel_score:.1f}/100, below the "
+                f"{review_scoring.PANEL_MIN_SCORE:.0f}/100 release floor"
+            ),
+            "required_action": "Raise overall quality by improving the lowest-scoring reviewer dimensions before release",
+        })
+    return issues, panel_score
+
+
 def _aggregate_panel(state: dict[str, Any], tailor_event: dict[str, Any]) -> None:
     iteration = int(tailor_event["iteration"])
     reviews = _reviews_for_iteration(state, iteration)
@@ -238,11 +288,20 @@ def _aggregate_panel(state: dict[str, Any], tailor_event: dict[str, Any]) -> Non
     for issue in all_open:
         if issue.get("lane") in revise_lanes and issue.get("id"):
             required_by_id[str(issue["id"])] = issue
+
+    lane_scores: dict[str, float] | None = None
+    panel_score: float | None = None
+    if state.get("contract") == CONTRACT:
+        score_issues, panel_score = _score_blocking_issues(reviews)
+        for issue in score_issues:
+            required_by_id[str(issue["id"])] = issue
+        lane_scores = {str(item["lane"]): float(item["score"]) for item in reviews}
+
     blocking = list(required_by_id.values())
     reviewer_revise = bool(revise_lanes)
     verdict = REVISE if blocking or reviewer_revise else APPROVE
     blocking_ids = set(required_by_id)
-    panel_event = {
+    panel_event: dict[str, Any] = {
         "type": "panel",
         "iteration": iteration,
         "cv_sha256": tailor_event["cv_sha256"],
@@ -256,6 +315,15 @@ def _aggregate_panel(state: dict[str, Any], tailor_event: dict[str, Any]) -> Non
         ],
         "timestamp": utc_now(),
     }
+    if lane_scores is not None and panel_score is not None:
+        panel_event.update({
+            "lane_scores": lane_scores,
+            "panel_score": panel_score,
+            "score_policy": {
+                "lane_minimum": review_scoring.LANE_MIN_SCORE,
+                "panel_minimum": review_scoring.PANEL_MIN_SCORE,
+            },
+        })
     _events(state).append(panel_event)
     state["status"] = "approved" if verdict == APPROVE else "revision_required"
     state["approved_cv_sha256"] = tailor_event["cv_sha256"] if verdict == APPROVE else None
@@ -296,6 +364,13 @@ def record_review(
     if reviewed_hash != tailor_event.get("cv_sha256"):
         raise ReviewLoopError("review report does not match the latest tailored CV hash")
 
+    scoring: dict[str, Any] = {}
+    if state.get("contract") == CONTRACT:
+        try:
+            scoring = review_scoring.normalise_review_score(report, lane)
+        except review_scoring.ReviewScoreError as exc:
+            raise ReviewLoopError(str(exc)) from exc
+
     issues = _normalise_issues(report)
     blocking_open = [
         issue for issue in issues
@@ -306,7 +381,7 @@ def record_review(
     if verdict == REVISE and not [issue for issue in issues if issue["status"] != "closed"]:
         raise ReviewLoopError("revision verdict requires at least one open issue")
 
-    event = {
+    event: dict[str, Any] = {
         "type": "review",
         "lane": lane,
         "iteration": tailor_event["iteration"],
@@ -317,6 +392,7 @@ def record_review(
         "summary": str(report.get("summary", "")).strip(),
         "timestamp": utc_now(),
     }
+    event.update(scoring)
     _events(state).append(event)
     _aggregate_panel(state, tailor_event)
     return state
@@ -415,6 +491,16 @@ def verify_release(state: dict[str, Any], cv_path: Path) -> list[dict[str, str]]
     for lane, review in by_lane.items():
         if review.get("cv_sha256") != tailor.get("cv_sha256"):
             failures.append({"code": "REVIEWED_HASH_MISMATCH", "message": f"{lane} review is not tied to the latest tailored CV"})
+        if state.get("contract") == CONTRACT:
+            try:
+                scored = review_scoring.normalise_review_score(review, lane)
+                if scored["score"] < review_scoring.LANE_MIN_SCORE:
+                    failures.append({
+                        "code": "REVIEW_LANE_SCORE_BELOW_FLOOR",
+                        "message": f"{lane} score {scored['score']:.1f} is below {review_scoring.LANE_MIN_SCORE:.0f}",
+                    })
+            except review_scoring.ReviewScoreError as exc:
+                failures.append({"code": "REVIEW_SCORE_INVALID", "message": f"{lane}: {exc}"})
 
     panel = _latest_panel(state)
     if not panel or panel.get("iteration") != iteration:
@@ -426,6 +512,22 @@ def verify_release(state: dict[str, Any], cv_path: Path) -> list[dict[str, str]]
             failures.append({"code": "REVIEW_PANEL_HASH_MISMATCH", "message": "panel approval is not tied to the latest CV hash"})
         if panel.get("blocking_issues"):
             failures.append({"code": "OPEN_BLOCKING_REVIEW_ISSUES", "message": "latest panel still contains open required review issues"})
+        if state.get("contract") == CONTRACT and len(by_lane) == len(REVIEW_LANES):
+            expected_lane_scores = {lane: float(by_lane[lane].get("score", -1)) for lane in REVIEW_LANES}
+            expected_panel_score = review_scoring.panel_score(list(by_lane.values()))
+            if panel.get("lane_scores") != expected_lane_scores:
+                failures.append({"code": "REVIEW_PANEL_SCORE_MISMATCH", "message": "panel lane scores do not match current reviewer events"})
+            try:
+                recorded_panel_score = float(panel.get("panel_score"))
+            except (TypeError, ValueError):
+                recorded_panel_score = -1
+            if abs(recorded_panel_score - expected_panel_score) > review_scoring.SCORE_TOLERANCE:
+                failures.append({"code": "REVIEW_PANEL_SCORE_MISMATCH", "message": "panel average does not match current reviewer scores"})
+            if expected_panel_score < review_scoring.PANEL_MIN_SCORE:
+                failures.append({
+                    "code": "REVIEW_PANEL_SCORE_BELOW_FLOOR",
+                    "message": f"panel score {expected_panel_score:.1f} is below {review_scoring.PANEL_MIN_SCORE:.0f}",
+                })
     return failures
 
 
@@ -512,12 +614,19 @@ def main() -> int:
 
         failures = verify_release(state, Path(args.cv))
         result = {"passed": not failures, "failures": failures}
+        panel = _latest_panel(state)
+        if state.get("contract") == CONTRACT and panel:
+            result["lane_scores"] = panel.get("lane_scores")
+            result["panel_score"] = panel.get("panel_score")
         if args.json_out:
             write_json(Path(args.json_out), result)
         if failures:
             print(json.dumps(result, indent=2))
             return 1
-        print("THREE-REVIEWER PANEL APPROVED.")
+        if state.get("contract") == CONTRACT and panel:
+            print(f"SCORED THREE-REVIEWER PANEL APPROVED: {float(panel['panel_score']):.1f}/100")
+        else:
+            print("THREE-REVIEWER PANEL APPROVED.")
         return 0
     except (OSError, json.JSONDecodeError, ReviewLoopError) as exc:
         if args.command != "init" and "state" in locals() and isinstance(state, dict):
