@@ -8,16 +8,23 @@ sys.path.insert(0, str(ROOT))
 import composition_gate
 
 
-class FakeBox:
+class ContainerBox:
     def __init__(self, y=0, height=0, children=None):
         self.position_y = y
         self.height = height
         self.children = children or []
 
 
+class TextBox:
+    def __init__(self, y=0, height=0):
+        self.position_y = y
+        self.height = height
+        self.children = []
+
+
 class FakePage:
     def __init__(self, height, lowest):
-        self._page_box = FakeBox(0, height, [FakeBox(0, lowest)])
+        self._page_box = ContainerBox(0, height, [TextBox(0, lowest)])
 
 
 class FakeDocument:
@@ -27,7 +34,7 @@ class FakeDocument:
 
 def payload(maximum_pages=2):
     return {
-        "page_strategy": {"maximum_pages": maximum_pages},
+        "page_strategy": {"maximum_pages": maximum_pages, "recommended_page_length": maximum_pages},
         "experience": [
             {
                 "org": "E.ON Energy Markets",
@@ -73,17 +80,25 @@ class CompositionGateTests(unittest.TestCase):
         self.assertEqual([], composition_gate.check_payload_depth(cv))
 
     def test_two_page_fill_thresholds_pass_when_both_pages_are_dense(self):
-        failures, fill = composition_gate.check_document_composition(FakeDocument([0.91, 0.78]))
+        failures, fill = composition_gate.check_document_composition(FakeDocument([0.93, 0.78]))
         self.assertEqual([], failures)
-        self.assertEqual([0.91, 0.78], fill)
+        self.assertEqual([0.93, 0.78], fill)
 
     def test_page_one_underfill_is_hard_failure(self):
-        failures, _ = composition_gate.check_document_composition(FakeDocument([0.72, 0.82]))
+        failures, _ = composition_gate.check_document_composition(FakeDocument([0.89, 0.82]))
         self.assertIn("PAGE_ONE_UNDERFILLED", {code for code, _ in failures})
 
     def test_page_two_underfill_is_hard_failure(self):
-        failures, _ = composition_gate.check_document_composition(FakeDocument([0.90, 0.55]))
+        failures, _ = composition_gate.check_document_composition(FakeDocument([0.94, 0.55]))
         self.assertIn("SECOND_PAGE_UNDERFILLED", {code for code, _ in failures})
+
+    def test_container_height_does_not_fake_page_fill(self):
+        page = FakePage(1000, 720)
+        page._page_box.children.append(ContainerBox(0, 1200, []))
+        failures, fill = composition_gate.check_document_composition(FakeDocument([0.95, 0.80]))
+        self.assertEqual([0.95, 0.80], fill)
+        self.assertEqual([], failures)
+        self.assertEqual(0.72, composition_gate.page_fill_ratios(type("D", (), {"pages": [page]})())[0])
 
     def test_template_uses_breakable_blocks_and_welded_bullets(self):
         html = (ROOT / "templates" / "cv_archetype_template.html").read_text(encoding="utf-8")
