@@ -1,0 +1,27 @@
+name: JobHuntAI control plane
+
+on:
+  push:
+    paths:
+      - 'jobhuntai_core/**'
+      - 'tests/test_control_plane.py'
+      - '.github/workflows/control-plane.yml'
+  pull_request:
+    paths:
+      - 'jobhuntai_core/**'
+      - 'tests/test_control_plane.py'
+      - '.github/workflows/control-plane.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run control-plane regression tests
+        run: python -m unittest discover -s tests -p 'test_control_plane.py' -v
