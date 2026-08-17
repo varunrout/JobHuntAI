@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import json
-import re
 from pathlib import Path
 from typing import Any
 
@@ -23,16 +22,13 @@ def check_archetype_template_contract(html: str | None = None) -> list[tuple[str
     html = TEMPLATE_PATH.read_text(encoding="utf-8") if html is None else html
     failures: list[tuple[str, str]] = []
     version = contract["version"]
-    if f'data-visual-contract="{version}"' not in html:
-        failures.append(("ARCHETYPE_VISUAL_VERSION_MISSING", f"template omits {version}"))
-    if re.search(r"<table\b", html, re.I):
-        failures.append(("VISUAL_TABLE_FORBIDDEN", "archetype template contains a table"))
-    for token in ("LinkedIn", "Portfolio", "GitHub"):
-        if token not in html:
-            failures.append(("CONTACT_LINK_MISSING", f"archetype template omits {token}"))
+    cv, shared = contract["cv"], contract["shared"]
+
+    failures.extend(legacy._check_shared_template_markup("archetype CV", html, version))
+    failures.extend(legacy._check_shared_css(html, version, shared, float(cv["body_size_pt"]), float(cv["body_line_height"])))
     if "{% for section in section_order %}" not in html:
         failures.append(("DYNAMIC_SECTION_ORDER_MISSING", "template does not iterate through section_order"))
-    for section in contract["cv"]["section_ids"]:
+    for section in cv["section_ids"]:
         if f'data-section=\"{section}\"' not in html:
             failures.append(("SECTION_HOOK_MISSING", f"template omits data-section={section!r}"))
     if "Selected Projects" in html:
@@ -41,25 +37,23 @@ def check_archetype_template_contract(html: str | None = None) -> list[tuple[str
         failures.append(("SKILLS_BINDING_DRIFT", "skills must use explicit dictionary-key binding"))
 
     root = legacy.css_rule(html, ":root")
-    cv = contract["cv"]
-    shared = contract["shared"]
     for key, value in (
-        ("--ink", shared["ink"]),
-        ("--link", shared["link"]),
-        ("--rule", shared["rule"]),
-        ("--body-size", f'{cv["body_size_pt"]}pt'),
-        ("--body-line-height", str(cv["body_line_height"])),
         ("--bullet-text-indent", f'{cv["bullet_text_indent_mm"]}mm'),
         ("--bullet-marker-offset", f'{cv["bullet_marker_offset_mm"]}mm'),
     ):
         legacy.require(failures, root, ":root", key, value)
-    legacy.require(
-        failures,
-        legacy.css_rule(html, "@page"),
-        "@page",
-        "margin",
-        " ".join(f"{legacy.fmt(value)}mm" for value in cv["page_margin_mm"]),
-    )
+    legacy.require(failures, legacy.css_rule(html, "@page"), "@page", "margin", "10mm")
+    h2 = legacy.css_rule(html, "h2")
+    for key, value in (
+        ("font-size", f'{cv["heading_size_pt"]}pt'),
+        ("font-weight", "600"),
+        ("letter-spacing", ".03em"),
+        ("text-transform", "uppercase"),
+        ("color", "var(--ink)"),
+        ("border-bottom", "1px solid var(--divider)"),
+        ("padding-bottom", "3px"),
+    ):
+        legacy.require(failures, h2, "h2", key, value)
     bullet = legacy.css_rule(html, ".evidence-list li")
     for key, value in (
         ("position", "relative"),
@@ -69,15 +63,15 @@ def check_archetype_template_contract(html: str | None = None) -> list[tuple[str
         ("line-height", "var(--body-line-height)"),
     ):
         legacy.require(failures, bullet, ".evidence-list li", key, value)
+    legacy.require(failures, legacy.css_rule(html, ".evidence-list li::before"), ".evidence-list li::before", "content", '"·"')
+    legacy.require(failures, legacy.css_rule(html, ".bullet-marker"), ".bullet-marker", "color", "var(--ink)")
+    if "border-left:1px solid var(--ink);" not in html:
+        failures.append(("VISUAL_CSS_DRIFT", ".impact-item must use a black border-left"))
     return failures
 
 
 def _find_block_across_pages(document, needle: str):
-    for page in document:
-        block = legacy._find_block(page, needle, exact=True)
-        if block is not None:
-            return page, block
-    return None, None
+    return legacy._find_block_across_pages(document, needle, exact=True)
 
 
 def check_archetype_cv_pdf(pdf_path: Path, payload: dict[str, Any]) -> list[tuple[str, str]]:
@@ -86,18 +80,21 @@ def check_archetype_cv_pdf(pdf_path: Path, payload: dict[str, Any]) -> list[tupl
     document = legacy._open_pdf(pdf_path)
     if not document:
         return failures + [("VISUAL_EMPTY_PDF", "CV PDF has no pages")]
-    maximum = int(payload.get("page_strategy", {}).get("maximum_pages", contract["cv"]["maximum_pages_without_exception"]))
-    if payload.get("page_limit_exception"):
-        maximum = max(maximum, 3)
-    if len(document) > maximum:
-        failures.append(("VISUAL_PAGE_COUNT", f"CV has {len(document)} pages; maximum is {maximum}"))
+    minimum = int(contract["cv"]["minimum_pages"])
+    maximum = int(contract["cv"]["maximum_pages"])
+    if len(document) < minimum or len(document) > maximum:
+        failures.append(("VISUAL_PAGE_COUNT", f"CV has {len(document)} pages; required range is 1-2"))
 
-    legacy._check_fonts(failures, document, contract["shared"]["allowed_pdf_font_fragments"])
+    shared, cv = contract["shared"], contract["cv"]
+    legacy._check_fonts(failures, document, shared["allowed_pdf_font_fragments"])
+    legacy._check_link_schemes(failures, document)
+    legacy._check_ctas(failures, document, payload, shared)
+
     labels = payload.get("section_labels", {})
     order = payload.get("section_order", [])
-    allowed = contract["cv"]["allowed_section_labels"]
-    expected_left = legacy.mm_to_pt(float(contract["cv"]["page_margin_mm"][1]))
-    tolerance = float(contract["shared"]["geometry_tolerance_pt"])
+    allowed = cv["allowed_section_labels"]
+    expected_left = legacy.mm_to_pt(float(cv["page_margin_mm"][1]))
+    tolerance = float(shared["geometry_tolerance_pt"])
     for section in order:
         if section == "impact" and not payload.get("selected_impact"):
             continue
@@ -107,35 +104,35 @@ def check_archetype_cv_pdf(pdf_path: Path, payload: dict[str, Any]) -> list[tupl
         if label not in allowed.get(section, []):
             failures.append(("SECTION_LABEL_UNCONTROLLED", f"{section} label {label!r} is not approved"))
             continue
-        page, block = _find_block_across_pages(document, label)
+        _, block = _find_block_across_pages(document, label)
         if block is None:
-            failures.append(("SECTION_HEADING_MISSING", f"rendered CV omits {label!r}"))
+            if legacy._spacing_drift_present(document, label):
+                failures.append(("SECTION_TEXT_LAYER_SPACING", f"{label!r} extracts with spaces between glyphs"))
+            else:
+                failures.append(("SECTION_HEADING_MISSING", f"rendered CV omits {label!r}"))
             continue
         x0 = float(block["bbox"][0])
         if abs(x0 - expected_left) > tolerance:
             failures.append(("SECTION_LEFT_EDGE", f"{label!r} starts at {x0:.2f} pt; expected {expected_left:.2f} pt"))
-        legacy._check_size(
-            failures,
-            f"heading {label}",
-            legacy._span_sizes(block),
-            float(contract["cv"]["heading_size_pt"]),
-            float(contract["shared"]["font_tolerance_pt"]),
-        )
+        legacy._check_size(failures, f"heading {label}", legacy._span_sizes(block), float(cv["heading_size_pt"]), float(shared["font_tolerance_pt"]))
 
     first_page = document[0]
     name = str(payload.get("identity", {}).get("name", ""))
-    name_block = legacy._find_block(first_page, name)
-    if name_block:
-        legacy._check_size(failures, "candidate name", legacy._span_sizes(name_block), float(contract["shared"]["name_size_pt"]), float(contract["shared"]["font_tolerance_pt"]))
+    name_sizes = legacy._matching_span_sizes(first_page, name)
+    if name_sizes:
+        legacy._check_size(failures, "candidate name", name_sizes, float(shared["name_size_pt"]), float(shared["font_tolerance_pt"]))
     else:
         failures.append(("NAME_MISSING", "candidate name is not visible on page one"))
-    for page in document:
-        if "•" in page.get_text():
-            failures.extend(legacy._check_bullets(page, contract))
-    if not any(contract["shared"]["portfolio_uri_contains"] in uri for uri in legacy._links(document)):
-        failures.append(("PORTFOLIO_LINK_MISSING", "rendered CV has no clickable portfolio link"))
+
+    bullet_pages = [page for page in document if any(line.lstrip().startswith("·") for line in page.get_text().splitlines())]
+    if not bullet_pages:
+        failures.append(("BULLET_GEOMETRY_MISSING", "No middle-dot bullets found in rendered CV"))
+    else:
+        for page in bullet_pages:
+            failures.extend(legacy._check_bullets(page, {"shared": shared, "cv": cv}))
+
     text = legacy.normalise(" ".join(page.get_text() for page in document))
-    for heading in contract["cv"]["forbidden_headings"]:
+    for heading in cv["forbidden_headings"]:
         if heading in text:
             failures.append(("PROJECT_HEADING_FORBIDDEN", f"rendered CV contains {heading!r}"))
     return failures
