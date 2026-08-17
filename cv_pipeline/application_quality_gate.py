@@ -46,7 +46,7 @@ def add_failure(failures: list[dict[str, str]], code: str, message: str) -> None
 def _latest_review_actor(state: dict[str, Any] | None) -> str | None:
     if not isinstance(state, dict):
         return None
-    if state.get("contract") == review_loop.CONTRACT:
+    if state.get("contract") in review_loop.PANEL_CONTRACTS:
         event = review_loop.latest_review_for_lane(state, "competitiveness")
         return str((event or {}).get("actor", "")).strip() or None
     reviews = [
