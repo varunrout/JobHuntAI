@@ -228,6 +228,7 @@ class ApplicationQualityGateTests(unittest.TestCase):
 
     def test_unverified_drive_save_blocks_release(self):
         self.manifest["drive_save"]["status"] = "assumed"
+        self.write_manifest()
         codes = {failure["code"] for failure in self.run_gate()}
         self.assertIn("DRIVE_SAVE_UNVERIFIED", codes)
 
