@@ -9,11 +9,12 @@ import sys
 from pathlib import Path
 from typing import Any
 
+import review_loop
+
 ROOT = Path(__file__).resolve().parent
 SCHEMA_PATH = ROOT / "schemas" / "cv_length_audit.schema.json"
 
 CONTRACT = "jobhuntai-cv-length-audit-v1"
-REVIEW_PANEL_CONTRACT = "jobhuntai-review-panel-v2"
 ONE_PAGE_ALLOWED = "ONE_PAGE_ALLOWED"
 TWO_PAGE_PREFERRED = "TWO_PAGE_PREFERRED"
 TWO_PAGE_REQUIRED = "TWO_PAGE_REQUIRED"
@@ -107,7 +108,7 @@ def _one_page_permitted(profile: dict[str, Any], essential_count: int) -> bool:
 def _length_review_event(review_state: dict[str, Any]) -> dict[str, Any] | None:
     events = review_state.get("events", []) if isinstance(review_state, dict) else []
     reviews = [item for item in events if isinstance(item, dict) and item.get("type") == "review"]
-    if review_state.get("contract") == REVIEW_PANEL_CONTRACT:
+    if review_state.get("contract") in review_loop.PANEL_CONTRACTS:
         reviews = [item for item in reviews if item.get("lane") == "completeness"]
     return reviews[-1] if reviews else None
 
