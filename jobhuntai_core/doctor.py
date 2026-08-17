@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from typing import Any, Iterable, Mapping
 
 from .ids import output_job_ids
-from .schema import CANONICAL_OUTPUT_RE, JOB_ID_RE, OUTPUT_PREFIX_RE
+from .schema import CANONICAL_OUTPUT_RE, OUTPUT_PREFIX_RE
 from .state import validate_job_application_semantics
 from .validators import validate_application, validate_job
 
@@ -75,7 +75,7 @@ def run_doctor(
     for row in jobs:
         job_id = str(row.get("Job ID", "")).strip()
         status = str(row.get("Status", "")).strip()
-        for detail in validate_job_application_semantics(job_id in application_job_ids and status or status, job_id in application_job_ids):
+        for detail in validate_job_application_semantics(status, job_id in application_job_ids):
             findings.append(Finding("BLOCK", "JOB_APPLICATION_STATUS_CONFLICT", "job", job_id, detail))
 
     for name in folders:
@@ -83,9 +83,7 @@ def run_doctor(
         if clean.startswith("JOB-") and not CANONICAL_OUTPUT_RE.fullmatch(clean):
             job_match = OUTPUT_PREFIX_RE.match(clean)
             entity_id = job_match.group(1) if job_match else ""
-            findings.append(
-                Finding("WARN", "NONCANONICAL_OUTPUT_NAME", "output", entity_id, clean)
-            )
+            findings.append(Finding("WARN", "NONCANONICAL_OUTPUT_NAME", "output", entity_id, clean))
         elif not clean.startswith("JOB-") and clean.upper().startswith("VALIDATION_"):
             continue
         elif not clean.startswith("JOB-"):
