@@ -38,6 +38,7 @@ jobs:
           cv_pipeline/pipeline_gate.py
           cv_pipeline/role_identity.py
           cv_pipeline/evidence_scoring.py
+          cv_pipeline/review_scoring.py
           cv_pipeline/positioning_pipeline.py
           cv_pipeline/review_loop.py
           cv_pipeline/application_quality_gate.py
