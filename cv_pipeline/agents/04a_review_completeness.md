@@ -25,6 +25,27 @@ Review:
 13. Does Page 1 use at least 90% of its usable height on a two-page CV and Page 2 at least 70% without padding?
 14. Would a recruiter understand why this candidate belongs in the role without reconstructing the argument?
 
+## Scoring rubric — 100 points
+
+Score the exact reviewed CV against these fixed dimensions. Do not choose a headline score first and back-fill the rubric.
+
+- `identity_coherence` — **15**: target identity, summary, skills and evidence tell one coherent hiring story.
+- `evidence_coverage` — **25**: role-critical evidence dimensions are present and sufficiently developed.
+- `block_depth_weighting` — **20**: included blocks clear depth floors and strongest evidence receives proportionate editorial weight.
+- `omission_page_strategy` — **20**: omissions are harmless, page strategy is evidence-led, and page-fill/pagination rules are satisfied without sacrificing material evidence.
+- `recruiter_comprehension` — **20**: the complete hiring case is understandable without reconstruction.
+
+The five point values must sum exactly to `score`.
+
+Score bands:
+- **95–100** exceptional
+- **90–94.9** excellent
+- **85–89.9** strong / release-capable
+- **75–84.9** revision required
+- **below 75** weak
+
+A lane score below **85/100** cannot release even if the prose verdict says `approve`. The panel also requires an average of at least **88/100**.
+
 ## Owned artefact
 
 This lane owns `cv_length_audit.json.review_judgement` and must write:
@@ -51,10 +72,19 @@ Write a report with `lane: "completeness"` and issue IDs prefixed `COMP-`.
 {
   "lane": "completeness",
   "verdict": "approve | revise",
+  "score": 92,
+  "score_breakdown": {
+    "identity_coherence": 14,
+    "evidence_coverage": 23,
+    "block_depth_weighting": 18,
+    "omission_page_strategy": 18,
+    "recruiter_comprehension": 19
+  },
+  "score_rationale": "Specific evidence-based explanation of why the points were earned and where points were lost.",
   "cv_sha256": "exact current hash",
   "summary": "cold hiring-case assessment",
   "issues": []
 }
 ```
 
-Critical or major open issues require `revise`. Minor observations may remain open with `approve` only when they do not materially change the hiring case, evidence integrity, page strategy or recruiter comprehension.
+Critical or major open issues require `revise`. Minor observations may remain open with `approve` only when they do not materially change the hiring case, evidence integrity, page strategy or recruiter comprehension. Do not inflate the score merely because no blocking issue exists: a clean but merely adequate CV can still score below the release floor and require revision.
