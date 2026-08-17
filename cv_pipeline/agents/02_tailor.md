@@ -22,16 +22,19 @@ Writes `cv.json`, `cv_diagnostic.json`, `cv_length_audit.json` and the cover-let
 16. Apply the archetype's preferred verbs and bullet style. The same evidence must be framed differently when the target archetype changes.
 17. Keep one principal action, one method or analytical basis and one outcome, influence or consequence per bullet.
 18. `Selected Impact` is OFF by default for every Varun CV, regardless of archetype, evidence strength, seniority, page strategy or available space. Do not create, infer or preserve a `selected_impact` block unless Varun explicitly requests or approves that section for the specific application run. When explicit approval exists, record `selected_impact_approval` with `approved: true` and `source: "explicit_user_instruction"`. Approval is run-specific and must never be inherited from another CV, template, archetype or prior application.
-19. Select projects according to archetype project importance. Every project still requires a direct GitHub link and two or three evidence bullets.
-20. Apply the page strategy from Role Identity Classification and the CV-length audit. Two pages are encouraged when they carry materially relevant proof. One page is never pursued by default.
-21. Never solve page pressure by shrinking the approved typography or deleting essential evidence.
-22. When a second page is sparse, repair in this exact order: section ordering, restore relevant omitted evidence, improve bullet depth, adjust section placement, tune spacing within approved limits, repair page breaks. Page-count reduction may be considered only after all six steps are recorded in `page_transition.remediation_steps`.
-23. Record every excluded relevant role, project or proof point in the omission audit. Classify it as `harmless` or `strategic_loss` and explain why. A strategic-loss omission blocks release. If the Independent Practice entry is omitted, record the explicit user instruction or Independent Review rationale here.
-24. If page count changes, set `page_transition.fresh_strategic_review` only after the exact new revision has been independently reviewed. A visual check alone is insufficient.
-25. Produce the archetype diagnostic and CV-length audit before rendering.
-26. Run `pipeline_gate.py`, the factual linter and `cv_length_gate.py`.
-27. Record the exact SHA-256 hash of the completed `cv.json` as a Tailor event in `review_loop.json`.
-28. When this is a re-tailor iteration, record every addressed review issue ID. The state machine rejects partial issue closure.
-29. Hand the exact recorded revision and CV-length audit to Independent Review. Do not make further edits while that revision is under review.
+19. Enforce block depth before rendering. Every normal employer block needs at least 3 JD-relevant evidence bullets across the block as a whole, with 3 to 5 the default target and the strongest block normally carrying 4 or 5 when evidence supports it. A nested sub-role may carry 1 or 2 bullets only when its parent employer block still clears 3 total. Independent Practice has a 2-bullet hard floor and should normally carry 3 to 5 when relevant evidence exists.
+20. Select projects according to archetype project importance. Every project requires a direct GitHub link. A two-page project block requires at least 3 evidence bullets; a valid one-page project may use 2 only when both materially support the hiring case.
+21. The block floor binds revision cuts as well as first drafts. If removing the locally weakest bullet would take its source block below the applicable floor, that cut is illegal. Fold its strongest fact into a surviving bullet and cut elsewhere, or reconsider the whole block. Never invent filler to satisfy a floor; stop with `AUTHORING_REQUIRED` when truthful JD-relevant evidence cannot feed an included block.
+22. Apply the page strategy from Role Identity Classification and the CV-length audit. Two pages are encouraged when they carry materially relevant proof. One page is never pursued by default.
+23. Never solve page pressure by shrinking the approved typography or deleting essential evidence.
+24. When a page is sparse, diagnose pagination/atomicity before content volume. If making the next employer, nested sub-role or project safely breakable removes the blank area, fix the template rather than cutting evidence.
+25. When content volume is genuinely sparse, repair in this exact order: section ordering, restore relevant omitted evidence, improve bullet depth, adjust section placement, tune spacing within approved limits, repair page breaks. Page-count reduction may be considered only after all six steps are recorded in `page_transition.remediation_steps`.
+26. Record every excluded relevant role, project or proof point in the omission audit. Classify it as `harmless` or `strategic_loss` and explain why. A strategic-loss omission blocks release. If the Independent Practice entry is omitted, record the explicit user instruction or Independent Review rationale here.
+27. If page count changes, set `page_transition.fresh_strategic_review` only after the exact new revision has been independently reviewed. A visual check alone is insufficient.
+28. Produce the archetype diagnostic and CV-length audit before rendering.
+29. Run `pipeline_gate.py`, the factual linter, `composition_gate.py` through the renderer and `cv_length_gate.py`.
+30. Record the exact SHA-256 hash of the completed `cv.json` as a Tailor event in `review_loop.json`.
+31. When this is a re-tailor iteration, record every addressed review issue ID. The state machine rejects partial issue closure.
+32. Hand the exact recorded revision and CV-length audit to Independent Review. Do not make further edits while that revision is under review.
 
 Tailor cannot approve its own work or mark a package ready. The identity layer controls positioning. The evidence bank controls factual truth. Review controls release. Page-count optimisation cannot override evidence retention. None may override another.
