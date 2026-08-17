@@ -228,9 +228,20 @@ def _aggregate_panel(state: dict[str, Any], tailor_event: dict[str, Any]) -> Non
         state["updated_at"] = utc_now()
         return
 
-    blocking = _blocking_open_issues(reviews)
-    reviewer_revise = any(item.get("verdict") == REVISE for item in reviews)
+    all_open = _open_issues(reviews)
+    required_by_id = {
+        str(issue["id"]): issue
+        for issue in _blocking_open_issues(reviews)
+        if issue.get("id")
+    }
+    revise_lanes = {str(review.get("lane", "")) for review in reviews if review.get("verdict") == REVISE}
+    for issue in all_open:
+        if issue.get("lane") in revise_lanes and issue.get("id"):
+            required_by_id[str(issue["id"])] = issue
+    blocking = list(required_by_id.values())
+    reviewer_revise = bool(revise_lanes)
     verdict = REVISE if blocking or reviewer_revise else APPROVE
+    blocking_ids = set(required_by_id)
     panel_event = {
         "type": "panel",
         "iteration": iteration,
@@ -239,7 +250,10 @@ def _aggregate_panel(state: dict[str, Any], tailor_event: dict[str, Any]) -> Non
         "review_lanes": list(REVIEW_LANES),
         "review_actors": {str(item["lane"]): str(item["actor"]) for item in reviews},
         "blocking_issues": blocking,
-        "minor_open_issues": [issue for issue in _open_issues(reviews) if issue.get("severity") == "minor"],
+        "minor_open_issues": [
+            issue for issue in all_open
+            if issue.get("severity") == "minor" and str(issue.get("id", "")) not in blocking_ids
+        ],
         "timestamp": utc_now(),
     }
     _events(state).append(panel_event)
@@ -411,7 +425,7 @@ def verify_release(state: dict[str, Any], cv_path: Path) -> list[dict[str, str]]
         if panel.get("cv_sha256") != tailor.get("cv_sha256"):
             failures.append({"code": "REVIEW_PANEL_HASH_MISMATCH", "message": "panel approval is not tied to the latest CV hash"})
         if panel.get("blocking_issues"):
-            failures.append({"code": "OPEN_BLOCKING_REVIEW_ISSUES", "message": "latest panel still contains open critical or major issues"})
+            failures.append({"code": "OPEN_BLOCKING_REVIEW_ISSUES", "message": "latest panel still contains open required review issues"})
     return failures
 
 
