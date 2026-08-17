@@ -10,6 +10,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any, Callable, Mapping
 
+from .state import application_transition, job_transition
 from .validators import Violation, require_valid, validate_application, validate_job
 
 
@@ -26,7 +27,7 @@ class WriteResult:
 
 WriteRow = Callable[[Mapping[str, Any]], None]
 ReadRow = Callable[[], Mapping[str, Any]]
-Audit = Callable[[str, str, str, Any, Any, str], None]
+Audit = Callable[[str, str, str, Any, Any, str, str, str], None]
 
 
 def _validate(
@@ -42,6 +43,33 @@ def _validate(
     raise ValueError(f"unknown entity {entity!r}")
 
 
+def _require_legal_status_transition(
+    entity: str,
+    previous_row: Mapping[str, Any] | None,
+    proposed_row: Mapping[str, Any],
+) -> None:
+    if not previous_row:
+        return
+
+    current = str(previous_row.get("Status", "") or "").strip()
+    proposed = str(proposed_row.get("Status", "") or "").strip()
+    if not current or not proposed or current == proposed:
+        return
+
+    if entity == "job":
+        transition = job_transition(current, proposed)
+    elif entity == "application":
+        transition = application_transition(current, proposed)
+    else:
+        raise ValueError(f"unknown entity {entity!r}")
+
+    if not transition.allowed:
+        raise ValueError(
+            "BLOCKED: ILLEGAL_STATE_TRANSITION:"
+            f"{entity}:{current!r}->{proposed!r}:{transition.kind}:{transition.reason}"
+        )
+
+
 def validated_write(
     *,
     entity: str,
@@ -52,14 +80,18 @@ def validated_write(
     read_row: ReadRow,
     audit: Audit,
     reason: str,
+    source: str = "control-plane",
+    actor: str = "JobHuntAI",
 ) -> WriteResult:
-    """Validate, write once, re-read, compare, then append audit events.
+    """Validate, enforce lifecycle, write, re-read, compare, then audit.
 
     The connector must write by column name. Positional cell APIs belong inside the
-    adapter and must never leak into workflow code.
+    adapter and must never leak into workflow code. A transport success is not a
+    JobHuntAI success: every proposed field must match the immediate read-back.
     """
 
     require_valid(_validate(entity, proposed_row, existing_job_ids=existing_job_ids))
+    _require_legal_status_transition(entity, previous_row, proposed_row)
 
     write_row(proposed_row)
     persisted = dict(read_row())
@@ -82,6 +114,6 @@ def validated_write(
         old_value = old.get(field)
         if ("" if old_value is None else str(old_value)) == ("" if new_value is None else str(new_value)):
             continue
-        audit(entity, entity_id, field, old_value, new_value, reason)
+        audit(entity, entity_id, field, old_value, new_value, reason, source, actor)
 
     return WriteResult(entity, entity_id, tuple(proposed_row.keys()))
