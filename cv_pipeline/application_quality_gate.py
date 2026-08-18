@@ -138,6 +138,17 @@ def run(run_dir: Path, manifest_path: Path) -> list[dict[str, str]]:
             except (OSError, json.JSONDecodeError, ValueError) as exc:
                 add_failure(failures, f"{key.upper()}_INVALID", str(exc))
 
+    # A cover letter is optional at the application level, but once a v4 Tailor
+    # revision includes one it becomes part of the reviewed hash-locked package.
+    cover_letter_value = artefacts.get("cover_letter")
+    if isinstance(cover_letter_value, str) and cover_letter_value.strip():
+        cover_letter_path = resolve(run_dir, cover_letter_value)
+        resolved["cover_letter"] = cover_letter_path
+        if not cover_letter_path.is_file():
+            add_failure(failures, "COVER_LETTER_MISSING", f"cover-letter artefact not found: {cover_letter_path}")
+        elif cover_letter_path.stat().st_size == 0:
+            add_failure(failures, "COVER_LETTER_EMPTY", f"cover-letter artefact is empty: {cover_letter_path}")
+
     checks = manifest.get("checks")
     if not isinstance(checks, dict):
         add_failure(failures, "CHECKS_MISSING", "manifest requires a checks object")
@@ -171,7 +182,10 @@ def run(run_dir: Path, manifest_path: Path) -> list[dict[str, str]]:
     if "review_loop" in resolved and "cv" in resolved and resolved["review_loop"].is_file() and resolved["cv"].is_file():
         try:
             state = load_json(resolved["review_loop"])
-            failures.extend(review_loop.verify_release(state, resolved["cv"]))
+            cl_path = resolved.get("cover_letter")
+            if cl_path is not None and not cl_path.is_file():
+                cl_path = None
+            failures.extend(review_loop.verify_release(state, resolved["cv"], cl_path))
         except (OSError, json.JSONDecodeError, ValueError, review_loop.ReviewLoopError) as exc:
             add_failure(failures, "REVIEW_LOOP_INVALID", str(exc))
 
