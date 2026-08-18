@@ -32,6 +32,8 @@ Treat work-authorisation feasibility as a first-class filter. Do not spend serio
 
 Never invent job titles, responsibilities, tools, metrics or formal risk ownership. `MASTER_PROFILE.md` remains the sole factual source. Existing claim-status, attribution, title, tenure and source-traceability gates remain binding.
 
+Literal truth is necessary but not sufficient. A claim also fails when a reasonable recruiter would infer materially more ownership, scope, causation, deployment, adoption, domain experience or generality than the canonical evidence supports. Numeric evidence must preserve any qualifier, denominator, evaluation split, comparator or scope condition that materially changes interpretation.
+
 ## Current independent-practice rule
 
 Varun has a user-confirmed period of independent technical work from **Jan 2026 - Present**. This period is genuine data science, research and engineering activity across verified technical projects, but it is not salaried employment, freelance client work, consulting or a company role unless separate evidence proves otherwise.
@@ -141,32 +143,40 @@ An included block must earn the heading and reader attention it consumes.
 - The floor binds revisions as well as first drafts. If cutting the locally weakest bullet would take its source block below the applicable floor, that cut is illegal; Tailor must fold the strongest fact into a surviving bullet and cut elsewhere, or reconsider whether the entire block belongs.
 - Do not invent filler to satisfy a floor. If the evidence bank cannot feed an included block with truthful JD-relevant evidence, stop with `AUTHORING_REQUIRED` / a content decision rather than shipping a starved block.
 
-## Mandatory Tailor and three-reviewer panel loop
+## Mandatory Tailor and adversarial three-reviewer panel loop
 
-Every new application CV must pass the executable `jobhuntai-review-panel-v2` loop before release. Historical `jobhuntai-tailor-review-v1` artefacts remain readable for backward compatibility but are not the standard for new runs.
+Every new application must pass the executable `jobhuntai-review-panel-v4` loop before release. Historical `jobhuntai-review-panel-v3`, `jobhuntai-review-panel-v2` and `jobhuntai-tailor-review-v1` artefacts remain readable for backward compatibility only.
 
-1. Initialise `review_loop.json` before the first CV draft.
-2. Tailor writes the CV and records the exact SHA-256 hash of `cv.json`.
-3. Freeze that revision and launch three separate cold reviewers against the same exact hash:
-   - `completeness` — hiring case, evidence coverage, block depth, omission audit and page strategy;
-   - `defensibility` — factual integrity, provenance, titles, dates, metrics, tools and claim scope;
-   - `competitiveness` — recruiter clarity, competitive strength, rendered-page quality and visual composition.
-4. Tailor and all three reviewer actors must be distinct. A reviewer actor cannot be reused across lanes.
-5. Cold review means no Tailor drafting rationale and no other reviewer findings are provided before all three reports are recorded.
-6. Reviewer A / Completeness owns `cv_length_audit.json.review_judgement` and must tie it to its actor, iteration and exact CV hash.
-7. Reviewer B / Defensibility owns factual and provenance findings.
+1. Initialise `review_loop.json` before the first draft.
+2. Tailor writes the CV. If a cover letter is part of the application, it must be drafted before the cold panel so CV and CL can be reviewed as one factual and competitive package.
+3. Freeze the application revision and launch three separate cold reviewers:
+   - `completeness` — hiring case, evidence coverage, block depth, evidence selection/omission and page strategy;
+   - `defensibility` — titles/dates/metrics/tools plus metric scope, reader inference, cross-document consistency, generalisation and attribution;
+   - `competitiveness` — employer buying intent, realistic competitor, shortlist strength, evidence hierarchy/omission and rendered-page quality.
+4. Tailor and all three reviewer actors must be distinct. Reviewer actors cannot be reused across lanes.
+5. Cold review means no Tailor drafting rationale, no prior scores and no other reviewer findings are provided before all three reports are recorded.
+6. Reviewer A / Completeness owns `cv_length_audit.json.review_judgement` and must tie it to actor, iteration and exact CV hash.
+7. Reviewer B / Defensibility owns factual and semantic integrity findings.
 8. Reviewer C / Competitiveness owns `rendered_visual_review.json.manual_review` and must inspect every exact rendered-page image tied to the final PDF hash.
-9. Any open `critical` or `major` issue forces panel verdict `revise`.
-10. Any reviewer explicit `revise` verdict also forces panel `revise`, even when its issue is marked minor.
-11. Open minor observations may remain non-blocking only when the issuing reviewer approves and they do not affect hiring-case completeness, factual integrity, page strategy, readability or recruiter comprehension.
-12. A panel `revise` returns every blocking issue ID to Tailor.
-13. Re-tailoring must explicitly address every blocking issue ID before another iteration is allowed.
-14. Any CV edit creates a new hash, invalidates the complete panel and requires all three cold reviewers to rerun on the new revision.
-15. Any page-count change requires a fresh Completeness review of the exact revised payload and a fresh Competitiveness review of the exact rerendered pages.
-16. Panel approval requires all three lanes, three distinct reviewer actors, the exact current CV hash, no open blocking issue and no reviewer `revise` verdict.
-17. The final package remains `FAILED QA` until the current panel is approved and the final application quality gate independently verifies the panel state.
+9. Every v4 reviewer returns a 0–100 score, exact fixed-weight breakdown and evidence-based rationale. Scores are recomputed from scratch on every changed revision.
+10. Release floors are **Completeness >=85**, **Defensibility >=90**, **Competitiveness >=85**, and **panel arithmetic mean >=88**.
+11. 95+ is exceptional. It means essentially no actionable weakness on that lane after adversarial challenge; it is not a synonym for a tidy or impressive CV.
+12. Completeness must return `selection_audit`. `risk=material` creates a blocking evidence-selection finding even when every included claim is true.
+13. Defensibility must return hard booleans for metric-scope preservation, inference integrity, CV/CL consistency, generalisation boundaries and attribution integrity. Any false check blocks release without forcing the underlying quality score to zero.
+14. Competitiveness must return Buying Intent (`yes|mostly|partly|no`), a realistic competitor model, likely rejection reason, spend recommendation and separate strong-candidate / strong-document / strong-fit / strong-shortlist judgements.
+15. Buying Intent `partly/no` with a `document` or `mixed` ceiling is blocking and returns the application to Tailor. Buying Intent `partly/no` with a purely `candidate` ceiling records a structural shortlist risk instead of manufacturing endless document work; release may still pass if every document/factual gate passes, but `shortlist_certified` must remain false.
+16. Any open `critical` or `major` issue forces panel verdict `revise` regardless of score.
+17. Any reviewer explicit `revise` verdict also forces panel `revise`, even when its issue is marked minor.
+18. Open minor observations may remain non-blocking only when the issuing reviewer approves and they do not affect selection, factual integrity, page strategy, buying intent or recruiter comprehension.
+19. A panel `revise` returns every blocking issue ID to Tailor.
+20. Re-tailoring must explicitly address every blocking issue ID before another iteration is allowed.
+21. Any reviewed content edit invalidates the complete panel and requires all three cold reviewers to rerun and rescore from scratch.
+22. Any page-count change requires a fresh Completeness review and fresh Competitiveness review of the rerendered pages.
+23. Panel approval requires all three lanes, distinct reviewer actors, the current application revision, no blocking issue/revise verdict, all lane floors and the panel mean floor.
+24. The panel records `application_release_approved`, `shortlist_certified`, Buying Intent and any candidate-only structural risks separately.
+25. The final package remains `FAILED QA` until the current panel approves application release and the final application quality gate independently verifies the panel state.
 
-The default maximum is four Tailor/panel iterations. Reaching the limit blocks automatic release for manual diagnosis. It does not permit the pipeline to waive findings.
+The default maximum is four Tailor/panel iterations. Reaching the limit blocks automatic release for diagnosis. It does not permit threshold relaxation. If the only ceiling is candidate-structural, stop rewriting and surface the risk/spend recommendation instead.
 
 ## Page-length logic
 
@@ -215,7 +225,7 @@ Employer blocks, nested sub-roles and projects are breakable across pages. The t
 
 Existing legacy payloads must continue to generate the current Forecasting Data Scientist, Data Engineer, Energy Market Analyst and Football Research Engineer CVs without regression. The new role identity layer sits above the existing evidence engine. Payloads without `role_identity` remain on the locked legacy quality and visual contracts.
 
-The legacy rendering path remains supported. Historical review-loop v1 artefacts remain readable, but new application runs use the three-reviewer panel contract.
+The legacy rendering path remains supported. Historical review-loop v3/v2/v1 artefacts remain readable, but new application runs use the v4 three-reviewer panel contract.
 
 ## Canonical visual sources
 
@@ -247,17 +257,24 @@ The release gate requires:
 - role identity and evidence ranking;
 - non-empty CV payload, diagnostic, CV-length audit and PDF;
 - passed CV-length, factual, positioning, visual, composition and render checks;
-- an approved three-reviewer panel tied to the exact final CV hash;
+- an approved v4 three-reviewer application release tied to the exact final CV revision;
+- valid Completeness selection audit and score >=85;
+- valid Defensibility semantic integrity checks and score >=90;
+- valid Competitiveness Buying Intent/competitor assessment and score >=85;
+- panel mean >=88;
+- no material evidence-selection loss, failed semantic integrity check or document-fixable Buying Intent blocker;
 - a Completeness-owned CV-length judgement tied to the same iteration and hash;
 - a Competitiveness-owned rendered visual review tied to the exact final PDF and page images;
 - tracker mode and duplicate history recorded;
 - Drive save verified rather than assumed.
 
+`shortlist_certified=false` is not by itself an application-release failure when the sole remaining ceiling is candidate-structural and Reviewer C still recommends the role as worth a slot. It is a risk label, not permission to invent missing experience.
+
 A missing, failed, blocked or merely assumed item cannot be converted into `Ready to Apply` by prose or manual optimism.
 
 ## Quality gates
 
-A CV fails when:
+A CV/application fails when:
 
 - the role is not classified before evidence selection;
 - more than one professional identity competes for attention;
@@ -276,7 +293,7 @@ A CV fails when:
 - one page is used when the candidate-role profile exceeds one-page permission thresholds;
 - a two-page-preferred or two-page-required strategy is compressed without an allowed exception;
 - essential evidence is absent from the final CV;
-- an omission is classified as a strategic loss;
+- an omission is classified as a strategic loss or v4 `selection_audit.risk=material`;
 - sparse-page remediation steps were skipped;
 - page count changed without a fresh Completeness and Competitiveness review;
 - Page 1 of a two-page CV is under 90% rendered fill;
@@ -289,6 +306,9 @@ A CV fails when:
 - any reviewer is tied to a stale CV hash;
 - any open critical/major review issue remains;
 - any reviewer verdict is `revise`;
+- Completeness <85, Defensibility <90, Competitiveness <85 or panel mean <88;
+- any Defensibility v4 integrity check is false;
+- Buying Intent is `partly/no` because of a document or mixed ceiling;
 - the CV-length review judgement does not match the Completeness reviewer, iteration and hash;
 - the rendered visual manual review does not match the Competitiveness reviewer and exact PDF/screenshots;
 - the final CV hash differs from the panel-approved hash;
