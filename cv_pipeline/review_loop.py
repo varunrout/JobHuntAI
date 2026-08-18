@@ -75,6 +75,7 @@ def create_state(job_id: str, max_iterations: int = 4) -> dict[str, Any]:
         "required_review_lanes": list(REVIEW_LANES),
         "score_policy": _v4_score_policy(),
         "approved_cv_sha256": None,
+        "approved_cl_sha256": None,
         "events": [],
         "created_at": now,
         "updated_at": now,
@@ -180,6 +181,7 @@ def record_tailor(
     cv_path: Path,
     actor: str,
     addressed_issue_ids: list[str] | None = None,
+    cl_path: Path | None = None,
 ) -> dict[str, Any]:
     validate_state_shape(state)
     actor = actor.strip()
@@ -189,6 +191,8 @@ def record_tailor(
         raise ReviewLoopError(f"tailor is not allowed while status is {state['status']}")
     if not cv_path.is_file():
         raise ReviewLoopError(f"CV payload not found: {cv_path}")
+    if cl_path is not None and not cl_path.is_file():
+        raise ReviewLoopError(f"cover-letter payload not found: {cl_path}")
     if state["current_iteration"] >= state["max_iterations"]:
         state["status"] = "blocked"
         state["updated_at"] = utc_now()
@@ -213,7 +217,7 @@ def record_tailor(
             )
 
     iteration = state["current_iteration"] + 1
-    event = {
+    event: dict[str, Any] = {
         "type": "tailor",
         "iteration": iteration,
         "actor": actor,
@@ -222,10 +226,15 @@ def record_tailor(
         "addressed_issue_ids": sorted(addressed),
         "timestamp": utc_now(),
     }
+    if cl_path is not None:
+        event["cl_path"] = str(cl_path)
+        event["cl_sha256"] = sha256_file(cl_path)
     _events(state).append(event)
     state["current_iteration"] = iteration
     state["status"] = "awaiting_reviews" if state.get("contract") in PANEL_CONTRACTS else "awaiting_review"
     state["approved_cv_sha256"] = None
+    if state.get("contract") == CONTRACT:
+        state["approved_cl_sha256"] = None
     state["updated_at"] = event["timestamp"]
     return state
 
@@ -293,7 +302,7 @@ def _score_blocking_issues(
                     "status": "open",
                     "lane": lane,
                     "message": (
-                        f"{lane} reviewer scored the CV {score:.1f}/100, below the "
+                        f"{lane} reviewer scored the application {score:.1f}/100, below the "
                         f"{minimum:.0f}/100 lane release floor"
                     ),
                     "required_action": "Improve the weakest scoring dimensions: " + ", ".join(weak),
@@ -439,6 +448,7 @@ def _aggregate_panel(state: dict[str, Any], tailor_event: dict[str, Any]) -> Non
         "type": "panel",
         "iteration": iteration,
         "cv_sha256": tailor_event["cv_sha256"],
+        "cl_sha256": tailor_event.get("cl_sha256"),
         "verdict": verdict,
         "review_lanes": list(REVIEW_LANES),
         "review_actors": {str(item["lane"]): str(item["actor"]) for item in reviews},
@@ -485,6 +495,8 @@ def _aggregate_panel(state: dict[str, Any], tailor_event: dict[str, Any]) -> Non
     _events(state).append(panel_event)
     state["status"] = "approved" if verdict == APPROVE else "revision_required"
     state["approved_cv_sha256"] = tailor_event["cv_sha256"] if verdict == APPROVE else None
+    if state.get("contract") == CONTRACT:
+        state["approved_cl_sha256"] = tailor_event.get("cl_sha256") if verdict == APPROVE else None
     state["updated_at"] = panel_event["timestamp"]
 
 
@@ -521,6 +533,12 @@ def record_review(
     reviewed_hash = str(report.get("cv_sha256", "")).strip()
     if reviewed_hash != tailor_event.get("cv_sha256"):
         raise ReviewLoopError("review report does not match the latest tailored CV hash")
+    expected_cl_hash = tailor_event.get("cl_sha256")
+    reported_cl_hash = str(report.get("cl_sha256", "")).strip() or None
+    if expected_cl_hash != reported_cl_hash:
+        if expected_cl_hash:
+            raise ReviewLoopError("review report does not match the latest tailored cover-letter hash")
+        raise ReviewLoopError("review report includes a cover-letter hash but this revision has no reviewed cover letter")
 
     scoring: dict[str, Any] = {}
     extensions: dict[str, Any] = {}
@@ -550,6 +568,7 @@ def record_review(
         "iteration": tailor_event["iteration"],
         "actor": actor,
         "cv_sha256": reviewed_hash,
+        "cl_sha256": expected_cl_hash,
         "verdict": verdict,
         "issues": issues,
         "summary": str(report.get("summary", "")).strip(),
@@ -616,7 +635,9 @@ def latest_review_for_lane(state: dict[str, Any], lane: str) -> dict[str, Any] |
     return None
 
 
-def verify_release(state: dict[str, Any], cv_path: Path) -> list[dict[str, str]]:
+def verify_release(
+    state: dict[str, Any], cv_path: Path, cl_path: Path | None = None
+) -> list[dict[str, str]]:
     failures: list[dict[str, str]] = []
     try:
         validate_state_shape(state)
@@ -652,6 +673,32 @@ def verify_release(state: dict[str, Any], cv_path: Path) -> list[dict[str, str]]
     if not tailor:
         return failures
 
+    expected_cl_hash = tailor.get("cl_sha256")
+    if state.get("contract") == CONTRACT and expected_cl_hash:
+        if cl_path is None or not cl_path.is_file():
+            failures.append(
+                {
+                    "code": "FINAL_CL_MISSING_FOR_REVIEW",
+                    "message": "reviewed v4 revision includes a cover letter but final cover-letter payload was not supplied",
+                }
+            )
+        else:
+            final_cl_hash = sha256_file(cl_path)
+            if state.get("approved_cl_sha256") != final_cl_hash:
+                failures.append(
+                    {
+                        "code": "APPROVED_CL_HASH_STALE",
+                        "message": "final cover letter differs from the panel-approved revision",
+                    }
+                )
+            if expected_cl_hash != final_cl_hash:
+                failures.append(
+                    {
+                        "code": "TAILOR_CL_HASH_STALE",
+                        "message": "final cover letter differs from the latest Tailor revision",
+                    }
+                )
+
     iteration = int(tailor["iteration"])
     reviews = _reviews_for_iteration(state, iteration)
     by_lane = {str(item.get("lane", "")): item for item in reviews}
@@ -685,6 +732,13 @@ def verify_release(state: dict[str, Any], cv_path: Path) -> list[dict[str, str]]
                 {
                     "code": "REVIEWED_HASH_MISMATCH",
                     "message": f"{lane} review is not tied to the latest tailored CV",
+                }
+            )
+        if state.get("contract") == CONTRACT and review.get("cl_sha256") != expected_cl_hash:
+            failures.append(
+                {
+                    "code": "REVIEWED_CL_HASH_MISMATCH",
+                    "message": f"{lane} review is not tied to the latest tailored cover letter",
                 }
             )
         if state.get("contract") in SCORED_CONTRACTS:
@@ -725,6 +779,13 @@ def verify_release(state: dict[str, Any], cv_path: Path) -> list[dict[str, str]]
                 {
                     "code": "REVIEW_PANEL_HASH_MISMATCH",
                     "message": "panel approval is not tied to the latest CV hash",
+                }
+            )
+        if state.get("contract") == CONTRACT and panel.get("cl_sha256") != expected_cl_hash:
+            failures.append(
+                {
+                    "code": "REVIEW_PANEL_CL_HASH_MISMATCH",
+                    "message": "panel approval is not tied to the latest cover-letter hash",
                 }
             )
         if panel.get("blocking_issues"):
@@ -866,6 +927,7 @@ def main() -> int:
     p = sub.add_parser("tailor")
     p.add_argument("state")
     p.add_argument("cv")
+    p.add_argument("--cl")
     p.add_argument("--actor", required=True)
     p.add_argument("--addressed-issues", default="")
 
@@ -878,6 +940,7 @@ def main() -> int:
     p = sub.add_parser("verify")
     p.add_argument("state")
     p.add_argument("cv")
+    p.add_argument("--cl")
     p.add_argument("--json-out")
 
     args = parser.parse_args()
@@ -895,6 +958,7 @@ def main() -> int:
                 Path(args.cv),
                 args.actor,
                 _parse_issue_ids(args.addressed_issues),
+                Path(args.cl) if args.cl else None,
             )
             write_json(state_path, state)
             print(f"TAILOR ITERATION {state['current_iteration']} RECORDED")
@@ -905,7 +969,11 @@ def main() -> int:
             print(f"REVIEW PANEL STATUS: {state['status'].upper()}")
             return 0
 
-        failures = verify_release(state, Path(args.cv))
+        failures = verify_release(
+            state,
+            Path(args.cv),
+            Path(args.cl) if args.cl else None,
+        )
         result: dict[str, Any] = {"passed": not failures, "failures": failures}
         panel = _latest_panel(state)
         if state.get("contract") in SCORED_CONTRACTS and panel:
