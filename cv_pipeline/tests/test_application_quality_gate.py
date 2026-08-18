@@ -16,23 +16,48 @@ import review_loop
 import review_scoring
 
 
-def scored_report(lane, cv_path, score=92):
+def scored_report(lane, cv_path, score=92, cl_path=None):
     remaining = float(score)
     breakdown = {}
     for dimension, maximum in review_scoring.LANE_RUBRICS[lane].items():
         points = min(float(maximum), remaining)
         breakdown[dimension] = points
         remaining = round(remaining - points, 1)
-    return {
+    report = {
         "lane": lane,
         "verdict": "approve",
         "score": score,
         "score_breakdown": breakdown,
-        "score_rationale": "The exact final CV was scored against every fixed lane dimension, with points withheld where the evidence or presentation was less than perfect.",
+        "score_rationale": "The exact final application was scored against every fixed adversarial lane dimension, with points withheld where evidence or presentation was less than perfect.",
         "cv_sha256": review_loop.sha256_file(cv_path),
         "issues": [],
         "summary": "Clean cold review",
     }
+    if cl_path is not None:
+        report["cl_sha256"] = review_loop.sha256_file(cl_path)
+    if lane == "completeness":
+        report["selection_audit"] = {
+            "risk": "none",
+            "strongest_unused_evidence": "none materially stronger",
+            "rationale": "The strongest unused evidence was compared with the weakest included evidence and no material selection loss was found.",
+        }
+    elif lane == "defensibility":
+        report["integrity_checks"] = {key: True for key in review_scoring.INTEGRITY_CHECKS}
+        report["integrity_rationale"] = "Metric scope, reader inference, CV and cover-letter consistency, generalisation and attribution were challenged explicitly and remained bounded."
+    elif lane == "competitiveness":
+        report["buying_intent"] = {
+            "verdict": "mostly",
+            "ceiling": "candidate",
+            "strong_candidate": True,
+            "strong_document": True,
+            "strong_fit": True,
+            "strong_shortlist": True,
+            "spend_recommendation": "worth_a_slot",
+            "realistic_competitor": "A directly experienced candidate with comparable technical depth and shipped work inside the target operating environment.",
+            "likely_rejection_reason": "A stronger directly experienced competitor remains the most credible comparative risk.",
+            "rationale": "The employer buying intent is landed by the evidence hierarchy and application narrative, with only a normal candidate-history risk remaining.",
+        }
+    return report
 
 
 class ApplicationQualityGateTests(unittest.TestCase):
@@ -72,13 +97,7 @@ class ApplicationQualityGateTests(unittest.TestCase):
                 '<w:document xmlns:w="x"><w:body><w:p><w:r><w:t>Text</w:t></w:r></w:p></w:body></w:document>',
             )
 
-        state = review_loop.create_state("JOB-1")
-        cv_path = self.run_dir / "cv.json"
-        review_loop.record_tailor(state, cv_path, "tailor-agent")
-        review_loop.record_review(state, scored_report("completeness", cv_path, 92), "review-completeness", "completeness")
-        review_loop.record_review(state, scored_report("defensibility", cv_path, 94), "review-defensibility", "defensibility")
-        review_loop.record_review(state, scored_report("competitiveness", cv_path, 92), "review-competitiveness", "competitiveness")
-        review_loop.write_json(self.run_dir / "review_loop.json", state)
+        self._write_review_state()
 
         visual_review_path = self.run_dir / "rendered_visual_review.json"
         rendered_visual_gate.capture(
@@ -103,6 +122,7 @@ class ApplicationQualityGateTests(unittest.TestCase):
         })
         visual_review_path.write_text(json.dumps(visual_review), encoding="utf-8")
 
+        cv_path = self.run_dir / "cv.json"
         cv_length_audit = {
             "contract": cv_length_gate.CONTRACT,
             "strategy_decision": cv_length_gate.ONE_PAGE_ALLOWED,
@@ -162,7 +182,31 @@ class ApplicationQualityGateTests(unittest.TestCase):
             "tracker": {"status": "checked", "mode": "read_only"},
             "drive_save": {"status": "verified"},
         }
-        (self.run_dir / "application_manifest.json").write_text(json.dumps(self.manifest), encoding="utf-8")
+        self.write_manifest()
+
+    def _write_review_state(self, cl_path=None):
+        state = review_loop.create_state("JOB-1")
+        cv_path = self.run_dir / "cv.json"
+        review_loop.record_tailor(state, cv_path, "tailor-agent", cl_path=cl_path)
+        review_loop.record_review(
+            state,
+            scored_report("completeness", cv_path, 92, cl_path),
+            "review-completeness",
+            "completeness",
+        )
+        review_loop.record_review(
+            state,
+            scored_report("defensibility", cv_path, 94, cl_path),
+            "review-defensibility",
+            "defensibility",
+        )
+        review_loop.record_review(
+            state,
+            scored_report("competitiveness", cv_path, 92, cl_path),
+            "review-competitiveness",
+            "competitiveness",
+        )
+        review_loop.write_json(self.run_dir / "review_loop.json", state)
 
     def tearDown(self):
         self.temp.cleanup()
@@ -231,6 +275,26 @@ class ApplicationQualityGateTests(unittest.TestCase):
         self.write_manifest()
         codes = {failure["code"] for failure in self.run_gate()}
         self.assertIn("DRIVE_SAVE_UNVERIFIED", codes)
+
+    def test_reviewed_cover_letter_is_hash_locked(self):
+        cl_path = self.run_dir / "cover_letter.json"
+        cl_path.write_text('{"paragraphs": ["Evidence-backed letter"]}\n', encoding="utf-8")
+        self.manifest["artefacts"]["cover_letter"] = "cover_letter.json"
+        self._write_review_state(cl_path)
+        self.write_manifest()
+        self.assertEqual([], self.run_gate())
+
+        cl_path.write_text('{"paragraphs": ["Changed after review"]}\n', encoding="utf-8")
+        codes = {failure["code"] for failure in self.run_gate()}
+        self.assertIn("APPROVED_CL_HASH_STALE", codes)
+
+    def test_reviewed_cover_letter_missing_from_manifest_blocks(self):
+        cl_path = self.run_dir / "cover_letter.json"
+        cl_path.write_text('{"paragraphs": ["Evidence-backed letter"]}\n', encoding="utf-8")
+        self._write_review_state(cl_path)
+        self.write_manifest()
+        codes = {failure["code"] for failure in self.run_gate()}
+        self.assertIn("FINAL_CL_MISSING_FOR_REVIEW", codes)
 
 
 if __name__ == "__main__":
