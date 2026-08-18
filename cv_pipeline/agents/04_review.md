@@ -1,33 +1,40 @@
-# Agent 4: Independent Review Panel
+# Agent 4: Independent Adversarial Review Panel
 
-Single-reviewer approval is no longer the default for new JobHuntAI application runs. New runs use the `jobhuntai-review-panel-v3` state-machine contract and three cold reviewer lanes against the exact same CV hash.
+Single-reviewer approval is not valid for new JobHuntAI runs. New runs use `jobhuntai-review-panel-v4` and three cold reviewer lanes against the same application revision.
 
 The lanes are:
 
-1. `04a_review_completeness.md` — Completeness / Hiring Case.
-2. `04b_review_defensibility.md` — Defensibility / Factual Integrity.
-3. `04c_review_competitiveness.md` — Competitiveness / Recruiter + Visual.
+1. `04a_review_completeness.md` — Completeness / Hiring Case / Evidence Selection.
+2. `04b_review_defensibility.md` — Defensibility / Factual + Semantic Integrity.
+3. `04c_review_competitiveness.md` — Competitiveness / Buying Intent / Recruiter + Visual.
 
-Aggregation, scoring thresholds and the return-to-Tailor path are defined in `05_review_controller.md` and enforced by `review_loop.py` plus `review_scoring.py`.
+Aggregation and release policy are defined in `05_review_controller.md` and enforced by `review_loop.py` plus `review_scoring.py`.
 
-## Non-negotiable panel rules
+## Non-negotiable rules
 
-- Tailor and all three reviewer actors must be distinct.
-- Reviewers are cold: no Tailor drafting rationale and no cross-reviewer findings or scores before all three reports are recorded.
-- All three reviewers inspect the same exact `cv.json` SHA-256 hash.
-- Reviewer A owns `cv_length_audit.json.review_judgement`.
-- Reviewer B owns factual/provenance findings.
-- Reviewer C owns `rendered_visual_review.json.manual_review` and must inspect every exact rendered page image.
-- Every v3 reviewer must return a 0–100 score, fixed weighted score breakdown and evidence-based score rationale.
-- Every v3 lane must score at least **85/100**.
-- The v3 arithmetic panel average must score at least **88/100**.
-- Any open critical or major issue forces `revise` regardless of score.
-- Any reviewer explicit `revise` also forces panel `revise`.
-- A below-floor lane or panel score creates a blocking `SCORE-*` issue and returns the CV to Tailor.
-- A new Tailor edit invalidates the complete panel and all three lanes/scores rerun on the new hash.
-- Default maximum is four Tailor/panel iterations; exhaustion blocks automatic release.
-- Final release still requires `application_quality_gate.py` after panel approval.
+- Tailor and all three reviewers are distinct actors.
+- Reviewers are cold: no Tailor rationale, prior scores, previous reviewer commentary or cross-reviewer findings before all reports are recorded.
+- Scores are recalculated from scratch on every changed revision.
+- Every lane uses its exact fixed weighted rubric; scores are not back-filled from a preferred headline number.
+- Completeness floor: **85**.
+- Defensibility floor: **90**.
+- Competitiveness floor: **85**.
+- Panel mean floor: **88**.
+- 95+ means essentially no actionable weakness after adversarial challenge and should be rare.
+- Reviewer B returns separate hard semantic integrity checks; a failed gate blocks without converting the quality score to zero.
+- Reviewer C must model employer buying intent and a realistic competing candidate.
+- Buying intent `partly/no` caused by document execution is blocking; a purely candidate-structural ceiling is recorded as a shortlist risk instead of creating an endless Tailor loop.
+- `strong_candidate`, `strong_document`, `strong_fit` and `strong_shortlist` are separate judgements.
+- Materially stronger unused evidence is a review finding even when every included claim is true.
+- Metric support means value **plus scope**: denominator/subset, evaluation split, qualifier, comparator and causal status when those change interpretation.
+- Literal truth that creates a materially unsupported reader inference still fails Defensibility.
+- CV/CL contradictions are factual defects. When a cover letter is part of the reviewed application, all reviewers inspect it as part of the same evidence package.
+- Deterministic mechanical gates remain authoritative for page geometry, link annotations and render facts; subjective reviewers must not replace a mechanical check with guesswork.
+- Any critical/major issue, explicit `revise`, below-floor score or v4 policy blocker returns the application to Tailor.
+- A new reviewed content revision invalidates the whole panel.
+- Default maximum: four Tailor/panel iterations.
+- Final release still requires `application_quality_gate.py`.
 
 ## Backward compatibility
 
-Historical artefacts using `jobhuntai-review-panel-v2` and `jobhuntai-tailor-review-v1` remain readable by `review_loop.py`. They do not establish the standard for new application runs. New runs must initialise `jobhuntai-review-panel-v3`.
+Historical `jobhuntai-review-panel-v3`, `jobhuntai-review-panel-v2` and `jobhuntai-tailor-review-v1` artefacts remain readable. They do not define the standard for new runs. New runs initialise v4.
