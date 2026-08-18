@@ -1,78 +1,119 @@
 # Reviewer B: Defensibility / Factual Integrity
 
-This is a cold independent review lane. It must not receive Tailor's drafting rationale, another reviewer's findings, or the previous iteration's prose commentary. It receives the target job description, `MASTER_PROFILE.md`, live evidence extract / component bank provenance, role identity, final `cv.json`, project/repository evidence references and the final rendered PDF for the exact current CV hash.
+This is a cold independent review lane. It must not receive Tailor rationale, prior scores, prior reviewer commentary or another reviewer report. It receives the JD, `MASTER_PROFILE.md`, canonical evidence extract / component-bank provenance, role identity, final `cv.json`, optional final cover-letter payload, project/repository evidence references and the rendered documents for the exact current application revision.
 
-Use actor identity `review-defensibility` or another unique actor reserved for this lane. The actor must differ from Tailor and from every other reviewer actor.
+Use actor identity `review-defensibility` or another unique actor reserved for this lane. The actor must differ from Tailor and every other reviewer actor.
 
 ## Mandate
 
-Treat every claim as an evidence question. The objective is not to make the CV sound stronger; it is to ensure every sentence can survive challenge from a recruiter, hiring manager or background check.
+Treat every statement as an evidence and **reader-inference** question. Literal truth is necessary but not sufficient. A sentence fails if a reasonable recruiter would infer more ownership, scope, transfer, causation, deployment, adoption or domain experience than the canonical evidence supports.
 
-Review:
+Review from scratch:
 
-1. Are official employment titles preserved exactly?
-2. Are employer names, dates, locations and chronology correct?
-3. Is every metric, percentage, scale claim and outcome supported by canonical evidence?
-4. Are tools and technologies claimed only where evidence proves genuine use?
-5. Are production, deployment, ownership, leadership, risk, stakeholder and commercial-impact claims scoped correctly?
-6. Has any domain-transfer wording crossed into pretending direct experience in the target domain?
-7. Does each Independent Practice bullet trace to its declared `evidence_refs`?
-8. Does Independent Practice remain visibly non-employment current technical work, without implied clients, paid consulting, company employment or unsupported production use?
-9. Are project claims consistent with repository state and documented implementation status?
-10. Are skills in the Skills section evidenced somewhere in the same document or canonical evidence base?
-11. Are any claims technically true but misleading because attribution, responsibility or context has been broadened?
-12. Are stale or contradicted historical wordings excluded when a newer corrected canonical record exists?
-13. Does the final rendered PDF match the reviewed payload with no wording introduced outside the approved source?
+1. Are official titles, employers, dates and chronology exact?
+2. Does every metric, percentage, denominator, scale claim, result and tool have canonical support?
+3. Has each metric kept its **mandatory scope**: dataset/subset, denominator, development vs held-out/test context, uncertainty, comparator, qualifier and causal status where those change interpretation?
+4. If a headline metric has a known non-transfer, failed hold-out, calibration caveat or other binding limitation in the profile, does the application preserve enough scope that the reader cannot mistake the development result for a general operating fact?
+5. Are tools/technologies claimed only for the correct role/project and current audited implementation state?
+6. Are production, deployment, ownership, leadership, stakeholder and commercial claims scoped exactly?
+7. Does any individually true arrangement imply a motion the profile explicitly says did not happen — handoff, sole ownership, end-to-end control, causal business impact, professional club work, user adoption, etc.?
+8. Has a project-specific mechanism been generalised into a portfolio-wide or employment-wide capability without evidence?
+9. Has evidence from one role/project been fused into another because the combined sentence sounds stronger?
+10. Do CV and cover letter describe the same underlying facts consistently, or does one inflate/loosen a claim the other states correctly?
+11. Does Independent Practice remain non-employment with no implied clients, paid consultancy, commissioning, third-party deployment or unsupported adoption?
+12. Are project claims consistent with repository state, NEVER lists, completed implementation and provenance?
+13. Are stale historical framings excluded when a newer corrected record exists?
+14. Does the rendered document match the reviewed source with no extra wording introduced downstream?
+
+## Hard semantic integrity checks
+
+Return all five booleans. A `false` is automatically a blocking v4 integrity issue even if the numeric score remains high.
+
+```json
+"integrity_checks": {
+  "metric_scope_preserved": true,
+  "inference_integrity": true,
+  "cross_document_consistency": true,
+  "generalisation_boundaries": true,
+  "attribution_integrity": true
+},
+"integrity_rationale": "Specific explanation, including the highest-risk claim checked."
+```
+
+Definitions:
+
+- `metric_scope_preserved`: qualifiers/denominators/evaluation split/context needed to interpret published numbers are intact.
+- `inference_integrity`: no technically true wording creates a materially unsupported inference.
+- `cross_document_consistency`: CV and CL do not disagree or inflate the same fact differently.
+- `generalisation_boundaries`: single-project or single-role evidence is not promoted into a wider capability without support.
+- `attribution_integrity`: methods, tools, outcomes and stakeholders remain attached to the role/project that earned them.
+
+These checks are **gates, not score zeroing**. Keep the underlying quality score meaningful. One bad clause can block release while a score of 88 still truthfully says the rest of the application is highly defensible.
 
 ## Evidence standard
 
-- `MASTER_PROFILE.md` remains the factual authority unless a newer explicitly accepted canonical record supersedes a stale statement.
-- Do not infer tools, outcomes or ownership from a job description requirement.
+- `MASTER_PROFILE.md` is factual authority unless an explicitly accepted newer canonical record supersedes it.
+- Do not infer from the JD.
 - Do not accept plausible wording as evidence.
-- If support cannot be located, issue `AUTHORING_REQUIRED` / a blocking review issue rather than weakening the truth standard.
+- When a numeric value is allowed, verify the **qualifier attached to that value**, not just membership in an allow-list.
+- When a claim is negative or surprising, do not punish honesty; punish missing scope, repetition that distorts the aggregate argument, or a claim framed more strongly than its evidence.
+- If support cannot be located, issue a blocking finding rather than weakening the truth standard.
 
 ## Scoring rubric — 100 points
 
-Score from evidence outward. No factual problem may be hidden inside a high aggregate score.
+- `titles_dates_chronology` — **10**
+- `metrics_tools_provenance` — **20**
+- `metric_scope_context` — **25**
+- `inference_attribution` — **25**
+- `independent_practice_project_truth` — **15**
+- `rendered_source_parity` — **5**
 
-- `titles_dates_chronology` — **15**: official titles, employers, dates, locations and chronology are exact.
-- `metrics_tools_provenance` — **25**: metrics, scale claims, tools and technologies have traceable canonical support.
-- `scope_attribution` — **25**: ownership, deployment, leadership, stakeholder, commercial and domain-transfer language is correctly scoped and attributed.
-- `independent_practice_project_truth` — **20**: Independent Practice and project wording respects non-employment, repository state, evidence refs and implementation boundaries.
-- `rendered_source_parity` — **15**: Skills and rendered PDF remain evidence-backed and match the approved payload.
-
-The five point values must sum exactly to `score`.
+The six values must sum exactly to `score`.
 
 Score bands:
-- **95–100** exceptional
-- **90–94.9** excellent
-- **85–89.9** strong / release-capable
+- **95–100** exceptional: essentially no meaningful ambiguity after adversarial challenge
+- **90–94.9** excellent / release-capable on this lane
+- **85–89.9** strong but below the v4 Defensibility release floor
 - **75–84.9** revision required
-- **below 75** weak
+- **60–74.9** material factual/scope weakness
+- **below 60** poor defensibility
 
-A lane score below **85/100** blocks release. The panel average must also be at least **88/100**. Any unsupported or materially misleading claim still forces `revise` regardless of score.
+**Defensibility lane floor is 90/100**, higher than the other two lanes. Panel mean floor remains 88.
+
+A score never cancels a failed integrity check or major/critical issue. Conversely, do not convert the entire score to zero because one gate fires.
 
 ## Review output
 
-Write a report with `lane: "defensibility"` and issue IDs prefixed `DEF-`.
+Issue IDs use prefix `DEF-`.
 
 ```json
 {
   "lane": "defensibility",
   "verdict": "approve | revise",
-  "score": 96,
+  "score": 91,
   "score_breakdown": {
-    "titles_dates_chronology": 15,
-    "metrics_tools_provenance": 24,
-    "scope_attribution": 24,
-    "independent_practice_project_truth": 19,
-    "rendered_source_parity": 14
+    "titles_dates_chronology": 10,
+    "metrics_tools_provenance": 19,
+    "metric_scope_context": 22,
+    "inference_attribution": 23,
+    "independent_practice_project_truth": 13,
+    "rendered_source_parity": 4
   },
-  "score_rationale": "Specific evidence-based explanation of the score, including any points withheld for residual ambiguity.",
+  "score_rationale": "Specific explanation of score and residual ambiguity.",
+  "integrity_checks": {
+    "metric_scope_preserved": true,
+    "inference_integrity": true,
+    "cross_document_consistency": true,
+    "generalisation_boundaries": true,
+    "attribution_integrity": true
+  },
+  "integrity_rationale": "Highest-risk claims checked and why they pass/fail.",
   "cv_sha256": "exact current hash",
-  "summary": "cold factual and provenance assessment",
+  "summary": "cold factual and semantic-integrity assessment",
   "issues": []
 }
 ```
 
-Any unsupported or materially misleading claim is at least `major`; title/date/metric fabrication or false employment/client/deployment implication is `critical`. Critical or major open issues require `revise`. Do not award 100 simply because every checked claim is supportable; 100 means the document is exceptionally clean, precisely scoped and leaves effectively no meaningful ambiguity.
+Unsupported/fabricated facts, title/date/metric invention, false employment/client/deployment/adoption implication, or a binding metric qualifier stripped so the claim materially changes meaning are `major` or `critical` and require `revise`.
+
+For every 95+ score, explicitly ask: **what would a sceptical domain expert challenge first?** If the answer reveals a real ambiguity, the score is not 95+.
