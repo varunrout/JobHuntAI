@@ -1,101 +1,130 @@
 # Agent 5: Review Panel Controller
 
-The Review Panel Controller orchestrates three cold, independent review lanes against the exact same CV revision:
+The Review Panel Controller orchestrates three cold, independent review lanes against the exact same application revision:
 
-1. `completeness` — hiring case, evidence coverage, block depth, omission audit and page strategy.
-2. `defensibility` — factual integrity, provenance, titles, dates, metrics, tools and claim scope.
-3. `competitiveness` — recruiter clarity, competitive strength, rendered-page quality, CTA/link rendering and visual composition.
+1. `completeness` — hiring case, evidence coverage, evidence selection/omission, block depth and page strategy.
+2. `defensibility` — factual integrity, metric scope, reader inference, provenance, attribution and CV/CL consistency.
+3. `competitiveness` — employer buying intent, realistic competitor model, shortlist strength, evidence hierarchy and rendered-page quality.
 
-The Controller does not rewrite CV content and does not weaken findings. It only enforces reviewer independence, hash identity, panel completeness, scored quality thresholds and the return path to Tailor.
+The Controller does not rewrite content and does not weaken findings. It enforces independence, revision identity, scoring/gates and the return path to Tailor.
 
 ## Cold-review contract
 
 For every Tailor iteration:
 
-- freeze the completed `cv.json` and record its SHA-256 hash;
-- render the exact PDF and page images before reviewer C runs;
+- freeze the completed `cv.json` and record its SHA-256;
+- when a cover letter is part of the application, freeze it before review and treat CV + CL as one evidence package;
+- render exact PDFs/page images before Reviewer C runs;
 - launch three separate reviewer contexts;
-- do not provide Tailor's drafting rationale to any reviewer;
-- do not provide one reviewer's findings or score to another reviewer before all three reports are recorded;
-- do not reuse the Tailor actor as a reviewer;
-- do not reuse one reviewer actor for another lane;
-- all three reports must reference the exact same current `cv.json` hash;
-- stale reports from a previous revision are invalid.
+- provide no Tailor rationale, prior reviewer commentary, prior reviewer score or cross-reviewer result;
+- do not reuse Tailor or reviewer actor identities;
+- stale reports from a prior application revision are invalid;
+- a content edit to either reviewed CV or reviewed CL invalidates the whole panel.
 
-## Lane ownership
+## v4 philosophy
 
-- Reviewer A / `completeness` owns `cv_length_audit.json.review_judgement`.
-- Reviewer B / `defensibility` owns factual and provenance findings.
-- Reviewer C / `competitiveness` owns `rendered_visual_review.json.manual_review` and must inspect every exact page image.
+New runs use `jobhuntai-review-panel-v4`.
 
-## Scoring contract
+v4 separates three concepts that must never be collapsed:
 
-New review runs use `jobhuntai-review-panel-v3`.
+1. **quality score** — how strong the reviewed document is on a 0–100 rubric;
+2. **blocking integrity/policy gate** — whether a specific defect prevents release regardless of score;
+3. **candidate/shortlist ceiling** — whether the remaining weakness can be fixed by document work at all.
 
-Each lane must return:
+A single false clause may block a Defensibility score of 91 without turning the quality score into 0. Conversely, a technically clean document can remain competitively weak.
 
-- `score` from 0 to 100;
-- the lane-specific fixed `score_breakdown` whose weighted points sum exactly to `score`;
-- an evidence-based `score_rationale` explaining both earned and withheld points;
-- the existing `approve | revise` verdict and issue list.
+## Lane thresholds
 
-The fixed release thresholds are:
+- Completeness: **>=85**
+- Defensibility: **>=90**
+- Competitiveness: **>=85**
+- Arithmetic panel mean: **>=88**
 
-- **each lane >= 85/100**;
-- **panel arithmetic mean >= 88/100**;
-- existing factual, visual, hash, independence and issue gates remain mandatory.
+95+ is exceptional and should be rare. It means effectively no material actionable weakness on that lane after adversarial challenge.
 
-The score is not a substitute for blocking issues. A 95 cannot cancel a major issue. Conversely, a CV with no major issue can still require revision if a reviewer scores it below 85 or the three-lane mean is below 88.
+## Mandatory v4 extensions
 
-Score bands are common across lanes:
+### Completeness
 
-- `95–100` exceptional
-- `90–94.9` excellent
-- `85–89.9` strong / release-capable
-- `75–84.9` revision required
-- `<75` weak
+Requires `selection_audit`:
+- `risk`: `none | minor | material`
+- strongest unused evidence
+- evidence-based rationale
+
+`material` automatically creates `SELECTION-MATERIAL-OMISSION` and returns the application to Tailor.
+
+### Defensibility
+
+Requires five hard semantic integrity booleans:
+- metric scope preserved
+- inference integrity
+- CV/CL consistency
+- generalisation boundaries
+- attribution integrity
+
+Any false value becomes an `INTEGRITY-*` blocking issue. The numeric Defensibility score remains the underlying quality score and is not zeroed.
+
+### Competitiveness
+
+Requires `buying_intent` with:
+- `yes | mostly | partly | no`
+- ceiling `none | document | candidate | mixed`
+- strong candidate / strong document / strong fit / strong shortlist judgements
+- realistic competitor model
+- likely rejection reason
+- spend recommendation
+
+If buying intent is `partly/no` and the ceiling is `document` or `mixed`, Controller creates `BUYING-INTENT-DOCUMENT` and forces revision.
+
+If buying intent is `partly/no` and the ceiling is purely `candidate`, the Controller records a structural shortlist risk instead of forcing an endless Tailor loop. The application can still be release-approved if all document/factual gates pass, but `shortlist_certified` is false.
+
+This is deliberate: **application quality** and **shortlist certainty** are not the same thing.
 
 ## Aggregation rules
 
 After all three lanes submit:
 
-- any open `critical` or `major` issue forces panel verdict `revise`;
-- any reviewer explicit `revise` verdict forces panel verdict `revise` even if its issue is marked minor;
-- any lane score below 85 creates a blocking score issue and forces `revise`;
-- when all lane scores clear 85 but the panel average is below 88, the Controller creates `SCORE-PANEL` and forces `revise`;
-- open minor observations may remain as non-blocking notes only when the reviewer itself approves and they do not affect hiring-case completeness, factual integrity, page strategy, readability or recruiter comprehension;
-- panel approval requires all three lanes to be present, three distinct reviewer actors, the exact current CV hash, no blocking issues, no reviewer `revise` verdict, all three lane floors and the panel-average floor;
-- the Controller records a `panel` event in `review_loop.json` with reviewer actors, `lane_scores`, `panel_score`, blocking issues, minor notes and the exact approved/rejected CV hash.
+- any open `critical` or `major` issue forces `revise`;
+- any reviewer explicit `revise` forces `revise`, even on a minor issue;
+- a below-floor lane creates `SCORE-*` and forces revision;
+- if all lane floors clear but panel mean <88, create `SCORE-PANEL`;
+- v4 policy issues (`SELECTION-*`, `INTEGRITY-*`, document-fixable `BUYING-INTENT-*`) are blocking;
+- candidate-only structural risks are recorded but do not create fake document work;
+- panel approval requires three current lanes, unique actors, exact current revision, valid v4 schemas, no blocking issues and all numeric floors;
+- `shortlist_certified` additionally requires buying intent `yes/mostly` and Reviewer C `strong_shortlist: true`.
 
 ## Revision loop
 
-When the panel verdict is `revise`:
+When verdict is `revise`:
 
-1. Return every blocking issue ID — including `SCORE-*` issues — to Tailor.
-2. Tailor must explicitly address every blocking issue ID before a new iteration can be recorded.
-3. Any content edit creates a new CV hash and invalidates every prior review and score.
-4. Re-render the PDF and page images.
-5. Run all three cold reviewers again on the new hash, not only the lane that raised the original issue.
-6. Recalculate every score from scratch; never carry a score forward.
-7. Repeat until approved or the default four-iteration limit is exhausted.
+1. Return every blocking issue ID to Tailor.
+2. Tailor must address all blocking IDs before a new iteration.
+3. Any reviewed CV or CL content edit creates a new application revision.
+4. Re-render.
+5. Run all three cold reviewers again, not only the lane that raised the defect.
+6. Recalculate every score and verdict from scratch. Never carry a score forward.
+7. Maximum four Tailor/panel iterations by default.
 
-Iteration exhaustion blocks automatic release for manual diagnosis. It never downgrades review severity or scoring thresholds.
+If iteration exhaustion is caused by a candidate-only ceiling, do not keep rewriting the document. Surface the structural risk and the spend recommendation instead.
 
 ## Release rule
 
-`Ready to Apply` is impossible unless `review_loop.py verify` confirms:
+`Ready to Apply` requires `review_loop.py verify` to confirm:
 
-- current scored panel contract `jobhuntai-review-panel-v3`, or a supported legacy v2/v1 contract for historical artefacts;
-- latest Tailor revision exists;
-- all three current review lanes exist;
-- all reviewer actors are distinct from each other and Tailor;
-- every reviewer references the current CV hash;
-- every v3 reviewer has a valid fixed-weight score breakdown and rationale;
-- every v3 lane score is at least 85/100;
-- v3 panel average is at least 88/100;
-- a current panel aggregation event exists and its scores match the three current reviewer events;
-- panel verdict is `approve`;
-- no critical/major or score-blocking issue remains open;
-- final `cv.json` still matches the panel-approved hash.
+- current v4 contract, or supported historical v3/v2/v1 state;
+- current Tailor revision exists;
+- all three current reviewer lanes exist and are independent;
+- exact revision hash identity;
+- valid lane-specific score breakdowns and v4 extensions;
+- Completeness >=85, Defensibility >=90, Competitiveness >=85;
+- panel mean >=88;
+- no blocking issue or document-fixable buying-intent failure;
+- panel verdict `approve` and final CV still matches the approved revision.
 
-The final application quality gate must separately verify the Completeness-owned CV-length judgement and the Competitiveness-owned rendered visual review against the same iteration and hash.
+For v4, the panel also records:
+- `application_release_approved`
+- `shortlist_certified`
+- `buying_intent`
+- `structural_risks`
+
+The final application quality gate still verifies deterministic CV-length and rendered-visual ownership against the same review iteration. Mechanical render/link facts remain deterministic gates; subjective reviewers should not invent mechanical failures that deterministic tools can test directly.
